@@ -1,0 +1,54 @@
+{
+    "settings": {
+        "bulletin_title": "LACC Weekly Spotlights",
+        "bulletin_date": "July 11, 2025",
+        "colors": {
+            "primary": "#182c45",
+            "secondary": "#5a6a7a"
+        },
+        "google_api_key": "AIzaSyA-sWQA84PSyR13BS2AZmKEUNwmV9-cDIQ"
+    },
+    "sections": [
+        {
+            "type": "image",
+            "title": "Email Header",
+            "src": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/05/EmailHeader.png",
+            "alt": "LACC Email Header"
+        },
+        {
+            "type": "announcements",
+            "title": "Board of Directors Meeting",
+            "body": "Board of Directors Meeting\nSaturday, July 26 at 8:30 AM",
+            "link": "https://www.google.com",
+            "link_text": "Join Zoom Meeting"
+        },
+        {
+            "type": "announcements",
+            "title": "Important Announcement",
+            "body": "This is a test announcement with a link.",
+            "link": "https://www.google.com",
+            "link_text": "Click here to learn more!"
+        },
+        {
+            "type": "custom_text",
+            "title": "Welcome Message",
+            "content": "Hello everyone!\nThis is a test."
+        },
+        {
+            "type": "events",
+            "title": "LACC Events",
+            "content": [
+                {
+                    "date": "July 15",
+                    "time": "6:00 PM",
+                    "description": "Board Meeting"
+                },
+                {
+                    "date": "July 22",
+                    "time": "1:00 PM",
+                    "description": "Community Picnic"
+                }
+            ]
+        }
+    ]
+}

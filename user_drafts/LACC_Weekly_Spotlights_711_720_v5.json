@@ -1,0 +1,93 @@
+{
+    "settings": {
+        "bulletin_title": "LACC Weekly Spotlights",
+        "bulletin_date": "July 11, 2025",
+        "colors": {
+            "primary": "#005f73",
+            "secondary": "#343a40"
+        },
+        "google_api_key": "AIzaSyA-sWQA84PSyR13BS2AZmKEUNwmV9-cDIQ"
+    },
+    "sections": [
+        {
+            "type": "image",
+            "title": "",
+            "src": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/05/EmailHeader.png",
+            "alt": "LACC Email Header"
+        },
+        {
+            "type": "announcements",
+            "title": "Board of Directors Meeting",
+            "body": "Board of Directors Meeting\nSaturday, July 26 at 8:30 AM\nLACC Clubhouse\nMeeting ID: 815 8546 1840\nPasscode: 126015",
+            "link": "https://hoamco.zoom.us/j/81585461840?pwd=M1Il7qsatNDBWrlMblWaw2fUKGh8bK.1",
+            "link_text": "Join Zoom Meeting"
+        },
+        {
+            "type": "announcements",
+            "title": "Hole in One - Nick's Golf",
+            "body": "Get ready for some AMAZING excitement at the Invitational!  Nick's Custom Golf Carts is sponsoring a Hole-in-One contest on Hole #4 \u2013 and the prize?  A BRAND NEW golf cart!  That's right, a hole-in-one could mean you're driving home in style!\n",
+            "link": "https://www.laccmensgolf.com/store/p1/2025_LACC_Men%27s_Golf_Assn._Invitational_Golf_Tournament_July_18th_and_19th.html",
+            "link_text": "Sign Up Today"
+        },
+        {
+            "type": "announcements",
+            "title": "Kids Fishing",
+            "body": "Hey everyone! Get ready for some splashing good fun! This Wednesday, July 16th, we're having our LAST Kids' Fishing event of the season!  Two sessions are available: 9-10 am for 5-9 year olds and 10-11 am for 10-14 year olds.  It's just $5 per child, so sign your little anglers up ASAP\u2014spots are limited!\n",
+            "link": "https://lakealmanorcountryclub.com/sports-center/",
+            "link_text": "Read More"
+        },
+        {
+            "type": "announcements",
+            "title": "Fire Safe Council",
+            "body": "Join us for a Wildfire Aware & Prepared Gathering in Westwood on July 13th at 4:00 PM (3791 Big Springs Rd)!  Learn about home hardening, evacuation planning, and more.  Families welcome!  \n\ud83d\udcde For more info, contact Jan Davies at (530) 310-1956\n",
+            "link": "https://www.plumasfiresafe.org/",
+            "link_text": "Read More"
+        },
+        {
+            "type": "announcements",
+            "title": "Poker Paddle - Registration now open!",
+            "body": "Hey everyone! Registration is NOW OPEN for the Lake Almanor Poker Paddle on July 19th, 2025!  Limited to 100 paddlers, so sign up quick for this fun 5 or 8-mile paddle, lunch, and awesome swag!  See you on the lake!\n",
+            "link": "https://www.strideevents.com/events/poker-paddle/2025/register",
+            "link_text": "Click here to register!"
+        },
+        {
+            "type": "lacc_events",
+            "title": "LACC Events",
+            "content": [
+                {
+                    "date": "Monday, July 14",
+                    "time": "4:00 PM",
+                    "description": "Lovey Dovey Tournament",
+                    "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/06/LoveyDovey_20250714_L.png",
+                    "layout_style": "Card"
+                },
+                {
+                    "date": "Wednesday, July 16",
+                    "time": "11:00 AM",
+                    "description": "Game Day",
+                    "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/06/GameDay_20250716.png",
+                    "layout_style": "Card"
+                },
+                {
+                    "date": "Wednesday, July 16",
+                    "time": "6:00 PM",
+                    "description": "Music on the Patio\u2014Jim Carlsen",
+                    "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/07/20250716_JimCarlsen-1.jpg",
+                    "layout_style": "Card"
+                },
+                {
+                    "date": "Thursday, July 17",
+                    "time": "6:00 PM",
+                    "description": "Clubhouse Patio\u2014Karaoke",
+                    "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/06/KARAOKE_THURSDAY_JULY_17__6-8_PM.png",
+                    "layout_style": "Card"
+                }
+            ]
+        },
+        {
+            "type": "community_events",
+            "title": "Community Events",
+            "content": []
+        }
+    ]
+}

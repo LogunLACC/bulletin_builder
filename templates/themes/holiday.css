@@ -1,0 +1,9 @@
+/* Holiday Theme */
+body {
+    color: #1a531b; /* Dark Green */
+    font-family: 'Georgia', serif;
+}
+
+.section h2 {
+    color: #D32F2F; /* Festive Red */
+}

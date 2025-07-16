@@ -1,0 +1,60 @@
+{
+  "sections": [
+    {
+      "title": "Test Custom Text",
+      "type": "custom_text",
+      "content": "Testing Custom Text here.\n<h1>Testing html in custom text</h1>\n: )"
+    },
+    {
+      "title": "Test Events",
+      "type": "events",
+      "content": [
+        {
+          "date": "Tuesday, July 15",
+          "time": "15:42",
+          "description": "Test Event Event",
+          "image_url": "https://placehold.co/600x400?text=Hello+World"
+        }
+      ],
+      "layout_style": "Card"
+    },
+    {
+      "title": "Test Community Events",
+      "type": "community_events",
+      "content": [
+        {
+          "date": "NOW",
+          "time": "NOW",
+          "description": "Test Com Event",
+          "image_url": "https://placehold.co/600x400?text=The+End+Is+Nai"
+        }
+      ],
+      "layout_style": "Card"
+    },
+    {
+      "title": "Test LACC Events",
+      "type": "lacc_events",
+      "content": [
+        {
+          "date": "Later",
+          "time": "Late",
+          "description": "LACC Event",
+          "image_url": "https://placehold.co/600x400?text=Wait+for+it"
+        }
+      ],
+      "layout_style": "Card"
+    },
+    {
+      "title": "Test Image",
+      "type": "image",
+      "content": {},
+      "src": "https://placehold.co/600x400?text=Test+Image",
+      "alt": "Test Image"
+    },
+    {
+      "title": "Test Announcements",
+      "type": "announcements",
+      "content": {}
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{# This is the MASTER partial for all event sections #}
+{% if section.title %}
+    <h2>{{ section.title }}</h2>
+{% endif %}
+
+{% if section.content %}
+    {# GRID LAYOUT #}
+    {% if section.layout_style == 'Grid' %}
+        <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse; font-size: 0;">
+            <!-- Use the batch filter to group events into rows of 2 -->
+            {% for row in section.content|batch(2) %}
+            <tr>
+                {% for event in row %}
+                <td width="50%" style="padding-right: {% if loop.first %}10px{% else %}0{% endif %}; padding-left: {% if not loop.first %}10px{% else %}0{% endif %}; vertical-align: top; border: none;">
+                     <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse; margin-bottom: 20px;">
+                         <tr>
+                             <td style="border: none; padding: 0;">
+                                <a href="{{ event.image_url or '#' }}" target="_blank" style="margin: 0; padding: 0; text-decoration: none;">
+                                    <img src="{{ event.image_url or 'https://placehold.co/300x400/eeeeee/999999?text=No+Image' }}" alt="{{ event.description or 'Event' }}" style="width: 100%; height: auto; margin: 0; padding: 0; display: block; border-radius: 8px;" />
+                                </a>
+                             </td>
+                         </tr>
+                         <tr>
+                             <td style="border: none; padding: 10px 0; font-size: 14px;">
+                                <strong style="font-size: 1.1em; color: #333;">{{ event.description }}</strong><br>
+                                <span style="font-size: 0.9em; color: #666;">{{ event.date }} {% if event.time %}at {{ event.time }}{% endif %}</span>
+                             </td>
+                         </tr>
+                     </table>
+                </td>
+                {% endfor %}
+                {# If there's only one item in the last row, add an empty cell to maintain layout #}
+                {% if row|length == 1 %}
+                    <td width="50%" style="padding-left: 10px;"></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+
+    {# CARD LAYOUT (DEFAULT) #}
+    {% else %}
+        <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+            {% for event in section.content %}
+            <tr>
+                <td style="padding-bottom: 20px; border: none;">
+                    <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse; border: 1px solid #ddd; border-radius: 8px;">
+                        {% if event.image_url %}
+                        <tr>
+                            <td style="border: none; padding: 0;">
+                                 <a href="{{ event.image_url }}" target="_blank" style="margin: 0; padding: 0; text-decoration: none;">
+                                    <img src="{{ event.image_url }}" alt="{{ event.description or 'Event' }}" style="width: 100%; height: auto; margin: 0; padding: 0; display: block; border-radius: 8px 8px 0 0;" />
+                                </a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <td style="border: none; padding: 20px;">
+                                <strong style="font-size: 1.2em; color: #333;">{{ event.description }}</strong><br>
+                                <span style="font-size: 1em; color: {{ settings.colors.primary or '#005f73' }}; font-weight: bold;">{{ event.date }} {% if event.time %}at {{ event.time }}{% endif %}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% else %}
+    <p>No events scheduled.</p>
+{% endif %}

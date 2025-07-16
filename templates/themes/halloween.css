@@ -1,0 +1,9 @@
+/* Halloween Theme */
+body {
+    color: #212121; /* Near Black */
+    font-family: 'Courier New', monospace;
+}
+
+.section h2 {
+    color: #FF7043; /* Pumpkin Orange */
+}

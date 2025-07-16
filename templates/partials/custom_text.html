@@ -1,0 +1,7 @@
+{# This partial is for sections with type 'custom_text' #}
+{% if section.title %}
+    <h2>{{ section.title }}</h2>
+{% endif %}
+<p>
+    {{ section.content | replace('\n', '<br>') | safe }}
+</p>
