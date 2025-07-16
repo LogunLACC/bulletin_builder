@@ -1,0 +1,172 @@
+{
+    "settings": {
+        "bulletin_title": "LACC Weekly Spotlights",
+        "bulletin_date": "July 11, 2025",
+        "colors": {
+            "primary": "#005f73",
+            "secondary": "#343a40"
+        },
+        "google_api_key": "AIzaSyA-sWQA84PSyR13BS2AZmKEUNwmV9-cDIQ"
+    },
+    "sections": [
+        {
+            "type": "image",
+            "title": "",
+            "src": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/05/EmailHeader.png",
+            "alt": "LACC Email Header"
+        },
+        {
+            "type": "announcements",
+            "title": "Board of Directors Meeting",
+            "body": "Board of Directors Meeting\nSaturday, July 26 at 8:30 AM\nLACC Clubhouse\nMeeting ID: 815 8546 1840\nPasscode: 126015",
+            "link": "https://hoamco.zoom.us/j/81585461840?pwd=M1Il7qsatNDBWrlMblWaw2fUKGh8bK.1",
+            "link_text": "Join Zoom Meeting"
+        },
+        {
+            "type": "announcements",
+            "title": "Board of Control - Opening",
+            "body": "Calling all members!  We have an open position on the Board of Control.  Interested in applying? Download the application and submit by July 25th!  More details inside.\n",
+            "link": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/06/Committee-Interest-Form-2025.pdf",
+            "link_text": "Download Application Form"
+        },
+        {
+            "type": "announcements",
+            "title": "Hole in One - Nick's Golf",
+            "body": "Get ready for some AMAZING excitement at the Invitational!  Nick's Custom Golf Carts is sponsoring a Hole-in-One contest on Hole #4 \u2013 and the prize?  A BRAND NEW golf cart!  That's right, a hole-in-one could mean you're driving home in style!\n",
+            "link": "https://www.laccmensgolf.com/store/p1/2025_LACC_Men%27s_Golf_Assn._Invitational_Golf_Tournament_July_18th_and_19th.html",
+            "link_text": "Sign Up Today"
+        },
+        {
+            "type": "announcements",
+            "title": "Kids Fishing",
+            "body": "Hey everyone! Get ready for some splashing good fun! This Wednesday, July 16th, we're having our LAST Kids' Fishing event of the season!  Two sessions are available: 9-10 am for 5-9 year olds and 10-11 am for 10-14 year olds.  It's just $5 per child, so sign your little anglers up ASAP\u2014spots are limited!\n",
+            "link": "https://lakealmanorcountryclub.com/sports-center/",
+            "link_text": "Read More"
+        },
+        {
+            "type": "announcements",
+            "title": "Fire Safe Council",
+            "body": "Join us for a Wildfire Aware & Prepared Gathering in Westwood on July 13th at 4:00 PM (3791 Big Springs Rd)!  Learn about home hardening, evacuation planning, and more.  Families welcome!  \n\ud83d\udcde For more info, contact Jan Davies at (530) 310-1956\n",
+            "link": "https://www.plumasfiresafe.org/",
+            "link_text": "Read More"
+        },
+        {
+            "type": "announcements",
+            "title": "Poker Paddle - Registration now open!",
+            "body": "Hey everyone! Registration is NOW OPEN for the Lake Almanor Poker Paddle on July 19th, 2025!  Limited to 100 paddlers, so sign up quick for this fun 5 or 8-mile paddle, lunch, and awesome swag!  See you on the lake!\n",
+            "link": "https://www.strideevents.com/events/poker-paddle/2025/register",
+            "link_text": "Click here to register!"
+        },
+        {
+            "type": "lacc_events",
+            "title": "LACC Events Clubhouse",
+            "layout_style": "Card",
+            "content": [
+                {
+                    "date": "Monday, July 14",
+                    "time": "4:00 PM",
+                    "description": "Lovey Dovey Tournament",
+                    "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/06/LoveyDovey_20250714_L.png"
+                },
+                {
+                    "date": "Wednesday, July 16",
+                    "time": "11:00 AM",
+                    "description": "Game Day",
+                    "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/06/GameDay_20250716.png"
+                },
+                {
+                    "date": "Wednesday, July 16",
+                    "time": "6:00 PM",
+                    "description": "Music on the Patio\u2014Jim Carlsen",
+                    "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/07/20250716_JimCarlsen-1.jpg"
+                },
+                {
+                    "date": "Thursday, July 17",
+                    "time": "6:00 PM",
+                    "description": "Clubhouse Patio\u2014Karaoke",
+                    "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/06/KARAOKE_THURSDAY_JULY_17__6-8_PM.png"
+                },
+                {
+                    "date": "July 18-19",
+                    "time": "",
+                    "description": "2025 LACC Men's Golf Assn. Invitational Golf Tournament",
+                    "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/07/18-19-july-2023.jpg"
+                }
+            ]
+        },
+        {
+            "type": "lacc_events",
+            "title": "LACC Events Sports Center",
+            "layout_style": "Grid",
+            "content": [
+                {
+                    "date": "Wednesday, July 16",
+                    "time": "9:00 AM",
+                    "description": "Kids Fishing Lessons",
+                    "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/06/kids-fishing-Lessons.png"
+                },
+                {
+                    "date": "Daily",
+                    "time": "Various",
+                    "description": "Group Lessons\u2014Tennis and Pickleball",
+                    "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/06/Pickleball-and-Tennis-Lesson-Flyer.png"
+                },
+                {
+                    "date": "Daily",
+                    "time": "Various",
+                    "description": "Lost Range Balls and Baskets",
+                    "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/06/Lost-BALLS.png"
+                },
+                {
+                    "date": "Tuesdays and Tursdays",
+                    "time": "9:00 AM or 9:45 AM",
+                    "description": "Private Lessons\u2014Tennis and Pickleball",
+                    "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/06/LACC-SC-Private-Lessons-2.png"
+                }
+            ]
+        },
+        {
+            "type": "community_events",
+            "title": "Community Events",
+            "layout_style": "Grid",
+            "content": [
+                {
+                    "date": "Saturday, July 26",
+                    "time": "3:00 PM",
+                    "description": "AFA Founders' Family BBQ & Fundraiser",
+                    "image_url": "https://scontent-lax3-2.xx.fbcdn.net/v/t39.30808-6/517366555_1061716889431819_4095400929050791837_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=JZXEfe4MDB0Q7kNvwHfTTxn&_nc_oc=AdkvEwtDDFkMx8EESFaiUfeFv0fcnqgLEz5IIsnF2Yq0C7QNAXv1KRpWVZghw4UsaYU&_nc_zt=23&_nc_ht=scontent-lax3-2.xx&_nc_gid=CVOyaGS_ubVdDqUTHTlxAA&oh=00_AfS8c7MmRpFBzQXHjR6x0wDOFjDzjmOkdaq-UCokkGpepg&oe=68775B7E"
+                },
+                {
+                    "date": "Saturday, August 16",
+                    "time": "10:00 AM",
+                    "description": "Courage Triathlon",
+                    "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/07/1000029804.png"
+                },
+                {
+                    "date": "Saturday, July 19",
+                    "time": "All Day",
+                    "description": "Gold Diggers - 63rd Annual",
+                    "image_url": "https://scontent-lax3-2.xx.fbcdn.net/v/t39.30808-6/510792503_122126773148818058_6237582766370698241_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=101&ccb=1-7&_nc_sid=127cfc&_nc_ohc=yFJ5ZUbJ4mAQ7kNvwHT5k7I&_nc_oc=AdmMZ1aRaJtf-NjH-twbMglxCDdKKnG0EsoS8Td9OpzfojrJjgQ2dFAyoDDoH0uVTs0&_nc_zt=23&_nc_ht=scontent-lax3-2.xx&_nc_gid=yvvKDF1Nsfv8NIU4pJuR-w&oh=00_AfReAz3tklPyTGtLh2CZkyoJUmEdPBWkqQT6PFYvIEp94w&oe=68776153"
+                },
+                {
+                    "date": "Saturday, July 19",
+                    "time": "11:00 AM - 2:00 PM",
+                    "description": "Classic Car Show",
+                    "image_url": "https://scontent-lax3-2.xx.fbcdn.net/v/t39.30808-6/513037148_122126775344818058_376436147305266592_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_ohc=FcnAoEQ6wEYQ7kNvwGJq40J&_nc_oc=AdnbfpEiGf4NcVxA4jQQY2NsNZISmg2Fb3VuEIi4YmJCQk1Xm9sztDgajKTZV6fPXc4&_nc_zt=23&_nc_ht=scontent-lax3-2.xx&_nc_gid=0F-u2SzgGX0iic6slscVSA&oh=00_AfRCxe1zFJ9T4k91M1-8hG_nclVD3jMsSMpt8jNZF3GBcA&oe=68777DA2"
+                }
+            ]
+        },
+        {
+            "type": "image",
+            "title": "Lassen County Fair - July 16\u201420",
+            "src": "https://lassencountyfair.org/wp-content/uploads/2025/05/Lassen-2025-Event-Cover-copy.jpg",
+            "alt": "Lassen County Fair"
+        },
+        {
+            "type": "image",
+            "title": "Chester Community Blood Drive",
+            "src": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/07/BloodDrive-scaled.jpg",
+            "alt": "Chester Community Blood Drive"
+        }
+    ]
+}

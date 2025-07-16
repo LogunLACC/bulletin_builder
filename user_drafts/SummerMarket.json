@@ -1,0 +1,26 @@
+{
+    "settings": {
+        "bulletin_title": "LACC Weekly",
+        "bulletin_date": "July 10, 2025",
+        "colors": {
+            "primary": "#005f73",
+            "secondary": "#343a40"
+        },
+        "google_api_key": ""
+    },
+    "sections": [
+        {
+            "type": "image",
+            "title": "Lake Almanor Summer Market",
+            "src": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/07/Mooseymetruckerhatco-Flyer.jpg",
+            "alt": "Lake Almanor Summer Market"
+        },
+        {
+            "type": "announcements",
+            "title": "Lake Almanor Summer Market",
+            "body": "Moosey & Me Trucker Hat Co. Presents\nLake Almanor Summer Market\nFriday, July 11th from 11am-6pm\n1036 Peninsula Dr\nLake Almanor, CA  96137\n\nFlower Bar, Permanent Jewelry, Food Trucks, Custom Hat Bar, Baked Goods, Mobile Bar, and Much More.",
+            "link": "https://lakealmanorcountryclub.com/event/crafts-faire/",
+            "link_text": "Calendar Link"
+        }
+    ]
+}

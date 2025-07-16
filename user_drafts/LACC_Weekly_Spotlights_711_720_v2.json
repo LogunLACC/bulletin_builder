@@ -1,0 +1,56 @@
+{
+    "settings": {
+        "bulletin_title": "LACC Weekly Spotlights",
+        "bulletin_date": "July 11, 2025",
+        "colors": {
+            "primary": "#182c45",
+            "secondary": "#5a6a7a"
+        },
+        "google_api_key": "AIzaSyA-sWQA84PSyR13BS2AZmKEUNwmV9-cDIQ"
+    },
+    "sections": [
+        {
+            "type": "image",
+            "title": "",
+            "src": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/05/EmailHeader.png",
+            "alt": "LACC Email Header"
+        },
+        {
+            "type": "announcements",
+            "title": "Board of Directors Meeting",
+            "body": "Board of Directors Meeting\nSaturday, July 26 at 8:30 AM\nLACC Clubhouse\nMeeting ID: 815 8546 1840\nPasscode: 126015",
+            "link": "https://hoamco.zoom.us/j/81585461840?pwd=M1Il7qsatNDBWrlMblWaw2fUKGh8bK.1",
+            "link_text": "Join Zoom Meeting"
+        },
+        {
+            "type": "announcements",
+            "title": "Important Announcement",
+            "body": "Get ready for a HOLE IN ONE opportunity!  Nick's Custom Golf Carts is sponsoring a Hole-in-One contest at the Invitational Tournament.  Sink a shot on Hole 4 and win a brand new golf cart!  More details inside!\n",
+            "link": "https://lakealmanorcountryclub.frontsteps.com/community_events/QDe8wbFxzwmozL3Bdjmr8zXouS81eRK9agrr",
+            "link_text": "Calendar Link"
+        },
+        {
+            "type": "custom_text",
+            "title": "Welcome Message",
+            "content": "Hello everyone!\nThis is a test."
+        },
+        {
+            "type": "events",
+            "title": "LACC Events",
+            "content": [
+                {
+                    "date": "Wed, July 16",
+                    "time": "11:00 AM",
+                    "description": "Game Day",
+                    "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/06/GameDay_20250716.png"
+                },
+                {
+                    "date": "Mon, July 14",
+                    "time": "4:00 PM",
+                    "description": "Lovey Dovey Tournament",
+                    "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/06/LoveyDovey_20250714_L.png"
+                }
+            ]
+        }
+    ]
+}

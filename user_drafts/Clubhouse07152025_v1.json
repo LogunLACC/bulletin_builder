@@ -1,0 +1,32 @@
+{
+    "settings": {
+        "bulletin_title": "LACC Weekly",
+        "bulletin_date": "July 11, 2025",
+        "theme_css": "default.css",
+        "colors": {
+            "primary": "#005f73",
+            "secondary": "#343a40"
+        }
+    },
+    "sections": [
+        {
+            "type": "lacc_events",
+            "title": "Clubhouse Events",
+            "content": [
+                {
+                    "date": "Wed, July 16",
+                    "time": "6:00 PM",
+                    "description": "Music on the Patio: Jim Carlsen",
+                    "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/07/20250716_JimCarlsen-1.jpg"
+                },
+                {
+                    "date": "Thur, July 17",
+                    "time": "6:00 PM",
+                    "description": "Karaoke",
+                    "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/06/KARAOKE_THURSDAY_JULY_17__6-8_PM.png"
+                }
+            ],
+            "layout_style": "Grid"
+        }
+    ]
+}

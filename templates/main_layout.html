@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="header">
+        <h1>{{ settings.bulletin_title or 'Weekly Bulletin' }}</h1>
+        {% if settings.bulletin_date %}
+        <p>{{ settings.bulletin_date }}</p>
+        {% endif %}
+    </div>
+
+    {% for section in sections %}
+        <div class="section">
+            {# Intelligently choose the correct template #}
+            {% if 'events' in section.type %}
+                {# If the type contains 'events', use the master events partial #}
+                {% include 'partials/events.html' with context %}
+            {% elif section.type %}
+                {# Otherwise, use the specific partial for that type #}
+                {% include ['partials/' ~ section.type ~ '.html', 'partials/default.html'] ignore missing with context %}
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endblock %}
