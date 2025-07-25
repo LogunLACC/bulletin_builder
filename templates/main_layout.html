@@ -8,8 +8,18 @@
         {% endif %}
     </div>
 
+    {% if sections %}
+    <ul class="toc">
+        {% for section in sections %}
+            {% if section.title %}
+            <li><a href="#section-{{ loop.index }}">{{ section.title }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+
     {% for section in sections %}
-        <div class="section">
+        <div class="section" id="section-{{ loop.index }}">
             {# Intelligently choose the correct template #}
             {% if 'events' in section.type %}
                 {# If the type contains 'events', use the master events partial #}
