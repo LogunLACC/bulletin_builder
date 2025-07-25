@@ -2,6 +2,7 @@
 import customtkinter as ctk
 import tkinter.messagebox as messagebox
 from pathlib import Path
+import concurrent.futures
 
 import google.generativeai as genai
 
@@ -39,6 +40,9 @@ def init(app):
     app.progress = ctk.CTkProgressBar(app, mode="indeterminate")
     app.progress.place(relx=0.5, rely=0.5, anchor="center")
     app.progress.lower()
+
+    # Executor for threaded background tasks like exporting
+    app._thread_executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
 
      # --- AI callback ---
     def ai_callback(prompt: str) -> str:
