@@ -2,6 +2,9 @@
 
 import tempfile
 import webbrowser
+from pathlib import Path
+from tkinter import filedialog
+
 from premailer import transform
 from weasyprint import HTML
 
@@ -21,8 +24,8 @@ def init(app):
     def _do_export_pdf():
         settings = app.settings_frame.dump()
         html = app.renderer.render_html(app.sections_data, settings)
-        base = app.templates_dir.as_uri() + "/"
-        path = app.file_dialog.asksaveasfilename(
+        base = app.renderer.templates_dir.as_uri() + "/"
+        path = filedialog.asksaveasfilename(
             defaultextension=".pdf",
             filetypes=[("PDF Documents","*.pdf")],
             initialdir="./user_drafts",
