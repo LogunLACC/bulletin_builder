@@ -44,6 +44,21 @@
             color: {{ settings.colors.primary or '#1F6AA5' }};
             margin-top: 0;
         }
+        .toc {
+            list-style: none;
+            margin: 20px;
+            padding: 0;
+        }
+        .toc li {
+            margin-bottom: 5px;
+        }
+        .toc a {
+            color: {{ settings.colors.primary or '#1F6AA5' }};
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
         /* --- THEME STYLES INJECTED HERE --- */
         {{ theme_styles | safe }}
     </style>
