@@ -99,11 +99,25 @@ def init(app):
     ctk.CTkButton(ctrl, text="Open in Browser", command=app.open_in_browser).pack(side="left", padx=5)
 
     app.preview_mode_toggle = ctk.CTkSegmentedButton(
-        ctrl, values=["Rendered","Code"], command=app.toggle_preview_mode
+        ctrl, values=["Rendered", "Code"], command=app.toggle_preview_mode
     )
     app.preview_mode_toggle.set("Rendered")
     app.preview_mode_toggle.pack(side="left", padx=5)
 
-    app.rendered_preview = HTMLLabel(prev, background="white")
-    app.code_preview     = ctk.CTkTextbox(prev, wrap="word", font=("Courier New",12))
+    app.device_mode_toggle = ctk.CTkSegmentedButton(
+        ctrl,
+        values=["Desktop", "Tablet", "Mobile"],
+        command=app.set_preview_device,
+    )
+    app.device_mode_toggle.set("Desktop")
+    app.device_mode_toggle.pack(side="left", padx=5)
+
+    app.preview_area = ctk.CTkFrame(prev)
+    app.preview_area.pack(padx=10, pady=10)
+    app.preview_area.pack_propagate(False)
+
+    app.rendered_preview = HTMLLabel(app.preview_area, background="white")
+    app.code_preview = ctk.CTkTextbox(app.preview_area, wrap="word", font=("Courier New", 12))
     # neither packed until toggle
+
+    app.set_preview_device("Desktop")
