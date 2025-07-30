@@ -28,6 +28,7 @@ def init(app):
     tools_menu = tk.Menu(menubar, tearoff=0)
     tools_menu.add_command(label="WYSIWYG Editor", command=app.open_wysiwyg_editor)
     tools_menu.add_command(label="Template Gallery", command=app.open_template_gallery)
+    tools_menu.add_command(label="Component Library", command=app.open_component_library)
     tools_menu.add_separator()
     tools_menu.add_command(label="Import Announcements CSV...", command=app.import_announcements_csv)
     tools_menu.add_command(label="Import Announcements from Sheet...", command=app.import_announcements_sheet)
