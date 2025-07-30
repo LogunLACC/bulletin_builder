@@ -48,7 +48,7 @@
     "acceptance": "User can generate bulletins from structured sheet rows with minimal input."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Dark mode editor theme toggle",
     "action": "Add a toggle in the GUI to switch between light and dark editing modes for eye comfort.",
     "acceptance": "GUI theme updates dynamically when toggled."
