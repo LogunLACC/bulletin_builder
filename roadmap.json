@@ -120,7 +120,7 @@
     "acceptance": "Bulletin automatically displays events grouped and sorted in a user-friendly way."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Event Image Auto-Resizer",
     "action": "Resize and crop event images for consistent formatting (e.g., 4:3 ratio, max width).",
     "acceptance": "All event images appear uniform and do not distort the bulletin layout."
