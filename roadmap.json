@@ -60,7 +60,7 @@
     "acceptance": "User can enter their email and receive the bulletin in their inbox as a test."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Markdown support in text editor",
     "action": "Allow advanced users to write markdown that auto-renders to styled HTML in the bulletin preview.",
     "acceptance": "User inputted markdown is rendered correctly and styled appropriately in the output."

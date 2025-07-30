@@ -7,3 +7,8 @@ body {
 .section h2 {
     color: #005f73;
 }
+
+.custom-text, .announcement-body {
+    line-height: 1.6;
+}
+
