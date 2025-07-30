@@ -1,0 +1,170 @@
+[
+  {
+    "status": "todo",
+    "title": "Convert to src-based project structure",
+    "action": "Move main application code into src/bulletin_builder/, create __init__.py, and update imports accordingly.",
+    "acceptance": "App runs from CLI and tests still pass using new structure."
+  },
+  {
+    "status": "todo",
+    "title": "Add basic PyInstaller packaging",
+    "action": "Add PyInstaller spec file and script to build a standalone executable for Windows and MacOS.",
+    "acceptance": "Users can run bulletin_builder.exe without installing Python."
+  },
+  {
+    "status": "todo",
+    "title": "Create drag-and-drop WYSIWYG editor",
+    "action": "Add a visual editor using tkinter or PyQt5 to let users drag text blocks, images, buttons, and sections to design a bulletin.",
+    "acceptance": "User can preview and rearrange layout visually and export to HTML."
+  },
+  {
+    "status": "todo",
+    "title": "Template gallery with previews",
+    "action": "Create a system for saving and loading reusable HTML templates with thumbnail previews.",
+    "acceptance": "User can browse templates visually and apply them with a click."
+  },
+  {
+    "status": "todo",
+    "title": "Responsive layout preview",
+    "action": "Add toggle for desktop, tablet, and mobile preview modes within the GUI using a scaled iframe or equivalent.",
+    "acceptance": "User can preview how the email/bulletin will look on different screen sizes."
+  },
+  {
+    "status": "todo",
+    "title": "Auto image optimizer",
+    "action": "Compress and resize images during import to reduce email size while retaining quality.",
+    "acceptance": "Image uploads are optimized and result in significantly smaller HTML output size."
+  },
+  {
+    "status": "todo",
+    "title": "Add calendar event exporter (.ics)",
+    "action": "Allow user to add event info and export ICS files for email invites or to embed calendar links.",
+    "acceptance": "User can download a valid .ics file matching event details entered."
+  },
+  {
+    "status": "todo",
+    "title": "Google Sheets & CSV integration for announcements",
+    "action": "Allow loading tabular event data from Google Sheets or CSV files to auto-generate content blocks.",
+    "acceptance": "User can generate bulletins from structured sheet rows with minimal input."
+  },
+  {
+    "status": "todo",
+    "title": "Dark mode editor theme toggle",
+    "action": "Add a toggle in the GUI to switch between light and dark editing modes for eye comfort.",
+    "acceptance": "GUI theme updates dynamically when toggled."
+  },
+  {
+    "status": "todo",
+    "title": "One-click email preview & test send",
+    "action": "Integrate a basic SMTP client to allow previewing bulletins by sending them to an email address.",
+    "acceptance": "User can enter their email and receive the bulletin in their inbox as a test."
+  },
+  {
+    "status": "todo",
+    "title": "Markdown support in text editor",
+    "action": "Allow advanced users to write markdown that auto-renders to styled HTML in the bulletin preview.",
+    "acceptance": "User inputted markdown is rendered correctly and styled appropriately in the output."
+  },
+  {
+    "status": "todo",
+    "title": "Auto-generate subject line suggestions with AI",
+    "action": "Use OpenAI API to suggest catchy subject lines based on bulletin content.",
+    "acceptance": "User can click 'Suggest Subject' and receive 3+ AI-generated ideas."
+  },
+  {
+    "status": "todo",
+    "title": "Undo/redo functionality in editor",
+    "action": "Track changes and allow users to undo and redo edits made during the session.",
+    "acceptance": "User can click undo/redo buttons to revert changes with visual feedback."
+  },
+  {
+    "status": "todo",
+    "title": "Content block library",
+    "action": "Create a library of reusable components like event blocks, contact info, map links, etc.",
+    "acceptance": "User can insert a pre-made block and it renders styled in the output."
+  },
+  {
+    "status": "todo",
+    "title": "Real-time HTML + plain text export",
+    "action": "Add simultaneous generation of plain-text fallback email versions for accessibility and deliverability.",
+    "acceptance": "Both HTML and text versions are exported and styled appropriately."
+  },
+  {
+    "status": "todo",
+    "title": "Keyboard shortcut support",
+    "action": "Add keyboard navigation for power users: e.g., Ctrl+S to save, Ctrl+Z to undo, etc.",
+    "acceptance": "Documented shortcuts work reliably in the editor interface."
+  },
+  {
+    "status": "todo",
+    "title": "Live changelog sidebar",
+    "action": "Display live summary of edits made in current session (add image, edited block, changed style).",
+    "acceptance": "Sidebar shows list of actions with timestamps as user makes changes."
+  },
+  {
+    "status": "todo",
+    "title": "Add Community Events Feed Integration",
+    "action": "Add a module to fetch event data (title, date, time, image) from a remote source like Google Sheets, JSON API, or WebCal.",
+    "acceptance": "User can import events from a public URL or connected sheet and preview them in the bulletin builder."
+  },
+  {
+    "status": "todo",
+    "title": "Auto-Generate Event Blocks from Feed",
+    "action": "Parse each fetched event into a styled content block and insert them with default formatting (e.g., header, image, time).",
+    "acceptance": "User can see cleanly formatted event blocks added automatically and can edit them if needed."
+  },
+  {
+    "status": "todo",
+    "title": "Smart Event Sorting and Grouping",
+    "action": "Sort events chronologically and group by date headers (e.g., 'This Week', 'Next Week', etc).",
+    "acceptance": "Bulletin automatically displays events grouped and sorted in a user-friendly way."
+  },
+  {
+    "status": "todo",
+    "title": "Event Image Auto-Resizer",
+    "action": "Resize and crop event images for consistent formatting (e.g., 4:3 ratio, max width).",
+    "acceptance": "All event images appear uniform and do not distort the bulletin layout."
+  },
+  {
+    "status": "todo",
+    "title": "Add ‘Smart Suggestions’ Panel",
+    "action": "Analyze recent bulletin content and suggest block types (e.g., if many events: suggest adding a 'Community Highlights' banner).",
+    "acceptance": "User receives real-time layout suggestions based on bulletin content and patterns."
+  },
+  {
+    "status": "todo",
+    "title": "Link Event Feed to Admin Calendar",
+    "action": "Enable auto-sync from community calendars like Google Calendar, Airtable, or a JSON endpoint (e.g., lakealmanorcountryclub.com/data/events.json).",
+    "acceptance": "Events can be imported and previewed from a connected calendar feed with minimal setup."
+  },
+  {
+    "status": "todo",
+    "title": "Recurring Events Handling",
+    "action": "Detect recurring events and allow user to select which occurrences to include.",
+    "acceptance": "User can include only upcoming events or specific days from recurring schedules (e.g., Yoga every Tuesday)."
+  },
+  {
+    "status": "todo",
+    "title": "Bulletin Section Recommender AI",
+    "action": "Based on the imported events, suggest sections such as 'Top Picks', 'Kids Events', 'Live Music', etc.",
+    "acceptance": "User sees smart prompts to categorize event content and can accept or modify sections."
+  },
+  {
+    "status": "todo",
+    "title": "User-Defined Event Tags and Filtering",
+    "action": "Allow custom tags (e.g., 'Family', 'Free', 'Concert') for events and enable filtering during import.",
+    "acceptance": "User can filter events by tag and group them visually in the bulletin."
+  },
+  {
+    "status": "todo",
+    "title": "Event Conflict Detection",
+    "action": "Analyze times of imported events and flag overlaps or double-bookings to the user.",
+    "acceptance": "User is alerted when two events share overlapping time slots and can adjust layout accordingly."
+  },
+  {
+    "status": "todo",
+    "title": "Add Event Link + Map Button Support",
+    "action": "Each event block supports adding an external link (to website or map). Auto-format as a styled button.",
+    "acceptance": "User can click a 'View Map' or 'More Info' button on each event block."
+  }
+]
