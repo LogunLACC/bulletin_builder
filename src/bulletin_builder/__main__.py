@@ -1,7 +1,7 @@
 import os
 import customtkinter as ctk
-from app_core.loader import init_app
-from app_core.config import save_api_key
+from .app_core.loader import init_app
+from .app_core.config import save_api_key
 
 class BulletinBuilderApp(ctk.CTk):
     """
@@ -31,9 +31,7 @@ if __name__ == '__main__':
         'templates/partials',
         'templates/themes',
         'user_drafts',
-        'assets',
-        'ui',
-        'app_core'
+        'assets'
     ]:
         os.makedirs(d, exist_ok=True)
 

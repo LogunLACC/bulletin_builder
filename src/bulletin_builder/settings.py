@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Dict, Optional
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -10,7 +11,7 @@ class Settings:
         "primary": "#1F6AA5",
         "secondary": "#333333",
     })
-    template_path: str = "templates"
+    template_path: str = str(Path(__file__).resolve().parent / "templates")
     theme_css: Optional[str] = None  # e.g. "club_theme.css"
 
     @property

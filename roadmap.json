@@ -1,6 +1,6 @@
 [
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Convert to src-based project structure",
     "action": "Move main application code into src/bulletin_builder/, create __init__.py, and update imports accordingly.",
     "acceptance": "App runs from CLI and tests still pass using new structure."
