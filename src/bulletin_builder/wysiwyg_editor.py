@@ -89,3 +89,19 @@ class WysiwygEditor(ctk.CTkToplevel):
             with open(path, 'w', encoding='utf-8') as f:
                 f.write("\n".join(html_lines))
 
+def launch_gui():
+    import os
+    from .__main__ import BulletinBuilderApp
+
+    # ✅ Ensure required folders exist
+    for d in [
+        'templates/partials',
+        'templates/themes',
+        'user_drafts',
+        'assets'
+    ]:
+        os.makedirs(d, exist_ok=True)
+
+    # ✅ Launch the real builder
+    app = BulletinBuilderApp()
+    app.mainloop()

@@ -2,6 +2,8 @@ import os
 import customtkinter as ctk
 from .app_core.loader import init_app
 from .app_core.config import save_api_key
+import argparse
+from .wysiwyg_editor import launch_gui
 
 class BulletinBuilderApp(ctk.CTk):
     """
@@ -24,6 +26,18 @@ class BulletinBuilderApp(ctk.CTk):
     def populate_test_data(self):
         """Optional: load some sections for testing; no-op by default."""
         pass
+
+def main():
+    parser = argparse.ArgumentParser(description="Bulletin Builder CLI")
+    parser.add_argument("--gui", action="store_true", help="Launch the WYSIWYG editor")
+    args = parser.parse_args()
+
+    if args.gui:
+        print("📰 Bulletin Builder CLI is running!")
+        launch_gui()
+    else:
+        print("📰 CLI mode coming soon! Use '--gui' to launch the editor.")
+
 
 if __name__ == '__main__':
     # Ensure required directories exist

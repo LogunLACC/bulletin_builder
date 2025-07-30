@@ -31,12 +31,20 @@ class BulletinRenderer:
         """
         Renders the final HTML for the bulletin, injecting theme styles.
         """
+        from bulletin_builder.settings import Settings  # ✅ Import your settings class
+
         if settings is None:
-            settings = {}
-        
+            settings = Settings()
+        elif isinstance(settings, dict):
+            try:
+                settings = Settings(**settings)
+            except Exception as e:
+                print(f"Failed to cast dict to Settings object: {e}")
+                settings = Settings()
+
         # --- Theme Loading Logic ---
         theme_styles = ""
-        theme_filename = settings.get("theme_css")
+        theme_filename = settings.theme_css
         if theme_filename:
             theme_path = self.templates_dir / "themes" / theme_filename
             if theme_path.is_file():
@@ -50,13 +58,14 @@ class BulletinRenderer:
         try:
             tpl_name = template_name or self.template_name
             template = self.env.get_template(tpl_name)
-            
+
             html_output = template.render(
                 sections=sections_data,
                 settings=settings,
-                theme_styles=theme_styles # Pass the loaded CSS to the template
+                theme_styles=theme_styles
             )
             return html_output
         except Exception as e:
             print(f"Error rendering template: {e}")
             return f"<html><body><h1>Template Render Error</h1><p>{e}</p></body></html>"
+
