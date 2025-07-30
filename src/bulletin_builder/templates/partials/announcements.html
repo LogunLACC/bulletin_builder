@@ -4,9 +4,9 @@
 {% endif %}
 
 {% if section.body %}
-    <p>
-        {{ section.body | replace('\n', '<br>') | safe }}
-    </p>
+    <div class="announcement-body">
+        {{ section.body | markdown | safe }}
+    </div>
 {% endif %}
 
 {% if section.link and section.link_text %}
@@ -22,3 +22,4 @@
         </a>
     </p>
 {% endif %}
+
