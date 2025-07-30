@@ -19,7 +19,7 @@ def init(app):
             app.sections_data.clear()
             app.current_draft_path = None
             if hasattr(app.settings_frame,'load_data'):
-                app.settings_frame.load_data(_default_settings(), app.google_api_key)
+                app.settings_frame.load_data(_default_settings(), app.google_api_key, app.openai_api_key)
             app.renderer.set_template('main_layout.html')
             app.refresh_listbox_titles()
             app.show_placeholder()
@@ -39,7 +39,11 @@ def init(app):
         app.renderer.set_template(data.get('template_name', 'main_layout.html'))
         settings = data.get('settings', _default_settings())
         if hasattr(app.settings_frame,'load_data'):
-            app.settings_frame.load_data(settings, settings.get('google_api_key',app.google_api_key))
+            app.settings_frame.load_data(
+                settings,
+                settings.get('google_api_key', app.google_api_key),
+                settings.get('openai_api_key', app.openai_api_key)
+            )
         app.refresh_listbox_titles()
         app.show_placeholder()
         app.update_preview()
