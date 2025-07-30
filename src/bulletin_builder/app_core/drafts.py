@@ -9,6 +9,7 @@ def init(app):
             'bulletin_title': 'LACC Bulletin',
             'bulletin_date': date.today().strftime('%A, %B %d, %Y'),
             'theme_css': 'default.css',
+            'appearance_mode': 'Dark',
             'colors': {'primary':'#103040','secondary':'#506070'},
             'google_api_key': app.google_api_key
         }
