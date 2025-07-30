@@ -18,7 +18,7 @@
     "acceptance": "User can preview and rearrange layout visually and export to HTML."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Template gallery with previews",
     "action": "Create a system for saving and loading reusable HTML templates with thumbnail previews.",
     "acceptance": "User can browse templates visually and apply them with a click."

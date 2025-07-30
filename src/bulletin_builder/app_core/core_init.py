@@ -34,7 +34,7 @@ def init(app):
 
     # --- Renderer setup ---
     tpl_dir = Path(__file__).parent.parent / "templates"
-    app.renderer = BulletinRenderer(templates_dir=tpl_dir)
+    app.renderer = BulletinRenderer(templates_dir=tpl_dir, template_name='main_layout.html')
 
     # --- Progress indicator ---
     app.progress = ctk.CTkProgressBar(app, mode="indeterminate")

@@ -1,24 +1,33 @@
 import os
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from typing import Optional
 
 class BulletinRenderer:
-    def __init__(self, templates_dir):
+    def __init__(self, templates_dir, template_name: str = "main_layout.html"):
         """
         Initializes the renderer.
         Args:
             templates_dir (str or Path): The path to the main templates directory.
         """
         self.templates_dir = Path(templates_dir)
+        self.template_name = template_name
         if not self.templates_dir.is_dir():
             raise FileNotFoundError(f"Templates directory not found at: {self.templates_dir}")
 
         self.env = Environment(
-            loader=FileSystemLoader(self.templates_dir),
+            loader=FileSystemLoader([
+                self.templates_dir,
+                self.templates_dir / "gallery",
+            ]),
             autoescape=select_autoescape(['html', 'xml'])
         )
 
-    def render_html(self, sections_data: list, settings: dict = None) -> str:
+    def set_template(self, name: str):
+        """Change the layout template used for rendering."""
+        self.template_name = name
+
+    def render_html(self, sections_data: list, settings: dict = None, template_name: Optional[str] = None) -> str:
         """
         Renders the final HTML for the bulletin, injecting theme styles.
         """
@@ -39,7 +48,8 @@ class BulletinRenderer:
                 print(f"Theme file not found: {theme_path}")
 
         try:
-            template = self.env.get_template("main_layout.html")
+            tpl_name = template_name or self.template_name
+            template = self.env.get_template(tpl_name)
             
             html_output = template.render(
                 sections=sections_data,
