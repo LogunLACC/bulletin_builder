@@ -54,7 +54,7 @@
     "acceptance": "GUI theme updates dynamically when toggled."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "One-click email preview & test send",
     "action": "Integrate a basic SMTP client to allow previewing bulletins by sending them to an email address.",
     "acceptance": "User can enter their email and receive the bulletin in their inbox as a test."

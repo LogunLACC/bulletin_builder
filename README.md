@@ -22,10 +22,11 @@
 
 - Add / remove / reorder sections  
 - Preview in‑app (HTML via `tkhtmlview`) or open browser  
-- Export to PDF via WeasyPrint  
-- Copy email‑ready HTML to clipboard  
-- Pluggable “sections” architecture for custom text, events, images, announcements  
-- Themeable: pick CSS file, colors, title/date, Google AI key integration  
+- Export to PDF via WeasyPrint
+- Copy email‑ready HTML to clipboard
+- Send preview emails via configurable SMTP server
+- Pluggable “sections” architecture for custom text, events, images, announcements
+- Themeable: pick CSS file, colors, title/date, Google AI key integration
 
 ---
 
@@ -60,4 +61,22 @@ python scripts/build_exe.py
 The resulting `bulletin_builder` directory contains an executable that can be
 distributed to users on the same platform (Windows or macOS) without needing a
 Python installation.
+
+### SMTP Configuration
+
+To use the **Send Test Email** feature, update `config.ini` with your SMTP
+credentials:
+
+```ini
+[smtp]
+host = "smtp.example.com"
+port = 587
+username = "your_username"
+password = "your_password"
+from_addr = "Bulletin Builder <user@example.com>"
+use_tls = true
+```
+
+After configuring, click **Send Test Email...** in the app and enter the
+destination address to receive a preview message.
 
