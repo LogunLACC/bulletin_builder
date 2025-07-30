@@ -24,6 +24,11 @@ def init(app):
     filemenu.add_separator()
     filemenu.add_command(label="Exit", command=app.quit)
     menubar.add_cascade(label="File", menu=filemenu)
+
+    tools_menu = tk.Menu(menubar, tearoff=0)
+    tools_menu.add_command(label="WYSIWYG Editor", command=app.open_wysiwyg_editor)
+    menubar.add_cascade(label="Tools", menu=tools_menu)
+
     app.config(menu=menubar)
 
     # --- Main Layout (Tabs + Status Bar) ---
