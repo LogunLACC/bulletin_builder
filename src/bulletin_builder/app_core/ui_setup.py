@@ -27,6 +27,7 @@ def init(app):
 
     tools_menu = tk.Menu(menubar, tearoff=0)
     tools_menu.add_command(label="WYSIWYG Editor", command=app.open_wysiwyg_editor)
+    tools_menu.add_command(label="Template Gallery", command=app.open_template_gallery)
     menubar.add_cascade(label="Tools", menu=tools_menu)
 
     app.config(menu=menubar)
