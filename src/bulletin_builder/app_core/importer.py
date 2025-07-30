@@ -3,6 +3,8 @@ import io
 import urllib.request
 from tkinter import filedialog, messagebox, simpledialog
 
+from ..event_feed import fetch_events
+
 
 def init(app):
     """Attach CSV/Google Sheets import handlers onto app."""
@@ -56,5 +58,29 @@ def init(app):
             return
         _rows_to_sections(rows)
 
+    def import_events_feed():
+        url = simpledialog.askstring('Events Feed URL', 'Enter events JSON/CSV URL:')
+        if not url:
+            return
+        try:
+            events = fetch_events(url)
+        except Exception as e:
+            messagebox.showerror('Import Error', str(e))
+            return
+        if not events:
+            messagebox.showinfo('Import Events', 'No events found.')
+            return
+        app.sections_data.append({
+            'title': 'Community Events',
+            'type': 'community_events',
+            'content': events,
+            'layout_style': 'Card'
+        })
+        app.refresh_listbox_titles()
+        app.show_placeholder()
+        app.update_preview()
+        app.show_status_message(f"Imported {len(events)} events")
+
     app.import_announcements_csv = import_csv_file
     app.import_announcements_sheet = import_google_sheet
+    app.import_events_feed = import_events_feed

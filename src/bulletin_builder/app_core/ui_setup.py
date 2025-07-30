@@ -32,6 +32,7 @@ def init(app):
     tools_menu.add_separator()
     tools_menu.add_command(label="Import Announcements CSV...", command=app.import_announcements_csv)
     tools_menu.add_command(label="Import Announcements from Sheet...", command=app.import_announcements_sheet)
+    tools_menu.add_command(label="Import Events Feed...", command=app.import_events_feed)
     menubar.add_cascade(label="Tools", menu=tools_menu)
 
     app.config(menu=menubar)
