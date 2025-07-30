@@ -2,7 +2,9 @@ import os
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markdown import markdown
-from typing import Optional
+from typing import Optional, List, Dict
+from datetime import datetime, date
+from collections import OrderedDict
 
 
 class BulletinRenderer:
@@ -32,6 +34,67 @@ class BulletinRenderer:
         self.env.filters["markdown"] = lambda text: markdown(
             text or "", output_format="html"
         )
+
+        # Register event grouping filter
+        self.env.filters["group_events"] = self._group_events
+
+    # --- Event Grouping Logic -------------------------------------------------
+    def _parse_date(self, value: str, default_year: int) -> date | None:
+        """Try to parse a variety of human friendly date strings."""
+        if not value:
+            return None
+        clean = value.split("-")[0].strip()
+        patterns = [
+            "%Y-%m-%d",
+            "%m/%d/%Y",
+            "%m/%d/%y",
+            "%B %d, %Y",
+            "%b %d, %Y",
+            "%A, %B %d, %Y",
+            "%A, %B %d",
+            "%B %d",
+            "%b %d",
+        ]
+        for fmt in patterns:
+            try:
+                dt = datetime.strptime(clean, fmt)
+                if "%Y" not in fmt:
+                    dt = dt.replace(year=default_year)
+                return dt.date()
+            except ValueError:
+                continue
+        return None
+
+    def _group_events(self, events: List[Dict[str, str]], bulletin_date: str = "") -> List[Dict[str, object]]:
+        """Return events sorted and grouped by week relative to bulletin_date."""
+        base = self._parse_date(bulletin_date, datetime.today().year) or date.today()
+        parsed = []
+        for ev in events:
+            ev_date = self._parse_date(ev.get("date", ""), base.year)
+            parsed.append((ev_date, ev))
+
+        parsed.sort(key=lambda t: t[0] or date.max)
+
+        groups: OrderedDict[str, Dict[str, object]] = OrderedDict()
+        for ev_date, ev in parsed:
+            if ev_date is None:
+                header = "Other"
+            else:
+                week_diff = (ev_date.isocalendar()[1] - base.isocalendar()[1]) + (
+                    ev_date.year - base.year
+                ) * 52
+                if week_diff < 0:
+                    header = "Past"
+                elif week_diff == 0:
+                    header = "This Week"
+                elif week_diff == 1:
+                    header = "Next Week"
+                else:
+                    header = ev_date.strftime("%B %d, %Y")
+            grp = groups.setdefault(header, {"header": header, "events": []})
+            grp["events"].append(ev)
+
+        return list(groups.values())
 
     def set_template(self, name: str):
         """Change the layout template used for rendering."""

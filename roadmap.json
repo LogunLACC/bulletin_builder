@@ -114,7 +114,7 @@
     "acceptance": "User can see cleanly formatted event blocks added automatically and can edit them if needed."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Smart Event Sorting and Grouping",
     "action": "Sort events chronologically and group by date headers (e.g., 'This Week', 'Next Week', etc).",
     "acceptance": "Bulletin automatically displays events grouped and sorted in a user-friendly way."
