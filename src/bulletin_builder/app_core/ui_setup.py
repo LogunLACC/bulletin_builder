@@ -70,7 +70,9 @@ def init(app):
     app.email_button = ctk.CTkButton(expf, text="Copy for Email", command=app.on_copy_for_email_clicked)
     app.email_button.pack(fill="x", pady=(0,5))
     app.export_button = ctk.CTkButton(expf, text="Export to PDF...", command=app.on_export_pdf_clicked)
-    app.export_button.pack(fill="x")
+    app.export_button.pack(fill="x", pady=(0,5))
+    app.ics_button = ctk.CTkButton(expf, text="Export Event .ics", command=app.on_export_ics_clicked)
+    app.ics_button.pack(fill="x")
 
     # Right panel: editor or placeholder
     app.right_panel = ctk.CTkFrame(content)
