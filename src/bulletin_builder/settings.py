@@ -13,6 +13,7 @@ class Settings:
     })
     template_path: str = str(Path(__file__).resolve().parent / "templates")
     theme_css: Optional[str] = None  # e.g. "club_theme.css"
+    appearance_mode: str = "Dark"
 
     @property
     def jinja_env(self) -> Environment:

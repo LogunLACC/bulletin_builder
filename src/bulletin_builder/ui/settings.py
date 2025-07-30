@@ -51,6 +51,21 @@ class SettingsFrame(ctk.CTkFrame):
         self.google_api_entry = ctk.CTkEntry(self, show="*")
         self.google_api_entry.grid(row=5, column=1, sticky="ew", pady=(0,5))
 
+        # Appearance Mode
+        ctk.CTkLabel(self, text="Appearance:").grid(row=6, column=0, sticky="w", pady=(0,5))
+        self.appearance_option = ctk.CTkOptionMenu(
+            self,
+            values=["Light", "Dark"],
+            command=self._on_appearance_changed,
+        )
+        # initialize with current mode
+        try:
+            current = ctk.get_appearance_mode()
+        except Exception:
+            current = "Dark"
+        self.appearance_option.set(current)
+        self.appearance_option.grid(row=6, column=1, sticky="ew", pady=(0,5))
+
         self.grid_columnconfigure(1, weight=1)
 
     def load_data(self, settings_data: dict, api_key: str):
@@ -74,6 +89,18 @@ class SettingsFrame(ctk.CTkFrame):
         theme = settings_data.get("theme_css", self.themes[0] if self.themes else "default.css")
         if theme in self.themes:
             self.theme_menu.set(theme)
+
+        # Appearance Mode
+        try:
+            current_mode = ctk.get_appearance_mode()
+        except Exception:
+            current_mode = "Dark"
+        appearance = settings_data.get("appearance_mode", current_mode)
+        try:
+            ctk.set_appearance_mode(appearance)
+        except Exception:
+            pass
+        self.appearance_option.set(appearance)
 
         # Colors
         self.primary_color_entry.delete(0, "end")
@@ -100,4 +127,12 @@ class SettingsFrame(ctk.CTkFrame):
                 "secondary": self.secondary_color_entry.get(),
             },
             "google_api_key": self.google_api_entry.get(),
+            "appearance_mode": self.appearance_option.get(),
         }
+
+    def _on_appearance_changed(self, mode: str):
+        """Apply the selected appearance mode immediately."""
+        try:
+            ctk.set_appearance_mode(mode)
+        except Exception:
+            pass
