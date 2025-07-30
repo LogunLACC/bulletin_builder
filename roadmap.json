@@ -66,7 +66,7 @@
     "acceptance": "User inputted markdown is rendered correctly and styled appropriately in the output."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Auto-generate subject line suggestions with AI",
     "action": "Use OpenAI API to suggest catchy subject lines based on bulletin content.",
     "acceptance": "User can click 'Suggest Subject' and receive 3+ AI-generated ideas."

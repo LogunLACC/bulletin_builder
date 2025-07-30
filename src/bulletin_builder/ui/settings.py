@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import tkinter.messagebox as messagebox
 from datetime import date
 
 class SettingsFrame(ctk.CTkFrame):
@@ -11,10 +12,11 @@ class SettingsFrame(ctk.CTkFrame):
       • Google AI API Key
     """
 
-    def __init__(self, parent, refresh_callback: callable, save_api_key_callback: callable):
+    def __init__(self, parent, refresh_callback: callable, save_api_key_callback: callable, save_openai_key_callback: callable):
         super().__init__(parent, fg_color="transparent")
         self.refresh_callback = refresh_callback
         self.save_api_key_callback = save_api_key_callback
+        self.save_openai_key_callback = save_openai_key_callback
 
         # Build all controls
         self._build_widgets()
@@ -26,6 +28,9 @@ class SettingsFrame(ctk.CTkFrame):
         ctk.CTkLabel(self, text="Bulletin Title:").grid(row=0, column=0, sticky="w", pady=(0,5))
         self.title_entry = ctk.CTkEntry(self)
         self.title_entry.grid(row=0, column=1, sticky="ew", pady=(0,5))
+        ctk.CTkButton(
+            self, text="Suggest Subject", command=self._suggest_subject
+        ).grid(row=0, column=2, padx=(5,0), pady=(0,5))
         # Date
         ctk.CTkLabel(self, text="Bulletin Date:").grid(row=1, column=0, sticky="w", pady=(0,5))
         self.date_entry = ctk.CTkEntry(self)
@@ -51,8 +56,12 @@ class SettingsFrame(ctk.CTkFrame):
         self.google_api_entry = ctk.CTkEntry(self, show="*")
         self.google_api_entry.grid(row=5, column=1, sticky="ew", pady=(0,5))
 
+        ctk.CTkLabel(self, text="OpenAI API Key:").grid(row=6, column=0, sticky="w", pady=(0,5))
+        self.openai_api_entry = ctk.CTkEntry(self, show="*")
+        self.openai_api_entry.grid(row=6, column=1, sticky="ew", pady=(0,5))
+
         # Appearance Mode
-        ctk.CTkLabel(self, text="Appearance:").grid(row=6, column=0, sticky="w", pady=(0,5))
+        ctk.CTkLabel(self, text="Appearance:").grid(row=7, column=0, sticky="w", pady=(0,5))
         self.appearance_option = ctk.CTkOptionMenu(
             self,
             values=["Light", "Dark"],
@@ -64,11 +73,11 @@ class SettingsFrame(ctk.CTkFrame):
         except Exception:
             current = "Dark"
         self.appearance_option.set(current)
-        self.appearance_option.grid(row=6, column=1, sticky="ew", pady=(0,5))
+        self.appearance_option.grid(row=7, column=1, sticky="ew", pady=(0,5))
 
         self.grid_columnconfigure(1, weight=1)
 
-    def load_data(self, settings_data: dict, api_key: str):
+    def load_data(self, settings_data: dict, google_key: str, openai_key: str):
         """Populate all fields, falling back to sensible defaults."""
         settings_data = settings_data or {}
         colors = settings_data.get("colors", {})
@@ -110,8 +119,12 @@ class SettingsFrame(ctk.CTkFrame):
 
         # API Key (also persist immediately)
         self.google_api_entry.delete(0, "end")
-        self.google_api_entry.insert(0, api_key or "")
+        self.google_api_entry.insert(0, google_key or "")
         self.save_api_key_callback(self.google_api_entry.get())
+
+        self.openai_api_entry.delete(0, "end")
+        self.openai_api_entry.insert(0, openai_key or "")
+        self.save_openai_key_callback(self.openai_api_entry.get())
 
         # Fire a preview refresh
         self.refresh_callback()
@@ -127,8 +140,20 @@ class SettingsFrame(ctk.CTkFrame):
                 "secondary": self.secondary_color_entry.get(),
             },
             "google_api_key": self.google_api_entry.get(),
+            "openai_api_key": self.openai_api_entry.get(),
             "appearance_mode": self.appearance_option.get(),
         }
+
+    def _suggest_subject(self):
+        app = self.winfo_toplevel()
+        content_parts = []
+        for sec in getattr(app, "sections_data", []):
+            content_parts.append(sec.get("title", ""))
+            content_parts.append(sec.get("body", sec.get("content", "")))
+        prompt_text = "\n".join(content_parts)
+        suggestions = app.generate_subject_lines(prompt_text)
+        if suggestions:
+            messagebox.showinfo("Subject Suggestions", "\n".join(suggestions), parent=self)
 
     def _on_appearance_changed(self, mode: str):
         """Apply the selected appearance mode immediately."""
