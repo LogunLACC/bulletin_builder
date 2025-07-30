@@ -10,9 +10,10 @@
 - [Requirements](#requirements)  
 - [Installation](#installation)  
 - [Usage](#usage)  
-- [Packaging](#packaging)  
-- [Auto‑Update](#auto‑update)  
-- [Testing](#testing)  
+- [Packaging](#packaging)
+- [Auto‑Update](#auto‑update)
+- [Keyboard Shortcuts](#keyboard-shortcuts)
+- [Testing](#testing)
 - [Contributing](#contributing)  
 - [License](#license)  
 
@@ -80,4 +81,18 @@ use_tls = true
 
 After configuring, click **Send Test Email...** in the app and enter the
 destination address to receive a preview message.
+
+## Keyboard Shortcuts
+
+Common actions can be triggered from the keyboard:
+
+| Shortcut | Action |
+| -------- | ------ |
+| `Ctrl+N` | New draft |
+| `Ctrl+O` | Open draft |
+| `Ctrl+S` | Save draft |
+| `Ctrl+Shift+S` | Save draft as... |
+| `Ctrl+Z` | Undo (WYSIWYG editor) |
+| `Ctrl+Y` | Redo (WYSIWYG editor) |
+| `Ctrl+E` | Export HTML (WYSIWYG editor) |
 
