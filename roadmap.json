@@ -102,7 +102,7 @@
     "acceptance": "Sidebar shows list of actions with timestamps as user makes changes."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Add Community Events Feed Integration",
     "action": "Add a module to fetch event data (title, date, time, image) from a remote source like Google Sheets, JSON API, or WebCal.",
     "acceptance": "User can import events from a public URL or connected sheet and preview them in the bulletin builder."
