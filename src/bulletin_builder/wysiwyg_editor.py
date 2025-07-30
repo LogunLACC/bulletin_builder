@@ -17,6 +17,11 @@ class WysiwygEditor(ctk.CTkToplevel):
         self.title("WYSIWYG Editor")
         self.geometry("800x600")
 
+        # Keyboard shortcuts
+        self.bind("<Control-z>", lambda e: self.undo())
+        self.bind("<Control-y>", lambda e: self.redo())
+        self.bind("<Control-e>", lambda e: self.export_html())
+
         self.canvas = tk.Canvas(self, bg="white")
         self.canvas.pack(side="left", fill="both", expand=True)
 
