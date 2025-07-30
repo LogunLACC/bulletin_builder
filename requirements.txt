@@ -7,4 +7,5 @@ tkhtmlview
 pyinstaller
 Pillow
 markdown
+openai
 
