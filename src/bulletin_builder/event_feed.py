@@ -2,7 +2,11 @@ import csv
 import io
 import json
 import urllib.request
+import os
+import tempfile
 from typing import List, Dict
+
+from .image_utils import optimize_image
 
 
 def fetch_events(url: str) -> List[Dict[str, str]]:
@@ -65,3 +69,32 @@ def events_to_blocks(events: List[Dict[str, str]]) -> List[Dict[str, str]]:
             }
         )
     return blocks
+
+
+def process_event_images(
+    events: List[Dict[str, str]],
+    dest_dir: str = "assets",
+    max_width: int = 800,
+    ratio: tuple[int, int] = (4, 3),
+) -> None:
+    """Download and standardize event images in place."""
+    for ev in events:
+        url = ev.get("image_url", "")
+        if not url:
+            continue
+        try:
+            if url.startswith("http://") or url.startswith("https://"):
+                ext = os.path.splitext(url)[1] or ".jpg"
+                fd, tmp_path = tempfile.mkstemp(suffix=ext)
+                os.close(fd)
+                urllib.request.urlretrieve(url, tmp_path)
+                local = tmp_path
+            else:
+                local = url
+            opt_path = optimize_image(
+                local, dest_dir=dest_dir, max_width=max_width, ratio=ratio
+            )
+            ev["image_url"] = opt_path
+        except Exception:
+            continue
+
