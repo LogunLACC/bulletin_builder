@@ -17,6 +17,36 @@ from ..ui.email_dialog import EmailDialog
 
 from premailer import transform
 from weasyprint import HTML
+from html.parser import HTMLParser
+
+class _PlainTextExtractor(HTMLParser):
+    """Simple HTML to plain text converter."""
+
+    def __init__(self):
+        super().__init__()
+        self.parts: list[str] = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag in {"br"}:
+            self.parts.append("\n")
+        if tag in {"p", "div", "li", "ul", "ol", "h1", "h2", "h3", "h4", "h5"}:
+            self.parts.append("\n")
+
+    def handle_endtag(self, tag):
+        if tag in {"p", "div", "li", "ul", "ol", "h1", "h2", "h3", "h4", "h5"}:
+            self.parts.append("\n")
+
+    def handle_data(self, data):
+        if data:
+            self.parts.append(data)
+
+
+def _html_to_text(html: str) -> str:
+    parser = _PlainTextExtractor()
+    parser.feed(html)
+    text = "".join(parser.parts)
+    lines = [line.strip() for line in text.splitlines()]
+    return "\n".join([l for l in lines if l])
 
 def init(app):
     """
@@ -83,6 +113,48 @@ def init(app):
             app.after(0, lambda: app.email_button.configure(state="normal"))
 
     app.on_copy_for_email_clicked = on_copy_for_email_clicked
+
+    # --- Export HTML + plain text (threaded) ---
+    def on_export_html_text_clicked():
+        app.export_button.configure(state="disabled")
+        app.email_button.configure(state="disabled")
+        app._show_progress("Exporting HTML/Text…")
+        future = app._thread_executor.submit(_do_export_html_text)
+        future.add_done_callback(_on_export_html_text_done)
+
+    def _do_export_html_text():
+        settings = app.settings_frame.dump()
+        html = app.renderer.render_html(app.sections_data, settings)
+        html = transform(html)
+        path = filedialog.asksaveasfilename(
+            defaultextension=".html",
+            filetypes=[("HTML Documents", "*.html")],
+            initialdir="./user_drafts",
+            title="Export HTML and Text",
+        )
+        if not path:
+            return None
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(html)
+        txt_path = Path(path).with_suffix(".txt")
+        with open(txt_path, "w", encoding="utf-8") as f:
+            f.write(_html_to_text(html))
+        return Path(path).name, txt_path.name
+
+    def _on_export_html_text_done(fut):
+        try:
+            result = fut.result()
+            if result:
+                html_name, txt_name = result
+                app.after(0, lambda: app.show_status_message(
+                    f"Exported: {html_name} & {txt_name}"
+                ))
+        finally:
+            app.after(0, app._hide_progress)
+            app.after(0, lambda: app.export_button.configure(state="normal"))
+            app.after(0, lambda: app.email_button.configure(state="normal"))
+
+    app.on_export_html_text_clicked = on_export_html_text_clicked
 
     # --- Open current bulletin in default browser ---
     def open_in_browser():
