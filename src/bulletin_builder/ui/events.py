@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from ui.base_section import SectionRegistry
+from .base_section import SectionRegistry
 
 @SectionRegistry.register("lacc_events")
 @SectionRegistry.register("community_events")

@@ -6,16 +6,16 @@ import concurrent.futures
 
 import google.generativeai as genai
 
-from bulletin_renderer import BulletinRenderer
-from app_core.config import load_api_key
-from ui.base_section import SectionRegistry
+from ..bulletin_renderer import BulletinRenderer
+from .config import load_api_key
+from ..ui.base_section import SectionRegistry
 
 
 # ensure all UI frame classes register themselves
-import ui.custom_text
-import ui.events
-import ui.image
-import ui.announcements
+from ..ui import custom_text  # noqa:F401
+from ..ui import events       # noqa:F401
+from ..ui import image        # noqa:F401
+from ..ui import announcements  # noqa:F401
 
 # Helper to list registered section types
 SectionRegistry.available_types = classmethod(lambda cls: list(cls._frames.keys()))

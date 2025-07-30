@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from tkinter import simpledialog
-from ui.base_section import SectionRegistry
+from .base_section import SectionRegistry
 
 @SectionRegistry.register("announcements")
 class AnnouncementsFrame(ctk.CTkFrame):
