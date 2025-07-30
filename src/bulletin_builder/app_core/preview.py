@@ -13,6 +13,7 @@ def init(app):
     app.update_preview      = lambda: _trigger_preview(app)
     app.toggle_preview_mode = lambda mode: _toggle_preview(app, mode)
     app.open_in_browser     = lambda: _open_in_browser(app)
+    app.set_preview_device  = lambda device: _set_preview_device(app, device)
 
 def _trigger_preview(app):
     """Start rendering in background thread when user clicks Update Preview."""
@@ -63,6 +64,7 @@ def _apply_preview(app, fut):
     else:
         raw_html, rendered = fut.result()
         mode = app.preview_mode_toggle.get()
+        device = getattr(app, 'device_mode', 'Desktop')
 
         if mode == "Rendered":
             # Try rendered → raw → code view if both fail
@@ -84,6 +86,8 @@ def _apply_preview(app, fut):
             # Code view
             app.code_preview.delete('1.0', 'end')
             app.code_preview.insert('1.0', raw_html)
+
+        _set_preview_device(app, device)
 
     # hide progress & re-enable button
     app.after(0, app._hide_progress)
@@ -107,3 +111,11 @@ def _open_in_browser(app):
     tmp.write(html.encode("utf-8"))
     tmp.close()
     webbrowser.open(tmp.name)
+
+def _set_preview_device(app, device):
+    """Adjust preview width for responsive modes."""
+    app.device_mode = device
+    widths = {"Desktop": 800, "Tablet": 600, "Mobile": 375}
+    width = widths.get(device, 800)
+    if hasattr(app, 'preview_area'):
+        app.preview_area.configure(width=width)
