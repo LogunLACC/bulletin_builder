@@ -44,4 +44,20 @@ google-generativeai
 pytest               # for tests
 pyinstaller          # for packaging
 pyupdater            # for auto‑update (optional)
-...
+
+```
+
+---
+
+## Packaging
+
+Run the build script to create a standalone executable (requires PyInstaller):
+
+```bash
+python scripts/build_exe.py
+```
+
+The resulting `bulletin_builder` directory contains an executable that can be
+distributed to users on the same platform (Windows or macOS) without needing a
+Python installation.
+

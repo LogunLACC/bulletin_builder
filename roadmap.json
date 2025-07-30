@@ -6,7 +6,7 @@
     "acceptance": "App runs from CLI and tests still pass using new structure."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Add basic PyInstaller packaging",
     "action": "Add PyInstaller spec file and script to build a standalone executable for Windows and MacOS.",
     "acceptance": "Users can run bulletin_builder.exe without installing Python."
