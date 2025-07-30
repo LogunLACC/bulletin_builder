@@ -12,7 +12,7 @@
     "acceptance": "Users can run bulletin_builder.exe without installing Python."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Create drag-and-drop WYSIWYG editor",
     "action": "Add a visual editor using tkinter or PyQt5 to let users drag text blocks, images, buttons, and sections to design a bulletin.",
     "acceptance": "User can preview and rearrange layout visually and export to HTML."

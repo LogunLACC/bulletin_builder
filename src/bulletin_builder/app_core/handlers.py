@@ -57,3 +57,11 @@ def init(app):
         app.progress.lower()
     app._show_progress = _show_progress
     app._hide_progress = _hide_progress
+
+    # --- Launch the WYSIWYG editor ---
+    from ..wysiwyg_editor import WysiwygEditor
+
+    def open_wysiwyg_editor():
+        WysiwygEditor(app)
+
+    app.open_wysiwyg_editor = open_wysiwyg_editor
