@@ -42,7 +42,7 @@
     "acceptance": "User can download a valid .ics file matching event details entered."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Google Sheets & CSV integration for announcements",
     "action": "Allow loading tabular event data from Google Sheets or CSV files to auto-generate content blocks.",
     "acceptance": "User can generate bulletins from structured sheet rows with minimal input."
