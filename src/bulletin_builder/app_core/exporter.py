@@ -4,6 +4,10 @@ import tempfile
 import webbrowser
 from pathlib import Path
 from tkinter import filedialog
+from uuid import uuid4
+from datetime import datetime
+
+from ..ui.calendar_event_dialog import CalendarEventDialog
 
 from premailer import transform
 from weasyprint import HTML
@@ -84,3 +88,47 @@ def init(app):
         webbrowser.open(tmp.name)
 
     app.open_in_browser = open_in_browser
+
+    # --- Export calendar event as .ics ---
+    def on_export_ics_clicked():
+        dlg = CalendarEventDialog(app)
+        data = dlg.get_data()
+        if not data:
+            return
+        path = filedialog.asksaveasfilename(
+            defaultextension=".ics",
+            filetypes=[("iCalendar Files", "*.ics")],
+            initialdir="./user_drafts",
+            title="Save ICS File"
+        )
+        if not path:
+            return
+        ics_content = _build_ics(data)
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(ics_content)
+        app.show_status_message(f"ICS exported: {Path(path).name}")
+
+    def _build_ics(data: dict) -> str:
+        fmt = "%Y%m%dT%H%M%S"
+        start = data["start"].strftime(fmt)
+        end = data["end"].strftime(fmt)
+        stamp = datetime.utcnow().strftime(fmt)
+        uid = uuid4()
+        lines = [
+            "BEGIN:VCALENDAR",
+            "VERSION:2.0",
+            "PRODID:-//LACC Bulletin Builder//EN",
+            "BEGIN:VEVENT",
+            f"UID:{uid}",
+            f"DTSTAMP:{stamp}Z",
+            f"DTSTART:{start}",
+            f"DTEND:{end}",
+            f"SUMMARY:{data['title']}",
+            f"DESCRIPTION:{data.get('description', '')}",
+            f"LOCATION:{data.get('location', '')}",
+            "END:VEVENT",
+            "END:VCALENDAR",
+        ]
+        return "\n".join(lines)
+
+    app.on_export_ics_clicked = on_export_ics_clicked
