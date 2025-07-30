@@ -2,6 +2,7 @@
 {% if section.title %}
     <h2>{{ section.title }}</h2>
 {% endif %}
-<p>
-    {{ section.content | replace('\n', '<br>') | safe }}
-</p>
+<div class="custom-text">
+    {{ section.content | markdown | safe }}
+</div>
+
