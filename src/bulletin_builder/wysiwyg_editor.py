@@ -5,6 +5,11 @@ from PIL import Image, ImageTk
 
 from .image_utils import optimize_image
 
+
+class HistoryAction(dict):
+    """Simple dict subclass for typing convenience."""
+    pass
+
 class WysiwygEditor(ctk.CTkToplevel):
     """Simple drag-and-drop WYSIWYG bulletin editor."""
     def __init__(self, master=None):
@@ -20,22 +25,77 @@ class WysiwygEditor(ctk.CTkToplevel):
         ctk.CTkButton(toolbar, text="Add Text", command=self.add_text).pack(pady=5, fill="x")
         ctk.CTkButton(toolbar, text="Add Image", command=self.add_image).pack(pady=5, fill="x")
         ctk.CTkButton(toolbar, text="Add Button", command=self.add_button).pack(pady=5, fill="x")
+        ctk.CTkButton(toolbar, text="Undo", command=self.undo).pack(pady=(20,5), fill="x")
+        ctk.CTkButton(toolbar, text="Redo", command=self.redo).pack(pady=5, fill="x")
         ctk.CTkButton(toolbar, text="Export HTML", command=self.export_html).pack(pady=(20,0), fill="x")
 
         self._item_data = {}  # map canvas id -> (type, data)
-        self._drag_data = {"item": None, "x": 0, "y": 0}
+        self._drag_data = {"item": None, "x": 0, "y": 0, "start": (0, 0)}
         self._images = {}  # keep PhotoImage refs
+        self._history = []
+        self._redo_stack = []
+
+    def _record_action(self, action: HistoryAction):
+        """Push an action onto the history stack and clear redo."""
+        self._history.append(action)
+        self._redo_stack.clear()
+
+    def undo(self):
+        if not self._history:
+            return
+        action = self._history.pop()
+        if action.get("type") == "create":
+            item = action["item"]
+            self.canvas.delete(item)
+            self._item_data.pop(item, None)
+            self._images.pop(item, None)
+        elif action.get("type") == "move":
+            self.canvas.coords(action["item"], action["old"])
+        self._redo_stack.append(action)
+
+    def redo(self):
+        if not self._redo_stack:
+            return
+        action = self._redo_stack.pop()
+        if action.get("type") == "create":
+            item_type = action["item_type"]
+            data = action["data"]
+            x, y = action["coords"]
+            if item_type == "text":
+                item = self.canvas.create_text(x, y, text=data, anchor="nw", font=("Arial", 14))
+                self._item_data[item] = ("text", data)
+            elif item_type == "image":
+                try:
+                    pil_img = Image.open(data)
+                    img = ImageTk.PhotoImage(pil_img)
+                except Exception:
+                    return
+                item = self.canvas.create_image(x, y, image=img, anchor="nw")
+                self._images[item] = img
+                self._item_data[item] = ("image", data)
+            elif item_type == "button":
+                btn = ctk.CTkButton(self.canvas, text=data)
+                item = self.canvas.create_window(x, y, window=btn, anchor="nw")
+                self._item_data[item] = ("button", data)
+            self._make_draggable(item)
+            action["item"] = item
+        elif action.get("type") == "move":
+            self.canvas.coords(action["item"], action["new"])
+        self._history.append(action)
 
     # --- Drag helpers ---
     def _make_draggable(self, item):
         self.canvas.tag_bind(item, "<ButtonPress-1>", self._on_drag_start)
         self.canvas.tag_bind(item, "<B1-Motion>", self._on_drag_move)
+        self.canvas.tag_bind(item, "<ButtonRelease-1>", self._on_drag_end)
 
     def _on_drag_start(self, event):
         item = self.canvas.find_closest(event.x, event.y)[0]
         self._drag_data["item"] = item
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
+        # store initial coords for history
+        self._drag_data["start"] = tuple(self.canvas.coords(item)[:2])
 
     def _on_drag_move(self, event):
         item = self._drag_data.get("item")
@@ -47,6 +107,17 @@ class WysiwygEditor(ctk.CTkToplevel):
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
 
+    def _on_drag_end(self, event):
+        item = self._drag_data.get("item")
+        if not item:
+            return
+        start = self._drag_data.get("start")
+        end = tuple(self.canvas.coords(item)[:2])
+        if start != end:
+            action = HistoryAction(type="move", item=item, old=start, new=end)
+            self._record_action(action)
+        self._drag_data = {"item": None, "x": 0, "y": 0, "start": (0, 0)}
+
     # --- Block creators ---
     def add_text(self):
         text = simpledialog.askstring("Text", "Enter text:", parent=self)
@@ -54,6 +125,8 @@ class WysiwygEditor(ctk.CTkToplevel):
             item = self.canvas.create_text(50, 50, text=text, anchor="nw", font=("Arial", 14))
             self._item_data[item] = ("text", text)
             self._make_draggable(item)
+            action = HistoryAction(type="create", item=item, item_type="text", data=text, coords=(50, 50))
+            self._record_action(action)
 
     def add_image(self):
         path = filedialog.askopenfilename(filetypes=[("Image files", "*.png *.jpg *.jpeg *.gif")])
@@ -68,6 +141,8 @@ class WysiwygEditor(ctk.CTkToplevel):
             self._images[item] = img
             self._item_data[item] = ("image", opt_path)
             self._make_draggable(item)
+            action = HistoryAction(type="create", item=item, item_type="image", data=opt_path, coords=(50, 50))
+            self._record_action(action)
 
     def add_button(self):
         label = simpledialog.askstring("Button Label", "Enter button label:", parent=self)
@@ -76,6 +151,8 @@ class WysiwygEditor(ctk.CTkToplevel):
             item = self.canvas.create_window(50, 50, window=btn, anchor="nw")
             self._item_data[item] = ("button", label)
             self._make_draggable(item)
+            action = HistoryAction(type="create", item=item, item_type="button", data=label, coords=(50, 50))
+            self._record_action(action)
 
     # --- Export ---
     def export_html(self):
