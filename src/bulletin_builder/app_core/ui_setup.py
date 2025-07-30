@@ -77,6 +77,8 @@ def init(app):
     app.send_test_button.pack(fill="x", pady=(0,5))
     app.export_button = ctk.CTkButton(expf, text="Export to PDF...", command=app.on_export_pdf_clicked)
     app.export_button.pack(fill="x", pady=(0,5))
+    app.export_html_text_button = ctk.CTkButton(expf, text="Export HTML + Text...", command=app.on_export_html_text_clicked)
+    app.export_html_text_button.pack(fill="x", pady=(0,5))
     app.ics_button = ctk.CTkButton(expf, text="Export Event .ics", command=app.on_export_ics_clicked)
     app.ics_button.pack(fill="x")
 
