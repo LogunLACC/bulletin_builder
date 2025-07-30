@@ -132,3 +132,10 @@ def init(app):
     # neither packed until toggle
 
     app.set_preview_device("Desktop")
+
+    # --- Keyboard Shortcuts ---
+    app.bind("<Control-s>", lambda e: app.save_draft())
+    app.bind("<Control-S>", lambda e: app.save_draft())  # for some platforms
+    app.bind("<Control-Shift-S>", lambda e: app.save_draft(save_as=True))
+    app.bind("<Control-o>", lambda e: app.open_draft())
+    app.bind("<Control-n>", lambda e: app.new_draft())

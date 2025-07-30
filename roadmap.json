@@ -90,7 +90,7 @@
     "acceptance": "Both HTML and text versions are exported and styled appropriately."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Keyboard shortcut support",
     "action": "Add keyboard navigation for power users: e.g., Ctrl+S to save, Ctrl+Z to undo, etc.",
     "acceptance": "Documented shortcuts work reliably in the editor interface."
