@@ -78,7 +78,7 @@
     "acceptance": "User can click undo/redo buttons to revert changes with visual feedback."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Content block library",
     "action": "Create a library of reusable components like event blocks, contact info, map links, etc.",
     "acceptance": "User can insert a pre-made block and it renders styled in the output."

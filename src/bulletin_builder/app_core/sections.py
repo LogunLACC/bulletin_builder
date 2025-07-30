@@ -76,7 +76,7 @@ def init(app):
         app.clear_editor_panel()
         FrameCls = SectionRegistry.get_frame(section['type'])
         # AnnouncementsFrame may require extra callbacks
-        params = [app.right_panel, section, app.refresh_listbox_titles, app.update_section_data]
+        params = [app.right_panel, section, app.refresh_listbox_titles, app.save_component]
         if section['type'] == 'announcements':
             params.append(app.ai_callback)
         frame = FrameCls(*params)
