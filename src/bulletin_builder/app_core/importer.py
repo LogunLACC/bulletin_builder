@@ -3,7 +3,7 @@ import io
 import urllib.request
 from tkinter import filedialog, messagebox, simpledialog
 
-from ..event_feed import fetch_events, events_to_blocks
+from ..event_feed import fetch_events, events_to_blocks, process_event_images
 
 
 def init(app):
@@ -68,6 +68,7 @@ def init(app):
             messagebox.showerror('Import Error', str(e))
             return
         events = events_to_blocks(raw_events)
+        process_event_images(events)
         if not events:
             messagebox.showinfo('Import Events', 'No events found.')
             return
