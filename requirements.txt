@@ -5,3 +5,4 @@ premailer
 jinja2>=3.1.2
 tkhtmlview
 pyinstaller
+Pillow

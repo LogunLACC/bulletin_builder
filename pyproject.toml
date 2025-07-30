@@ -7,7 +7,8 @@ readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
     "jinja2",
-    "requests"
+    "requests",
+    "pillow"
 ]
 
 [project.scripts]

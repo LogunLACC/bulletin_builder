@@ -1,6 +1,9 @@
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import filedialog, simpledialog
+from PIL import Image, ImageTk
+
+from .image_utils import optimize_image
 
 class WysiwygEditor(ctk.CTkToplevel):
     """Simple drag-and-drop WYSIWYG bulletin editor."""
@@ -53,15 +56,17 @@ class WysiwygEditor(ctk.CTkToplevel):
             self._make_draggable(item)
 
     def add_image(self):
-        path = filedialog.askopenfilename(filetypes=[("Image files", "*.png *.jpg *.gif")])
+        path = filedialog.askopenfilename(filetypes=[("Image files", "*.png *.jpg *.jpeg *.gif")])
         if path:
+            opt_path = optimize_image(path)
             try:
-                img = tk.PhotoImage(file=path)
+                pil_img = Image.open(opt_path)
+                img = ImageTk.PhotoImage(pil_img)
             except Exception:
                 return
             item = self.canvas.create_image(50, 50, image=img, anchor="nw")
             self._images[item] = img
-            self._item_data[item] = ("image", path)
+            self._item_data[item] = ("image", opt_path)
             self._make_draggable(item)
 
     def add_button(self):
