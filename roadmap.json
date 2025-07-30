@@ -30,7 +30,7 @@
     "acceptance": "User can preview how the email/bulletin will look on different screen sizes."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Auto image optimizer",
     "action": "Compress and resize images during import to reduce email size while retaining quality.",
     "acceptance": "Image uploads are optimized and result in significantly smaller HTML output size."

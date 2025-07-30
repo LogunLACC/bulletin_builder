@@ -3,6 +3,8 @@ import os
 import tempfile
 import urllib.request
 import concurrent.futures
+
+from ..image_utils import optimize_image
 from tkinter import messagebox
 
 # Single-thread executor for preview operations
@@ -44,7 +46,8 @@ def _render_preview_logic(app):
         os.close(fd)
         try:
             urllib.request.urlretrieve(url, tmp_path)
-            return f'src="{tmp_path}"'
+            opt_path = optimize_image(tmp_path)
+            return f'src="{opt_path}"'
         except Exception:
             return match.group(0)
 
