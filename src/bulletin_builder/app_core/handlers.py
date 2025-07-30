@@ -60,8 +60,13 @@ def init(app):
 
     # --- Launch the WYSIWYG editor ---
     from ..wysiwyg_editor import WysiwygEditor
+    from ..ui.template_gallery import TemplateGallery
 
     def open_wysiwyg_editor():
         WysiwygEditor(app)
 
+    def open_template_gallery():
+        TemplateGallery(app)
+
     app.open_wysiwyg_editor = open_wysiwyg_editor
+    app.open_template_gallery = open_template_gallery
