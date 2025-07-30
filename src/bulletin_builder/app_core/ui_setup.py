@@ -89,11 +89,12 @@ def init(app):
     app.settings_frame = SettingsFrame(
         sett,
         refresh_callback=app.refresh_listbox_titles,
-        save_api_key_callback=app.save_api_key_to_config
+        save_api_key_callback=app.save_api_key_to_config,
+        save_openai_key_callback=app.save_openai_key_to_config,
     )
     app.settings_frame.pack(fill="both", expand=True, padx=10, pady=10)
     # Load defaults + persisted API key on startup
-    app.settings_frame.load_data({}, app.google_api_key)
+    app.settings_frame.load_data({}, app.google_api_key, app.openai_api_key)
 
     # --- Preview Tab ---
     prev = app.tab_view.tab("Preview")
