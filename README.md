@@ -23,6 +23,7 @@
 - Add / remove / reorder sections  
 - Preview in‑app (HTML via `tkhtmlview`) or open browser  
 - Export to PDF via WeasyPrint
+- Export HTML + plain text versions for email
 - Copy email‑ready HTML to clipboard
 - Send preview emails via configurable SMTP server
 - Pluggable “sections” architecture for custom text, events, images, announcements

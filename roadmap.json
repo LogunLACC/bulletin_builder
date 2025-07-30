@@ -84,7 +84,7 @@
     "acceptance": "User can insert a pre-made block and it renders styled in the output."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Real-time HTML + plain text export",
     "action": "Add simultaneous generation of plain-text fallback email versions for accessibility and deliverability.",
     "acceptance": "Both HTML and text versions are exported and styled appropriately."
