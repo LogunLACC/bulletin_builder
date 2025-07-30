@@ -21,6 +21,7 @@ class SettingsFrame(ctk.CTkFrame):
 
     def _build_widgets(self):
         import os
+        from pathlib import Path
         # Title
         ctk.CTkLabel(self, text="Bulletin Title:").grid(row=0, column=0, sticky="w", pady=(0,5))
         self.title_entry = ctk.CTkEntry(self)
@@ -31,9 +32,9 @@ class SettingsFrame(ctk.CTkFrame):
         self.date_entry.grid(row=1, column=1, sticky="ew", pady=(0,5))
         # Theme dropdown
         ctk.CTkLabel(self, text="Theme:").grid(row=2, column=0, sticky="w", pady=(0,5))
-        themes_dir = os.path.join("templates", "themes")
+        themes_dir = Path(__file__).resolve().parents[1] / "templates" / "themes"
         try:
-            self.themes = sorted([f for f in os.listdir(themes_dir) if f.endswith(".css")])
+            self.themes = sorted([f.name for f in themes_dir.iterdir() if f.suffix == ".css"])
         except Exception:
             self.themes = []
         self.theme_menu = ctk.CTkOptionMenu(self, values=self.themes)

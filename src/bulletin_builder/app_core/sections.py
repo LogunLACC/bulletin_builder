@@ -1,6 +1,6 @@
 import customtkinter as ctk
 import tkinter as tk
-from ui.base_section import SectionRegistry
+from ..ui.base_section import SectionRegistry
 
 class AddSectionDialog(ctk.CTkToplevel):
     """Modal dialog to capture title and type for a new section."""
