@@ -2,6 +2,7 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import filedialog, simpledialog
 from PIL import Image, ImageTk
+from datetime import datetime
 
 from .image_utils import optimize_image
 
@@ -25,14 +26,30 @@ class WysiwygEditor(ctk.CTkToplevel):
         self.canvas = tk.Canvas(self, bg="white")
         self.canvas.pack(side="left", fill="both", expand=True)
 
-        toolbar = ctk.CTkFrame(self)
-        toolbar.pack(side="right", fill="y", padx=5, pady=5)
+        sidebar = ctk.CTkFrame(self)
+        sidebar.pack(side="right", fill="y", padx=5, pady=5)
+
+        toolbar = ctk.CTkFrame(sidebar)
+        toolbar.pack(fill="x")
         ctk.CTkButton(toolbar, text="Add Text", command=self.add_text).pack(pady=5, fill="x")
         ctk.CTkButton(toolbar, text="Add Image", command=self.add_image).pack(pady=5, fill="x")
         ctk.CTkButton(toolbar, text="Add Button", command=self.add_button).pack(pady=5, fill="x")
         ctk.CTkButton(toolbar, text="Undo", command=self.undo).pack(pady=(20,5), fill="x")
         ctk.CTkButton(toolbar, text="Redo", command=self.redo).pack(pady=5, fill="x")
         ctk.CTkButton(toolbar, text="Export HTML", command=self.export_html).pack(pady=(20,0), fill="x")
+
+        ctk.CTkLabel(sidebar, text="Changelog").pack(pady=(10,0))
+        self.changelog = tk.Listbox(
+            sidebar,
+            bg="#2B2B2B",
+            fg="white",
+            selectbackground="#1F6AA5",
+            selectforeground="white",
+            borderwidth=0,
+            highlightthickness=0,
+            height=15,
+        )
+        self.changelog.pack(fill="both", expand=True, padx=5, pady=(5,0))
 
         self._item_data = {}  # map canvas id -> (type, data)
         self._drag_data = {"item": None, "x": 0, "y": 0, "start": (0, 0)}
@@ -44,6 +61,20 @@ class WysiwygEditor(ctk.CTkToplevel):
         """Push an action onto the history stack and clear redo."""
         self._history.append(action)
         self._redo_stack.clear()
+        self._add_log(self._describe_action(action))
+
+    def _describe_action(self, action: HistoryAction) -> str:
+        t = action.get("type")
+        if t == "create":
+            return f"Added {action.get('item_type', 'item')}"
+        if t == "move":
+            return "Moved item"
+        return t or "action"
+
+    def _add_log(self, message: str):
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        self.changelog.insert(tk.END, f"{timestamp} - {message}")
+        self.changelog.yview_moveto(1)
 
     def undo(self):
         if not self._history:
@@ -57,6 +88,7 @@ class WysiwygEditor(ctk.CTkToplevel):
         elif action.get("type") == "move":
             self.canvas.coords(action["item"], action["old"])
         self._redo_stack.append(action)
+        self._add_log("Undo " + self._describe_action(action))
 
     def redo(self):
         if not self._redo_stack:
@@ -87,6 +119,7 @@ class WysiwygEditor(ctk.CTkToplevel):
         elif action.get("type") == "move":
             self.canvas.coords(action["item"], action["new"])
         self._history.append(action)
+        self._add_log("Redo " + self._describe_action(action))
 
     # --- Drag helpers ---
     def _make_draggable(self, item):
