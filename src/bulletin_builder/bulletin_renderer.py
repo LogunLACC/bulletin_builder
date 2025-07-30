@@ -1,7 +1,9 @@
 import os
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from markdown import markdown
 from typing import Optional
+
 
 class BulletinRenderer:
     def __init__(self, templates_dir, template_name: str = "main_layout.html"):
@@ -13,21 +15,34 @@ class BulletinRenderer:
         self.templates_dir = Path(templates_dir)
         self.template_name = template_name
         if not self.templates_dir.is_dir():
-            raise FileNotFoundError(f"Templates directory not found at: {self.templates_dir}")
+            raise FileNotFoundError(
+                f"Templates directory not found at: {self.templates_dir}"
+            )
 
         self.env = Environment(
-            loader=FileSystemLoader([
-                self.templates_dir,
-                self.templates_dir / "gallery",
-            ]),
-            autoescape=select_autoescape(['html', 'xml'])
+            loader=FileSystemLoader(
+                [
+                    self.templates_dir,
+                    self.templates_dir / "gallery",
+                ]
+            ),
+            autoescape=select_autoescape(["html", "xml"]),
+        )
+        # Register a simple Markdown filter
+        self.env.filters["markdown"] = lambda text: markdown(
+            text or "", output_format="html"
         )
 
     def set_template(self, name: str):
         """Change the layout template used for rendering."""
         self.template_name = name
 
-    def render_html(self, sections_data: list, settings: dict = None, template_name: Optional[str] = None) -> str:
+    def render_html(
+        self,
+        sections_data: list,
+        settings: dict = None,
+        template_name: Optional[str] = None,
+    ) -> str:
         """
         Renders the final HTML for the bulletin, injecting theme styles.
         """
@@ -49,7 +64,7 @@ class BulletinRenderer:
             theme_path = self.templates_dir / "themes" / theme_filename
             if theme_path.is_file():
                 try:
-                    theme_styles = theme_path.read_text(encoding='utf-8')
+                    theme_styles = theme_path.read_text(encoding="utf-8")
                 except Exception as e:
                     print(f"Error reading theme file {theme_path}: {e}")
             else:
@@ -60,12 +75,9 @@ class BulletinRenderer:
             template = self.env.get_template(tpl_name)
 
             html_output = template.render(
-                sections=sections_data,
-                settings=settings,
-                theme_styles=theme_styles
+                sections=sections_data, settings=settings, theme_styles=theme_styles
             )
             return html_output
         except Exception as e:
             print(f"Error rendering template: {e}")
             return f"<html><body><h1>Template Render Error</h1><p>{e}</p></body></html>"
-
