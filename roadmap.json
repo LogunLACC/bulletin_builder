@@ -36,7 +36,7 @@
     "acceptance": "Image uploads are optimized and result in significantly smaller HTML output size."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Add calendar event exporter (.ics)",
     "action": "Allow user to add event info and export ICS files for email invites or to embed calendar links.",
     "acceptance": "User can download a valid .ics file matching event details entered."
