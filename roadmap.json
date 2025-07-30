@@ -72,7 +72,7 @@
     "acceptance": "User can click 'Suggest Subject' and receive 3+ AI-generated ideas."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Undo/redo functionality in editor",
     "action": "Track changes and allow users to undo and redo edits made during the session.",
     "acceptance": "User can click undo/redo buttons to revert changes with visual feedback."
