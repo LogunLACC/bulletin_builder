@@ -1,0 +1,18 @@
+[project]
+name = "bulletin_builder"
+version = "0.1.0"
+description = "Smart desktop builder for community email bulletins"
+authors = [{ name = "Logun", email = "logun.johnston@gmail.com" }]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "jinja2",
+    "requests"
+]
+
+[project.scripts]
+bulletin = "bulletin_builder.__main__:main"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

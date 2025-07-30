@@ -1,0 +1,2 @@
+[console_scripts]
+bulletin = bulletin_builder.__main__:main
