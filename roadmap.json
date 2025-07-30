@@ -24,7 +24,7 @@
     "acceptance": "User can browse templates visually and apply them with a click."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Responsive layout preview",
     "action": "Add toggle for desktop, tablet, and mobile preview modes within the GUI using a scaled iframe or equivalent.",
     "acceptance": "User can preview how the email/bulletin will look on different screen sizes."
