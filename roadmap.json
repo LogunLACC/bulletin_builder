@@ -96,7 +96,7 @@
     "acceptance": "Documented shortcuts work reliably in the editor interface."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Live changelog sidebar",
     "action": "Display live summary of edits made in current session (add image, edited block, changed style).",
     "acceptance": "Sidebar shows list of actions with timestamps as user makes changes."
