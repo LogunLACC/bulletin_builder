@@ -45,3 +45,23 @@ def fetch_events(url: str) -> List[Dict[str, str]]:
                 }
             )
     return [e for e in events if any(e.values())]
+
+
+def events_to_blocks(events: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    """Convert raw event dictionaries into standard bulletin blocks.
+
+    Each returned block is guaranteed to have ``date``, ``time``, ``description``
+    and ``image_url`` keys so templates can render them without additional
+    checks.
+    """
+    blocks: List[Dict[str, str]] = []
+    for ev in events:
+        blocks.append(
+            {
+                "date": (ev.get("date") or "").strip(),
+                "time": (ev.get("time") or "").strip(),
+                "description": (ev.get("description") or ev.get("title") or "").strip(),
+                "image_url": (ev.get("image_url") or ev.get("image") or "").strip(),
+            }
+        )
+    return blocks

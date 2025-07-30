@@ -108,7 +108,7 @@
     "acceptance": "User can import events from a public URL or connected sheet and preview them in the bulletin builder."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Auto-Generate Event Blocks from Feed",
     "action": "Parse each fetched event into a styled content block and insert them with default formatting (e.g., header, image, time).",
     "acceptance": "User can see cleanly formatted event blocks added automatically and can edit them if needed."
