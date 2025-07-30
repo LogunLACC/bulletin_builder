@@ -2,7 +2,7 @@ import customtkinter as ctk
 import tkinter as tk
 from tkhtmlview import HTMLLabel
 from pathlib import Path
-from ui.settings import SettingsFrame
+from ..ui.settings import SettingsFrame
 
 def init(app):
     """Build all UI elements and wire them to app handlers."""
