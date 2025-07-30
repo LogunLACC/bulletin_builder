@@ -19,6 +19,7 @@ def init(app):
             app.current_draft_path = None
             if hasattr(app.settings_frame,'load_data'):
                 app.settings_frame.load_data(_default_settings(), app.google_api_key)
+            app.renderer.set_template('main_layout.html')
             app.refresh_listbox_titles()
             app.show_placeholder()
             app.update_preview()
@@ -34,6 +35,7 @@ def init(app):
             messagebox.showerror('Open Error',str(e)); return
         app.sections_data[:] = data.get('sections',[])
         app.current_draft_path = path
+        app.renderer.set_template(data.get('template_name', 'main_layout.html'))
         settings = data.get('settings', _default_settings())
         if hasattr(app.settings_frame,'load_data'):
             app.settings_frame.load_data(settings, settings.get('google_api_key',app.google_api_key))
@@ -50,7 +52,8 @@ def init(app):
             app.current_draft_path = path
         payload = {
             'sections': app.sections_data,
-            'settings': app.settings_frame.dump()
+            'settings': app.settings_frame.dump(),
+            'template_name': app.renderer.template_name
         }
         try:
             Path(app.current_draft_path).write_text(json.dumps(payload,indent=2), encoding='utf-8')
