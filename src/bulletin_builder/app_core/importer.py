@@ -3,7 +3,7 @@ import io
 import urllib.request
 from tkinter import filedialog, messagebox, simpledialog
 
-from ..event_feed import fetch_events
+from ..event_feed import fetch_events, events_to_blocks
 
 
 def init(app):
@@ -63,10 +63,11 @@ def init(app):
         if not url:
             return
         try:
-            events = fetch_events(url)
+            raw_events = fetch_events(url)
         except Exception as e:
             messagebox.showerror('Import Error', str(e))
             return
+        events = events_to_blocks(raw_events)
         if not events:
             messagebox.showinfo('Import Events', 'No events found.')
             return
