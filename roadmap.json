@@ -156,7 +156,7 @@
     "acceptance": "User can filter events by tag and group them visually in the bulletin."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Event Conflict Detection",
     "action": "Analyze times of imported events and flag overlaps or double-bookings to the user.",
     "acceptance": "User is alerted when two events share overlapping time slots and can adjust layout accordingly."
