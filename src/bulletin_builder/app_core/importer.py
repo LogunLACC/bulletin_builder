@@ -58,8 +58,9 @@ def init(app):
             return
         _rows_to_sections(rows)
 
-    def import_events_feed():
-        url = simpledialog.askstring('Events Feed URL', 'Enter events JSON/CSV URL:')
+    def import_events_feed(url: str | None = None):
+        if not url:
+            url = simpledialog.askstring('Events Feed URL', 'Enter events JSON/CSV URL:')
         if not url:
             return
         try:
@@ -83,6 +84,17 @@ def init(app):
         app.update_preview()
         app.show_status_message(f"Imported {len(events)} events")
 
+    def auto_sync_events_feed():
+        url = getattr(app, 'events_feed_url', '')
+        if not url:
+            return
+        import_events_feed(url)
+
+
     app.import_announcements_csv = import_csv_file
     app.import_announcements_sheet = import_google_sheet
     app.import_events_feed = import_events_feed
+    app.auto_sync_events_feed = auto_sync_events_feed
+
+    # Auto sync on startup if URL configured
+    app.auto_sync_events_feed()
