@@ -3,7 +3,12 @@ import io
 import urllib.request
 from tkinter import filedialog, messagebox, simpledialog
 
-from ..event_feed import fetch_events, events_to_blocks, process_event_images
+from ..event_feed import (
+    fetch_events,
+    events_to_blocks,
+    process_event_images,
+    expand_recurring_events,
+)
 
 
 def init(app):
@@ -68,6 +73,22 @@ def init(app):
         except Exception as e:
             messagebox.showerror('Import Error', str(e))
             return
+
+        raw_events = expand_recurring_events(raw_events)
+
+        # Prompt user for which dates to include when multiple dates exist
+        dates = sorted({ev.get('date') for ev in raw_events if ev.get('date')})
+        if len(dates) > 1:
+            prompt = (
+                "Available event dates:\n"
+                + "\n".join(dates)
+                + "\nEnter dates to include (comma separated) or leave blank for all:"
+            )
+            resp = simpledialog.askstring('Select Dates', prompt)
+            if resp:
+                allowed = {d.strip() for d in resp.split(',') if d.strip()}
+                raw_events = [ev for ev in raw_events if ev.get('date') in allowed]
+
         events = events_to_blocks(raw_events)
         process_event_images(events)
         if not events:
