@@ -144,7 +144,7 @@
     "acceptance": "User can include only upcoming events or specific days from recurring schedules (e.g., Yoga every Tuesday)."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Bulletin Section Recommender AI",
     "action": "Based on the imported events, suggest sections such as 'Top Picks', 'Kids Events', 'Live Music', etc.",
     "acceptance": "User sees smart prompts to categorize event content and can accept or modify sections."
