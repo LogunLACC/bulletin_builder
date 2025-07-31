@@ -15,8 +15,18 @@ def init_app(app):
     except Exception as e:
         print(f"Error in core_init: {e}")
 
-    # 2) then drafts, handlers, sections, components, exporter, preview, importer...
-    for module in ("handlers", "drafts", "sections", "component_library", "exporter", "preview", "importer", "ui_setup"):
+    # 2) then drafts, handlers, sections, components, exporter, preview, suggestions, importer...
+    for module in (
+        "handlers",
+        "drafts",
+        "sections",
+        "component_library",
+        "exporter",
+        "preview",
+        "suggestions",
+        "importer",
+        "ui_setup",
+    ):
         try:
             m = importlib.import_module(f"{base_pkg}.{module}")
             if hasattr(m, "init"):

@@ -99,6 +99,8 @@ def init(app):
             app.section_listbox.insert(tk.END, f"{i+1}. {title}")
         for idx in sel:
             app.section_listbox.selection_set(idx)
+        if hasattr(app, 'compute_suggestions'):
+            app.compute_suggestions()
 
     # Bind methods
     app.add_section_dialog = add_section_dialog
