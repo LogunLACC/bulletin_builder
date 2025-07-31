@@ -126,7 +126,7 @@
     "acceptance": "All event images appear uniform and do not distort the bulletin layout."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Add ‘Smart Suggestions’ Panel",
     "action": "Analyze recent bulletin content and suggest block types (e.g., if many events: suggest adding a 'Community Highlights' banner).",
     "acceptance": "User receives real-time layout suggestions based on bulletin content and patterns."
