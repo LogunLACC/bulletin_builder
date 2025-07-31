@@ -162,7 +162,7 @@
     "acceptance": "User is alerted when two events share overlapping time slots and can adjust layout accordingly."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Add Event Link + Map Button Support",
     "action": "Each event block supports adding an external link (to website or map). Auto-format as a styled button.",
     "acceptance": "User can click a 'View Map' or 'More Info' button on each event block."
