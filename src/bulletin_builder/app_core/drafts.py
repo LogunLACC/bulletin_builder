@@ -11,7 +11,8 @@ def init(app):
             'theme_css': 'default.css',
             'appearance_mode': 'Dark',
             'colors': {'primary':'#103040','secondary':'#506070'},
-            'google_api_key': app.google_api_key
+            'google_api_key': app.google_api_key,
+            'events_feed_url': app.events_feed_url
         }
 
     def new_draft():
@@ -19,7 +20,12 @@ def init(app):
             app.sections_data.clear()
             app.current_draft_path = None
             if hasattr(app.settings_frame,'load_data'):
-                app.settings_frame.load_data(_default_settings(), app.google_api_key, app.openai_api_key)
+                app.settings_frame.load_data(
+                    _default_settings(),
+                    app.google_api_key,
+                    app.openai_api_key,
+                    app.events_feed_url,
+                )
             app.renderer.set_template('main_layout.html')
             app.refresh_listbox_titles()
             app.show_placeholder()
@@ -42,7 +48,8 @@ def init(app):
             app.settings_frame.load_data(
                 settings,
                 settings.get('google_api_key', app.google_api_key),
-                settings.get('openai_api_key', app.openai_api_key)
+                settings.get('openai_api_key', app.openai_api_key),
+                settings.get('events_feed_url', app.events_feed_url),
             )
         app.refresh_listbox_titles()
         app.show_placeholder()

@@ -12,11 +12,12 @@ class SettingsFrame(ctk.CTkFrame):
       • Google AI API Key
     """
 
-    def __init__(self, parent, refresh_callback: callable, save_api_key_callback: callable, save_openai_key_callback: callable):
+    def __init__(self, parent, refresh_callback: callable, save_api_key_callback: callable, save_openai_key_callback: callable, save_events_url_callback: callable):
         super().__init__(parent, fg_color="transparent")
         self.refresh_callback = refresh_callback
         self.save_api_key_callback = save_api_key_callback
         self.save_openai_key_callback = save_openai_key_callback
+        self.save_events_url_callback = save_events_url_callback
 
         # Build all controls
         self._build_widgets()
@@ -60,8 +61,12 @@ class SettingsFrame(ctk.CTkFrame):
         self.openai_api_entry = ctk.CTkEntry(self, show="*")
         self.openai_api_entry.grid(row=6, column=1, sticky="ew", pady=(0,5))
 
+        ctk.CTkLabel(self, text="Events Feed URL:").grid(row=7, column=0, sticky="w", pady=(0,5))
+        self.events_feed_entry = ctk.CTkEntry(self)
+        self.events_feed_entry.grid(row=7, column=1, sticky="ew", pady=(0,5))
+
         # Appearance Mode
-        ctk.CTkLabel(self, text="Appearance:").grid(row=7, column=0, sticky="w", pady=(0,5))
+        ctk.CTkLabel(self, text="Appearance:").grid(row=8, column=0, sticky="w", pady=(0,5))
         self.appearance_option = ctk.CTkOptionMenu(
             self,
             values=["Light", "Dark"],
@@ -73,11 +78,11 @@ class SettingsFrame(ctk.CTkFrame):
         except Exception:
             current = "Dark"
         self.appearance_option.set(current)
-        self.appearance_option.grid(row=7, column=1, sticky="ew", pady=(0,5))
+        self.appearance_option.grid(row=8, column=1, sticky="ew", pady=(0,5))
 
         self.grid_columnconfigure(1, weight=1)
 
-    def load_data(self, settings_data: dict, google_key: str, openai_key: str):
+    def load_data(self, settings_data: dict, google_key: str, openai_key: str, events_url: str):
         """Populate all fields, falling back to sensible defaults."""
         settings_data = settings_data or {}
         colors = settings_data.get("colors", {})
@@ -126,6 +131,10 @@ class SettingsFrame(ctk.CTkFrame):
         self.openai_api_entry.insert(0, openai_key or "")
         self.save_openai_key_callback(self.openai_api_entry.get())
 
+        self.events_feed_entry.delete(0, "end")
+        self.events_feed_entry.insert(0, events_url or "")
+        self.save_events_url_callback(self.events_feed_entry.get())
+
         # Fire a preview refresh
         self.refresh_callback()
 
@@ -141,6 +150,7 @@ class SettingsFrame(ctk.CTkFrame):
             },
             "google_api_key": self.google_api_entry.get(),
             "openai_api_key": self.openai_api_entry.get(),
+            "events_feed_url": self.events_feed_entry.get(),
             "appearance_mode": self.appearance_option.get(),
         }
 
