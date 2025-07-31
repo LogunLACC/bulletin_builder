@@ -11,6 +11,7 @@ from ..bulletin_renderer import BulletinRenderer
 from .config import (
     load_api_key,
     load_openai_key,
+    load_events_feed_url,
 )
 from ..ui.base_section import SectionRegistry
 
@@ -35,6 +36,7 @@ def init(app):
     # --- load & configure AI keys ---
     app.google_api_key = load_api_key()
     app.openai_api_key = load_openai_key()
+    app.events_feed_url = load_events_feed_url()
     genai.configure(api_key=app.google_api_key)
 
     # Configure OpenAI when key available

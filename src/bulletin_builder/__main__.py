@@ -1,7 +1,11 @@
 import os
 import customtkinter as ctk
 from .app_core.loader import init_app
-from .app_core.config import save_api_key, save_openai_key
+from .app_core.config import (
+    save_api_key,
+    save_openai_key,
+    save_events_feed_url,
+)
 import argparse
 from .wysiwyg_editor import launch_gui
 
@@ -12,9 +16,10 @@ class BulletinBuilderApp(ctk.CTk):
     """
     def __init__(self):
         super().__init__()
-        # Expose API key savers for SettingsFrame
+        # Expose config savers for SettingsFrame
         self.save_api_key_to_config = save_api_key
         self.save_openai_key_to_config = save_openai_key
+        self.save_events_url_to_config = save_events_feed_url
 
         # Wire up all subsystems (core_init, handlers, drafts, sections, exporter, preview, UI)
         init_app(self)
