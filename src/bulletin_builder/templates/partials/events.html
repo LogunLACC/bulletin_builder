@@ -28,6 +28,18 @@
                                 <span style="font-size: 0.9em; color: #666;">{{ event.date }} {% if event.time %}at {{ event.time }}{% endif %}</span>
                             </td>
                         </tr>
+                        {% if event.link or event.map_link %}
+                        <tr>
+                            <td style="border: none; padding: 5px 0; text-align: center;">
+                                {% if event.link %}
+                                <a href="{{ event.link }}" target="_blank" style="display:inline-block; background-color: {{ settings.colors.primary or '#1F6AA5' }}; color:#fff; padding:6px 12px; border-radius:4px; text-decoration:none; margin-right:5px;">More Info</a>
+                                {% endif %}
+                                {% if event.map_link %}
+                                <a href="{{ event.map_link }}" target="_blank" style="display:inline-block; background-color: {{ settings.colors.primary or '#1F6AA5' }}; color:#fff; padding:6px 12px; border-radius:4px; text-decoration:none;">View Map</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
                     </table>
                 </td>
                 {% endfor %}
@@ -56,6 +68,18 @@
                                 <span style="font-size: 1em; color: {{ settings.colors.primary or '#005f73' }}; font-weight: bold;">{{ event.date }} {% if event.time %}at {{ event.time }}{% endif %}</span>
                             </td>
                         </tr>
+                        {% if event.link or event.map_link %}
+                        <tr>
+                            <td style="border: none; padding: 0 20px 20px 20px; text-align: center;">
+                                {% if event.link %}
+                                <a href="{{ event.link }}" target="_blank" style="display:inline-block; background-color: {{ settings.colors.primary or '#1F6AA5' }}; color:#fff; padding:6px 12px; border-radius:4px; text-decoration:none; margin-right:5px;">More Info</a>
+                                {% endif %}
+                                {% if event.map_link %}
+                                <a href="{{ event.map_link }}" target="_blank" style="display:inline-block; background-color: {{ settings.colors.primary or '#1F6AA5' }}; color:#fff; padding:6px 12px; border-radius:4px; text-decoration:none;">View Map</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
                     </table>
                 </td>
             </tr>

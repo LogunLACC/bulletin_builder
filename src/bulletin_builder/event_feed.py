@@ -34,8 +34,8 @@ def fetch_events(url: str) -> List[Dict[str, str]]:
             title/description, date, time, image or image_url.
 
     Returns:
-        A list of event dictionaries with ``date``, ``time``, ``description`` and
-        ``image_url`` keys.
+        A list of event dictionaries with ``date``, ``time``, ``description``,
+        ``image_url``, ``link`` and ``map_link`` keys.
     """
     with urllib.request.urlopen(url) as resp:
         text = resp.read().decode("utf-8")
@@ -53,6 +53,8 @@ def fetch_events(url: str) -> List[Dict[str, str]]:
                     "description": item.get("title") or item.get("description", ""),
                     "image_url": item.get("image") or item.get("image_url", ""),
                     "tags": _normalize_tags(item.get("tags") or item.get("categories") or item.get("labels") or item.get("tag")),
+                    "link": item.get("link") or item.get("url", ""),
+                    "map_link": item.get("map") or item.get("map_link", ""),
                 }
             )
     except json.JSONDecodeError:
@@ -65,6 +67,8 @@ def fetch_events(url: str) -> List[Dict[str, str]]:
                     "description": row.get("title") or row.get("description", ""),
                     "image_url": row.get("image") or row.get("image_url", ""),
                     "tags": _normalize_tags(row.get("tags") or row.get("categories") or row.get("labels") or row.get("tag")),
+                    "link": row.get("link") or row.get("url", ""),
+                    "map_link": row.get("map") or row.get("map_link", ""),
                 }
             )
     return [e for e in events if any(e.values())]
@@ -86,6 +90,8 @@ def events_to_blocks(events: List[Dict[str, str]]) -> List[Dict[str, str]]:
                 "description": (ev.get("description") or ev.get("title") or "").strip(),
                 "image_url": (ev.get("image_url") or ev.get("image") or "").strip(),
                 "tags": _normalize_tags(ev.get("tags")),
+                "link": (ev.get("link") or ev.get("url") or "").strip(),
+                "map_link": (ev.get("map_link") or ev.get("map") or "").strip(),
             }
         )
     return blocks

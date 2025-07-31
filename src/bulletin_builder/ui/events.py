@@ -100,14 +100,35 @@ class EventsFrame(ctk.CTkFrame):
         image_url_frame = ctk.CTkFrame(entry_frame, fg_color="transparent")
         image_url_frame.grid(row=1, column=0, sticky="ew", pady=5)
         image_url_frame.grid_columnconfigure(0, weight=1)
-        
+
         image_url_entry = ctk.CTkEntry(image_url_frame, placeholder_text="Image URL (optional)")
         image_url_entry.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
         image_url_entry.insert(0, event_item_data.get("image_url", ""))
         image_url_entry.bind("<KeyRelease>", lambda e, i=index: self.update_event_data(i, "image_url", e.widget.get()))
 
+        link_frame = ctk.CTkFrame(entry_frame, fg_color="transparent")
+        link_frame.grid(row=2, column=0, sticky="ew", pady=5)
+        link_frame.grid_columnconfigure(0, weight=1)
+
+        link_entry = ctk.CTkEntry(link_frame, placeholder_text="More Info Link (optional)")
+        link_entry.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+        link_entry.insert(0, event_item_data.get("link", ""))
+        link_entry.bind("<KeyRelease>", lambda e, i=index: self.update_event_data(i, "link", e.widget.get()))
+
+        map_entry = ctk.CTkEntry(link_frame, placeholder_text="Map Link (optional)")
+        map_entry.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
+        map_entry.insert(0, event_item_data.get("map_link", ""))
+        map_entry.bind("<KeyRelease>", lambda e, i=index: self.update_event_data(i, "map_link", e.widget.get()))
+
     def add_event_item(self):
-        self.section_data['content'].append({"date": "", "time": "", "description": "", "image_url": ""})
+        self.section_data['content'].append({
+            "date": "",
+            "time": "",
+            "description": "",
+            "image_url": "",
+            "link": "",
+            "map_link": "",
+        })
         self.rebuild_event_list()
         self._on_data_change()
 
