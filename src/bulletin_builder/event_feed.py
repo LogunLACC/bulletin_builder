@@ -7,9 +7,23 @@ import tempfile
 import calendar
 import re
 from datetime import datetime, timedelta
-from typing import List, Dict
+from typing import List, Dict, Iterable
 
 from .image_utils import optimize_image
+
+
+def _normalize_tags(raw: Iterable | str | None) -> list[str]:
+    """Return a list of lowercase tags from a variety of inputs."""
+    if not raw:
+        return []
+    if isinstance(raw, str):
+        parts = [p.strip() for p in raw.split(',')]
+    else:
+        try:
+            parts = [str(p).strip() for p in raw]
+        except TypeError:
+            parts = []
+    return [p.lower() for p in parts if p]
 
 
 def fetch_events(url: str) -> List[Dict[str, str]]:
@@ -38,6 +52,7 @@ def fetch_events(url: str) -> List[Dict[str, str]]:
                     "time": item.get("time", ""),
                     "description": item.get("title") or item.get("description", ""),
                     "image_url": item.get("image") or item.get("image_url", ""),
+                    "tags": _normalize_tags(item.get("tags") or item.get("categories") or item.get("labels") or item.get("tag")),
                 }
             )
     except json.JSONDecodeError:
@@ -49,6 +64,7 @@ def fetch_events(url: str) -> List[Dict[str, str]]:
                     "time": row.get("time", ""),
                     "description": row.get("title") or row.get("description", ""),
                     "image_url": row.get("image") or row.get("image_url", ""),
+                    "tags": _normalize_tags(row.get("tags") or row.get("categories") or row.get("labels") or row.get("tag")),
                 }
             )
     return [e for e in events if any(e.values())]
@@ -69,6 +85,7 @@ def events_to_blocks(events: List[Dict[str, str]]) -> List[Dict[str, str]]:
                 "time": (ev.get("time") or "").strip(),
                 "description": (ev.get("description") or ev.get("title") or "").strip(),
                 "image_url": (ev.get("image_url") or ev.get("image") or "").strip(),
+                "tags": _normalize_tags(ev.get("tags")),
             }
         )
     return blocks

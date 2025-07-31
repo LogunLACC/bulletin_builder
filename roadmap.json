@@ -150,7 +150,7 @@
     "acceptance": "User sees smart prompts to categorize event content and can accept or modify sections."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "User-Defined Event Tags and Filtering",
     "action": "Allow custom tags (e.g., 'Family', 'Free', 'Concert') for events and enable filtering during import.",
     "acceptance": "User can filter events by tag and group them visually in the bulletin."
