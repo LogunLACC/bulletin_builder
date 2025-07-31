@@ -4,6 +4,9 @@ import json
 import urllib.request
 import os
 import tempfile
+import calendar
+import re
+from datetime import datetime, timedelta
 from typing import List, Dict
 
 from .image_utils import optimize_image
@@ -97,4 +100,46 @@ def process_event_images(
             ev["image_url"] = opt_path
         except Exception:
             continue
+
+
+def expand_recurring_events(events: List[Dict[str, str]], days: int = 60) -> List[Dict[str, str]]:
+    """Expand simple weekly recurring events into individual occurrences.
+
+    Events may provide a ``recurrence`` or ``rrule`` field in the form
+    ``"weekly:Monday"``. Each occurrence within ``days`` days from today is
+    returned as a separate event dictionary with the ``date`` field set.
+    Past events are automatically filtered out.
+    """
+    start = datetime.utcnow().date()
+    end = start + timedelta(days=days)
+    expanded: List[Dict[str, str]] = []
+
+    for ev in events:
+        rule = ev.get("recurrence") or ev.get("rrule")
+        if rule:
+            m = re.match(r"weekly:(\w+)", str(rule), re.IGNORECASE)
+            if m:
+                weekday = m.group(1).capitalize()
+                if weekday in calendar.day_name:
+                    idx = list(calendar.day_name).index(weekday)
+                    current = start
+                    while current <= end:
+                        if current.weekday() == idx:
+                            nev = ev.copy()
+                            nev["date"] = current.isoformat()
+                            expanded.append(nev)
+                        current += timedelta(days=1)
+                continue
+        # If no recurrence rule, include future-dated events only
+        date_str = ev.get("date")
+        if date_str:
+            try:
+                dt = datetime.fromisoformat(date_str)
+                if dt.date() < start:
+                    continue
+            except Exception:
+                pass
+        expanded.append(ev)
+
+    return expanded
 
