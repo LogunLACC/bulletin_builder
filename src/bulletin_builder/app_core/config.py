@@ -49,3 +49,22 @@ def load_openai_key() -> str:
 
 def save_openai_key(api_key: str) -> None:
     _save_key("openai", api_key)
+
+
+def load_events_feed_url() -> str:
+    config = configparser.ConfigParser()
+    if os.path.exists(CONFIG_FILE):
+        config.read(CONFIG_FILE)
+        return config.get("events", "feed_url", fallback="")
+    return ""
+
+
+def save_events_feed_url(url: str) -> None:
+    config = configparser.ConfigParser()
+    if os.path.exists(CONFIG_FILE):
+        config.read(CONFIG_FILE)
+    if "events" not in config:
+        config["events"] = {}
+    config["events"]["feed_url"] = url
+    with open(CONFIG_FILE, "w") as f:
+        config.write(f)

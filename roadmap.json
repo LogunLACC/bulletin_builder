@@ -132,7 +132,7 @@
     "acceptance": "User receives real-time layout suggestions based on bulletin content and patterns."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Link Event Feed to Admin Calendar",
     "action": "Enable auto-sync from community calendars like Google Calendar, Airtable, or a JSON endpoint (e.g., lakealmanorcountryclub.com/data/events.json).",
     "acceptance": "Events can be imported and previewed from a connected calendar feed with minimal setup."
