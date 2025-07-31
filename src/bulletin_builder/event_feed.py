@@ -6,7 +6,7 @@ import os
 import tempfile
 import calendar
 import re
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from typing import List, Dict, Iterable
 
 from .image_utils import optimize_image
@@ -159,4 +159,58 @@ def expand_recurring_events(events: List[Dict[str, str]], days: int = 60) -> Lis
         expanded.append(ev)
 
     return expanded
+
+
+def _parse_time(value: str) -> time | None:
+    """Parse a time string to ``datetime.time`` if possible."""
+    if not value:
+        return None
+    value = value.strip().lower().replace(".", "")
+    patterns = [
+        "%I:%M %p",
+        "%I %p",
+        "%H:%M",
+        "%H",
+    ]
+    for fmt in patterns:
+        try:
+            return datetime.strptime(value, fmt).time()
+        except ValueError:
+            continue
+    return None
+
+
+def _parse_time_range(value: str) -> tuple[time | None, time | None]:
+    """Return (start, end) times from a value like '9am-10am'."""
+    if not value:
+        return None, None
+    parts = re.split(r"\s*-\s*|\s+to\s+", value, maxsplit=1)
+    if len(parts) == 2:
+        start = _parse_time(parts[0])
+        end = _parse_time(parts[1])
+    else:
+        start = _parse_time(value)
+        end = None
+    return start, end
+
+
+def detect_conflicts(events: List[Dict[str, str]]) -> List[tuple[Dict[str, str], Dict[str, str]]]:
+    """Return pairs of events that overlap in time on the same date."""
+    parsed = []
+    for ev in events:
+        start, end = _parse_time_range(ev.get("time", ""))
+        if ev.get("date") and start:
+            if end is None:
+                end_dt = datetime.combine(datetime.today(), start) + timedelta(hours=1)
+                end = end_dt.time()
+            parsed.append((ev.get("date"), start, end, ev))
+
+    parsed.sort(key=lambda t: (t[0], t[1]))
+    conflicts = []
+    for i in range(len(parsed) - 1):
+        d1, s1, e1, ev1 = parsed[i]
+        d2, s2, e2, ev2 = parsed[i + 1]
+        if d1 == d2 and s2 < e1:
+            conflicts.append((ev1, ev2))
+    return conflicts
 
