@@ -83,6 +83,10 @@ def init(app):
     app.ics_button = ctk.CTkButton(expf, text="Export Event .ics", command=app.on_export_ics_clicked)
     app.ics_button.pack(fill="x")
 
+    # Smart Suggestions Panel
+    sugg_frame = app.build_suggestions_panel(lp)
+    sugg_frame.pack(fill="x", pady=5)
+
     # Right panel: editor or placeholder
     app.right_panel = ctk.CTkFrame(content)
     app.right_panel.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
@@ -140,3 +144,6 @@ def init(app):
     app.bind("<Control-Shift-S>", lambda e: app.save_draft(save_as=True))
     app.bind("<Control-o>", lambda e: app.open_draft())
     app.bind("<Control-n>", lambda e: app.new_draft())
+
+    if hasattr(app, "compute_suggestions"):
+        app.compute_suggestions()
