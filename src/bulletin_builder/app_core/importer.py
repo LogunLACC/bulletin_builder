@@ -89,6 +89,22 @@ def init(app):
                 allowed = {d.strip() for d in resp.split(',') if d.strip()}
                 raw_events = [ev for ev in raw_events if ev.get('date') in allowed]
 
+        # Prompt for tags if available
+        tags_set = set(t for ev in raw_events for t in (ev.get('tags') or []))
+        if tags_set:
+            tag_prompt = (
+                "Available tags:\n"
+                + ", ".join(sorted(tags_set))
+                + "\nEnter tags to include (comma separated) or leave blank for all:"
+            )
+            resp = simpledialog.askstring('Select Tags', tag_prompt)
+            if resp:
+                allowed_tags = {t.strip().lower() for t in resp.split(',') if t.strip()}
+                raw_events = [
+                    ev for ev in raw_events
+                    if allowed_tags.intersection({t.lower() for t in (ev.get('tags') or [])})
+                ]
+
         events = events_to_blocks(raw_events)
         process_event_images(events)
         if not events:

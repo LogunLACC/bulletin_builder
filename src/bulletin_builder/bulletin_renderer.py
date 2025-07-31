@@ -35,8 +35,9 @@ class BulletinRenderer:
             text or "", output_format="html"
         )
 
-        # Register event grouping filter
+        # Register event grouping filters
         self.env.filters["group_events"] = self._group_events
+        self.env.filters["group_events_by_tag"] = self._group_events_by_tag
 
     # --- Event Grouping Logic -------------------------------------------------
     def _parse_date(self, value: str, default_year: int) -> date | None:
@@ -94,6 +95,18 @@ class BulletinRenderer:
             grp = groups.setdefault(header, {"header": header, "events": []})
             grp["events"].append(ev)
 
+        return list(groups.values())
+
+    def _group_events_by_tag(self, events: List[Dict[str, str]]) -> List[Dict[str, object]]:
+        """Group events by their first tag."""
+        groups: OrderedDict[str, Dict[str, object]] = OrderedDict()
+        for ev in events:
+            tags = ev.get("tags") or []
+            if isinstance(tags, str):
+                tags = [t.strip() for t in tags.split(",") if t.strip()]
+            tag = tags[0] if tags else "Other"
+            grp = groups.setdefault(tag.capitalize(), {"header": tag.capitalize(), "events": []})
+            grp["events"].append(ev)
         return list(groups.values())
 
     def set_template(self, name: str):
