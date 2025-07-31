@@ -3,7 +3,13 @@ import io
 import urllib.request
 from tkinter import filedialog, messagebox, simpledialog
 
-from ..event_feed import fetch_events, events_to_blocks, process_event_images
+from ..event_feed import (
+    fetch_events,
+    events_to_blocks,
+    process_event_images,
+    expand_recurring_event,
+)
+from ..ui.recurring_event_dialog import RecurringEventDialog
 
 
 def init(app):
@@ -69,6 +75,17 @@ def init(app):
             messagebox.showerror('Import Error', str(e))
             return
         events = events_to_blocks(raw_events)
+        expanded: list[dict] = []
+        bulletin_date = app.settings_frame.date_entry.get()
+        for ev in events:
+            occ = expand_recurring_event(ev, bulletin_date)
+            if len(occ) > 1:
+                dlg = RecurringEventDialog(app, occ)
+                selected = dlg.get_selected()
+                expanded.extend(selected)
+            else:
+                expanded.append(occ[0])
+        events = expanded
         process_event_images(events)
         if not events:
             messagebox.showinfo('Import Events', 'No events found.')

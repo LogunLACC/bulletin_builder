@@ -138,7 +138,7 @@
     "acceptance": "Events can be imported and previewed from a connected calendar feed with minimal setup."
   },
   {
-    "status": "todo",
+    "status": "complete",
     "title": "Recurring Events Handling",
     "action": "Detect recurring events and allow user to select which occurrences to include.",
     "acceptance": "User can include only upcoming events or specific days from recurring schedules (e.g., Yoga every Tuesday)."
