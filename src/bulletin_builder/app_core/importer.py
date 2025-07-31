@@ -8,6 +8,7 @@ from ..event_feed import (
     events_to_blocks,
     process_event_images,
     expand_recurring_events,
+    detect_conflicts,
 )
 
 
@@ -107,6 +108,15 @@ def init(app):
 
         events = events_to_blocks(raw_events)
         process_event_images(events)
+        conflicts = detect_conflicts(events)
+        if conflicts:
+            msg_lines = ["Overlapping events detected:"]
+            for a, b in conflicts:
+                msg_lines.append(
+                    f"- {a.get('description','')} ({a.get('date')} {a.get('time')}) \u2194 "
+                    f"{b.get('description','')} ({b.get('date')} {b.get('time')})"
+                )
+            messagebox.showwarning('Event Conflicts', '\n'.join(msg_lines))
         if not events:
             messagebox.showinfo('Import Events', 'No events found.')
             return
