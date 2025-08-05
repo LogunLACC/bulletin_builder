@@ -1,0 +1,13 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//LACC Bulletin Builder//EN
+BEGIN:VEVENT
+UID:6635292a-c4d9-4ac4-a4b5-8d4ee8983d51
+DTSTAMP:20250801T175056Z
+DTSTART:20250801T105000
+DTEND:20250801T105500
+SUMMARY:Test
+DESCRIPTION:This is a test.  This is only a test.  If this was not a test you would hear the emergency broadcast signal.
+LOCATION:Around
+END:VEVENT
+END:VCALENDAR

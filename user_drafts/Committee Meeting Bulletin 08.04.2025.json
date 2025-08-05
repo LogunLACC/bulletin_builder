@@ -1,0 +1,73 @@
+{
+  "sections": [
+    {
+      "type": "image",
+      "title": "Email Header",
+      "src": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/05/EmailHeader.png",
+      "alt": "LACC Email Header"
+    },
+    {
+      "title": "This Week 8.4.2035\u20148.11.2025",
+      "type": "custom_text",
+      "content": "<hr>"
+    },
+    {
+      "type": "announcements",
+      "title": "Clubhouse Renovations Meeting",
+      "body": "Time: <strong>Friday, Aug 8 at 12:00 PM</strong><br />\nLocation: LACC Clubhouse<br />\nMeeting ID: 876 0900 0057<br />\nPasscode: 020044",
+      "link": "https://us06web.zoom.us/j/87609000057?pwd=ATJ6ExdaaksUYkbi8bAp9yIaq1teDp.1\u00a0",
+      "link_text": "Join Zoom Meeting"
+    },
+    {
+      "title": "Annual Board of Directors Meeting",
+      "type": "announcements",
+      "content": {},
+      "body": "Time: <strong>Aug 9, 2025, 08:00 AM</strong><br />\nLocation: LACC Clubhouse<br />\nMeeting ID: 892 6746 2570<br />\nPasscode: 692272",
+      "link": "https://hoamco.zoom.us/j/89267462570?pwd=lC6oVI69KhCQLbbcnQOAaXrrelwT7S.1",
+      "link_text": "Join Zoom Meeting"
+    },
+    {
+      "title": "Next Week 8.11.2035\u20148.18.2025",
+      "type": "custom_text",
+      "content": "<hr />"
+    },
+    {
+      "title": "Finance Committee Meeting",
+      "type": "announcements",
+      "content": {},
+      "body": "Time: 11:00 AM Pacific Time<br />\nLocation: Admin <br />\nMeeting ID: 868 2883 9740<br />\nPasscode: 690208",
+      "link": "https://us06web.zoom.us/j/86828839740?pwd=czFgBxCNdj7MaOPOmHRtX0F3zM0K42.1",
+      "link_text": "Join Zoom Meeting"
+    },
+    {
+      "title": "Board of Directors Open Meeting",
+      "type": "announcements",
+      "content": {},
+      "body": "Time: Aug 16, 2025 11:00 AM Pacific Time<br />\nLocation: Clubhouse<br />\nMeeting ID: 850 1108 9022<br />\nPasscode: 424739",
+      "link": "https://hoamco.zoom.us/j/85011089022?pwd=iQOezag3CUrxpziE0SJlXTAPpyW6mQ.1",
+      "link_text": "Join Zoom Meeting"
+    },
+    {
+      "title": "Disclaimer",
+      "type": "announcements",
+      "content": {},
+      "body": "<small><strong>Please Note:</strong> This information is based on the data available to me at this time. All meeting schedules, dates, and details are subject to change. Please confirm all information with the event organizer.</small>",
+      "link": "",
+      "link_text": ""
+    }
+  ],
+  "settings": {
+    "bulletin_title": "Committee Meetings Bulletin",
+    "bulletin_date": "Monday, August 04, 2025",
+    "theme_css": "default.css",
+    "colors": {
+      "primary": "#103040",
+      "secondary": "#506070"
+    },
+    "google_api_key": "AIzaSyA-sWQA84PSyR13BS2AZmKEUNwmV9-cDIQ",
+    "openai_api_key": "\"REDACTED_OPENAI_KEY\"",
+    "events_feed_url": "\"https://example.com/events.json\"",
+    "appearance_mode": "Dark"
+  },
+  "template_name": "main_layout.html"
+}
