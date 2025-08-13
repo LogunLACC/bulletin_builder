@@ -157,10 +157,24 @@ class SettingsFrame(ctk.CTkFrame):
     def _suggest_subject(self):
         app = self.winfo_toplevel()
         content_parts = []
+        
         for sec in getattr(app, "sections_data", []):
-            content_parts.append(sec.get("title", ""))
-            content_parts.append(sec.get("body", sec.get("content", "")))
+            # Add the title, which is always a string
+            title = sec.get("title", "")
+            if title:
+                content_parts.append(title)
+
+            # Get the body, which might be a string or a dictionary
+            body_content = sec.get("body", sec.get("content"))
+
+            # IMPORTANT: Only append the body if it's a string
+            if isinstance(body_content, str):
+                content_parts.append(body_content)
+            # If body_content is a dictionary or another type, it's skipped.
+
+        # Now, content_parts is guaranteed to contain only strings
         prompt_text = "\n".join(content_parts)
+        
         suggestions = app.generate_subject_lines(prompt_text)
         if suggestions:
             messagebox.showinfo("Subject Suggestions", "\n".join(suggestions), parent=self)

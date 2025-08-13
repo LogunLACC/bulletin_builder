@@ -1,0 +1,11 @@
+<div id="hours" class="section" style="padding:20px; border-bottom:1px solid #eee">
+  <h2 style="margin-top:0; color:{{ settings.primary_color }}">{{ section.title or "Hours of Operation" }}</h2>
+  <table style="width:100%; font-size:14px; color:{{ settings.secondary_color }};" cellpadding="0" cellspacing="0">
+    {% for row in section.rows %}
+    <tr>
+      <td style="padding:4px 0;">{{ row.label }}</td>
+      <td style="padding:4px 0; text-align:right;">{{ row.time }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>

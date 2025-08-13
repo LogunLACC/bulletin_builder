@@ -27,51 +27,72 @@ def _normalize_tags(raw: Iterable | str | None) -> list[str]:
 
 
 def fetch_events(url: str) -> List[Dict[str, str]]:
-    """Fetch events from a JSON or CSV URL.
-
-    Args:
-        url: Public URL returning JSON or CSV rows with columns like
-            title/description, date, time, image or image_url.
-
-    Returns:
-        A list of event dictionaries with ``date``, ``time``, ``description``,
-        ``image_url``, ``link`` and ``map_link`` keys.
-    """
+    """Fetch and adapt events from any JSON structure."""
     with urllib.request.urlopen(url) as resp:
         text = resp.read().decode("utf-8")
 
-    events: List[Dict[str, str]] = []
     try:
         data = json.loads(text)
-        if isinstance(data, dict):
-            data = data.get("events", []) or data.get("items", [])
-        for item in data:
-            events.append(
-                {
-                    "date": item.get("date", ""),
-                    "time": item.get("time", ""),
-                    "description": item.get("title") or item.get("description", ""),
-                    "image_url": item.get("image") or item.get("image_url", ""),
-                    "tags": _normalize_tags(item.get("tags") or item.get("categories") or item.get("labels") or item.get("tag")),
-                    "link": item.get("link") or item.get("url", ""),
-                    "map_link": item.get("map") or item.get("map_link", ""),
-                }
-            )
     except json.JSONDecodeError:
-        reader = csv.DictReader(io.StringIO(text))
-        for row in reader:
-            events.append(
-                {
-                    "date": row.get("date", ""),
-                    "time": row.get("time", ""),
-                    "description": row.get("title") or row.get("description", ""),
-                    "image_url": row.get("image") or row.get("image_url", ""),
-                    "tags": _normalize_tags(row.get("tags") or row.get("categories") or row.get("labels") or row.get("tag")),
-                    "link": row.get("link") or row.get("url", ""),
-                    "map_link": row.get("map") or row.get("map_link", ""),
-                }
-            )
-    return [e for e in events if any(e.values())]
+        # Try CSV fallback
+        return _fetch_from_csv(text)
+
+    # Drill into list if wrapped in common keys
+    if isinstance(data, dict):
+        for key in ["events", "items", "data", "results", "records"]:
+            if key in data and isinstance(data[key], list):
+                data = data[key]
+                break
+        if not isinstance(data, list):
+            return []
+
+    events = []
+    for item in data:
+        event = {}
+
+        def find(key_opts):
+            for k in key_opts:
+                val = item.get(k)
+                if val:
+                    return val
+            return ""
+
+        event["date"] = find(["date", "event_date", "start_date"])
+        event["time"] = find(["time", "event_time", "start_time"])
+        event["description"] = find(["description", "title", "name", "event"])
+        event["image_url"] = find(["image_url", "image", "img", "cover"])
+        event["tags"] = _normalize_tags(
+            item.get("tags") or item.get("categories") or item.get("labels") or item.get("tag")
+        )
+        event["link"] = find(["link", "url", "event_url"])
+        event["map_link"] = find(["map", "map_link", "location_url"])
+
+        # Only keep it if it has at least a date or description
+        if event["description"] or event["date"]:
+            events.append(event)
+
+    events.sort(key=lambda e: _parse_event_date(e.get("date", "")))               
+
+    return events
+
+
+def _parse_event_date(d: str) -> datetime:
+    """
+    Try ISO first, then fallback to 'Sat, 06 Sep 2025'-style.
+    Unparseable dates go to the far future so they land last.
+    """
+    if not d:
+        return datetime.max
+    try:
+        # ISO: "2025-09-06" or full datetime
+        return datetime.fromisoformat(d)
+    except ValueError:
+        try:
+            return datetime.strptime(d, "%a, %d %b %Y")
+        except ValueError:
+            return datetime.max
+
+
 
 
 def events_to_blocks(events: List[Dict[str, str]]) -> List[Dict[str, str]]:
@@ -103,26 +124,8 @@ def process_event_images(
     max_width: int = 800,
     ratio: tuple[int, int] = (4, 3),
 ) -> None:
-    """Download and standardize event images in place."""
-    for ev in events:
-        url = ev.get("image_url", "")
-        if not url:
-            continue
-        try:
-            if url.startswith("http://") or url.startswith("https://"):
-                ext = os.path.splitext(url)[1] or ".jpg"
-                fd, tmp_path = tempfile.mkstemp(suffix=ext)
-                os.close(fd)
-                urllib.request.urlretrieve(url, tmp_path)
-                local = tmp_path
-            else:
-                local = url
-            opt_path = optimize_image(
-                local, dest_dir=dest_dir, max_width=max_width, ratio=ratio
-            )
-            ev["image_url"] = opt_path
-        except Exception:
-            continue
+    """No-op: keep remote image URLs intact."""
+    return
 
 
 def expand_recurring_events(events: List[Dict[str, str]], days: int = 60) -> List[Dict[str, str]]:

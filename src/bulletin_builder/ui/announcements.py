@@ -8,26 +8,36 @@ class AnnouncementsFrame(ctk.CTkFrame):
     A frame for editing an 'announcements' section, now with AI features.
     """
     def __init__(self, parent, section_data: dict, refresh_callback: callable, save_component_callback: callable, ai_callback: callable):
-        super().__init__(parent, fg_color="transparent")
-        
-        self.section_data = section_data
-        self.refresh_callback = refresh_callback
-        self.save_component_callback = save_component_callback
-        self.ai_callback = ai_callback
+        print(f"[DEBUG] AnnouncementsFrame __init__ called. parent={parent}, section_data={section_data}")
+        self._init_args = (parent, section_data, refresh_callback, save_component_callback, ai_callback)
+        try:
+            super().__init__(parent, fg_color="transparent")
+            self.section_data = section_data
+            self.refresh_callback = refresh_callback
+            self.save_component_callback = save_component_callback
+            self.ai_callback = ai_callback
 
-        # --- Layout Configuration ---
-        self.grid_columnconfigure(1, weight=1)
+            # --- Layout Configuration ---
+            self.grid_columnconfigure(1, weight=1)
 
-        # --- Widgets ---
-        title_label = ctk.CTkLabel(self, text="Title")
-        title_label.grid(row=0, column=0, padx=(0, 10), pady=10, sticky="w")
-        self.title_entry = ctk.CTkEntry(self, font=ctk.CTkFont(size=14))
-        self.title_entry.grid(row=0, column=1, sticky="ew", pady=10)
-        self.title_entry.insert(0, self.section_data.get("title", ""))
-        self.title_entry.bind("<KeyRelease>", self._on_data_change)
+            # --- Widgets ---
+            title_label = ctk.CTkLabel(self, text="Title")
+            title_label.grid(row=0, column=0, padx=(0, 10), pady=10, sticky="w")
+            self.title_entry = ctk.CTkEntry(self, font=ctk.CTkFont(size=14))
+            self.title_entry.grid(row=0, column=1, sticky="ew", pady=10)
+            self.title_entry.insert(0, self.section_data.get("title", ""))
+            self.title_entry.bind("<KeyRelease>", self._on_data_change)
 
-        body_label = ctk.CTkLabel(self, text="Body")
-        body_label.grid(row=1, column=0, padx=(0, 10), pady=10, sticky="nw")
+            body_label = ctk.CTkLabel(self, text="Body")
+            body_label.grid(row=1, column=0, padx=(0, 10), pady=10, sticky="nw")
+            # Layout fix: ensure frame expands and grid works
+            self.grid_propagate(True)
+            self.pack_propagate(False)
+            self.pack(fill="both", expand=True)
+            print("[DEBUG] AnnouncementsFrame __init__ completed successfully.")
+        except Exception as e:
+            print(f"[ERROR] Exception in AnnouncementsFrame __init__: {e}")
+            raise
         
         ai_button_frame = ctk.CTkFrame(self, fg_color="transparent")
         ai_button_frame.grid(row=2, column=1, sticky="w", pady=(0, 5))

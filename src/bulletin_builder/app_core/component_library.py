@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from tkinter import simpledialog, messagebox
 
-from ..ui.component_library import ComponentLibrary
+from bulletin_builder.ui.component_library import ComponentLibrary
 
 COMP_DIR = Path("components")
 

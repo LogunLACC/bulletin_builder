@@ -15,6 +15,12 @@ class Settings:
     theme_css: Optional[str] = None  # e.g. "club_theme.css"
     appearance_mode: str = "Dark"
 
+    # --- Add these new fields to match the UI ---
+    google_api_key: Optional[str] = None
+    openai_api_key: Optional[str] = None
+    events_feed_url: Optional[str] = None
+    # -------------------------------------------
+
     @property
     def jinja_env(self) -> Environment:
         loader = FileSystemLoader(self.template_path)

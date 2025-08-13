@@ -7,10 +7,10 @@ block_cipher = None
 a = Analysis([
     'src/bulletin_builder/__main__.py'
 ],
-    pathex=[str(Path(__file__).parent.resolve())],
+    pathex=[str(Path(".").resolve())],
     binaries=[],
     datas=[('src/bulletin_builder/templates', 'bulletin_builder/templates')],
-    hiddenimports=[],
+    hiddenimports=['bulletin_builder.app_core.core_init'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -28,11 +28,11 @@ exe = EXE(
     [],
     exclude_binaries=True,
     name='bulletin_builder',
-    debug=False,
+    debug=True,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
-    console=False,
+    console=True,
 )
 
 coll = COLLECT(

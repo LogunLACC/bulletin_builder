@@ -1,6 +1,6 @@
 import customtkinter as ctk
 import tkinter as tk
-from ..ui.base_section import SectionRegistry
+from bulletin_builder.ui.base_section import SectionRegistry
 
 class AddSectionDialog(ctk.CTkToplevel):
     """Modal dialog to capture title and type for a new section."""
@@ -54,7 +54,14 @@ def init(app):
             title, sec_type = result
             app.sections_data.append({'title': title, 'type': sec_type, 'content': {}})
             app.refresh_listbox_titles()
-            app.show_placeholder()
+            # Select the newly added section
+            idx = len(app.sections_data) - 1
+            app.section_listbox.selection_clear(0, tk.END)
+            app.section_listbox.selection_set(idx)
+            app.section_listbox.activate(idx)
+            app.section_listbox.see(idx)
+            # Trigger the selection event to show the editor
+            app.on_section_select()
 
     # --- Remove Section ---
     def remove_section():
@@ -68,20 +75,26 @@ def init(app):
 
     # --- Section Selection ---
     def on_section_select(event=None):
+        print("[DEBUG] on_section_select called")
         sel = app.section_listbox.curselection()
         if not sel:
+            print("[DEBUG] on_section_select: no selection")
             return
         idx = sel[0]
         section = app.sections_data[idx]
-        app.clear_editor_panel()
+        print(f"[DEBUG] on_section_select: idx={idx}, section type={section.get('type')}, title={section.get('title')}")
+        # Use the new editor container and replace_editor_frame helper
         FrameCls = SectionRegistry.get_frame(section['type'])
-        # AnnouncementsFrame may require extra callbacks
-        params = [app.right_panel, section, app.refresh_listbox_titles, app.save_component]
+        # Clear editor_container before creating the new frame
+        for w in app.editor_container.winfo_children():
+            w.destroy()
+        # Now construct the frame with editor_container as parent
         if section['type'] == 'announcements':
-            params.append(app.ai_callback)
-        frame = FrameCls(*params)
-        frame.pack(fill='both', expand=True)
-        app.current_editor_frame = frame
+            frame = FrameCls(app.editor_container, section, app.refresh_listbox_titles, app.save_component, app.ai_callback)
+        else:
+            frame = FrameCls(app.editor_container, section, app.refresh_listbox_titles, app.save_component)
+        # Do NOT call frame.pack() here; replace_editor_frame will handle it
+        app.replace_editor_frame(frame)
         app.active_editor_index = idx
 
     # --- Update Data ---

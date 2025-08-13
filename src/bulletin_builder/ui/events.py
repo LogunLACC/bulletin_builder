@@ -9,25 +9,36 @@ class EventsFrame(ctk.CTkFrame):
     A frame for editing an 'events' section, with a single layout style for the whole section.
     """
     def __init__(self, parent, section_data: dict, refresh_callback: callable, save_component_callback: callable):
-        super().__init__(parent, fg_color="transparent")
-        self.section_data = section_data
-        self.refresh_callback = refresh_callback
-        self.save_component_callback = save_component_callback
+        print(f"[DEBUG] EventsFrame __init__ called. parent={parent}, section_data={section_data}")
+        self._init_args = (parent, section_data, refresh_callback, save_component_callback)
+        try:
+            super().__init__(parent, fg_color="transparent")
+            self.section_data = section_data
+            self.refresh_callback = refresh_callback
+            self.save_component_callback = save_component_callback
 
-        if not isinstance(self.section_data.get('content'), list):
-            self.section_data['content'] = []
-        if 'layout_style' not in self.section_data:
-            self.section_data['layout_style'] = 'Card'
+            if not isinstance(self.section_data.get('content'), list):
+                self.section_data['content'] = []
+            if 'layout_style' not in self.section_data:
+                self.section_data['layout_style'] = 'Card'
 
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(2, weight=1)
+            self.grid_columnconfigure(0, weight=1)
+            self.grid_rowconfigure(2, weight=1)
 
-        top_frame = ctk.CTkFrame(self, fg_color="transparent")
-        top_frame.grid(row=0, column=0, sticky="ew", pady=(0, 10))
-        top_frame.grid_columnconfigure(1, weight=1)
+            top_frame = ctk.CTkFrame(self, fg_color="transparent")
+            top_frame.grid(row=0, column=0, sticky="ew", pady=(0, 10))
+            top_frame.grid_columnconfigure(1, weight=1)
 
-        title_label = ctk.CTkLabel(top_frame, text="Section Title")
-        title_label.grid(row=0, column=0, padx=(0, 10))
+            title_label = ctk.CTkLabel(top_frame, text="Section Title")
+            title_label.grid(row=0, column=0, padx=(0, 10))
+            # Layout fix: ensure frame expands and grid works
+            self.grid_propagate(True)
+            self.pack_propagate(False)
+            self.pack(fill="both", expand=True)
+            print("[DEBUG] EventsFrame __init__ completed successfully.")
+        except Exception as e:
+            print(f"[ERROR] Exception in EventsFrame __init__: {e}")
+            raise
         
         self.title_entry = ctk.CTkEntry(top_frame, font=ctk.CTkFont(size=14))
         self.title_entry.grid(row=0, column=1, sticky="ew")

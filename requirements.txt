@@ -1,3 +1,7 @@
+# GUI and HTML dependencies
+customtkinter
+premailer
+tkhtmlview
 customtkinter
 WeasyPrint
 google-generativeai

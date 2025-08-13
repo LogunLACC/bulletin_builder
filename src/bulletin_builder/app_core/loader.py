@@ -1,35 +1,32 @@
-import importlib
-import pkgutil
+from importlib import import_module
 
+MODULES = [
+    ("core_init", True),      # builds frames, status/progress, basic hooks
+    ("handlers", False),
+    ("drafts", False),
+    ("sections", False),
+    ("suggestions", False),
+    ("importer", False),      # CSV/Sheet/Feed importers
+    ("exporter", False),      # HTML/TXT export, ICS, email
+    ("preview", True),        # defines show_placeholder + update_preview
+    ("ui_setup", True),       # builds UI; attaches _build_menus and calls it
+]
+
+def _import_flexible(name):
+    # Always use bulletin_builder.app_core.<name> for core modules
+    try:
+        return import_module(f"bulletin_builder.app_core.{name}")
+    except Exception as e:
+        raise e
 
 def init_app(app):
-    """
-    Initialize core attributes and then discover all feature modules under app_core,
-    calling their `init(app)` functions to register functionality.
-    """
-    base_pkg = __name__  # e.g., 'bulletin_builder.app_core'
-
-    try:
-        from .core_init import init as _core_init
-        _core_init(app)
-    except Exception as e:
-        print(f"Error in core_init: {e}")
-
-    # 2) then drafts, handlers, sections, components, exporter, preview, suggestions, importer...
-    for module in (
-        "handlers",
-        "drafts",
-        "sections",
-        "component_library",
-        "exporter",
-        "preview",
-        "suggestions",
-        "importer",
-        "ui_setup",
-    ):
+    for name, required in MODULES:
         try:
-            m = importlib.import_module(f"{base_pkg}.{module}")
-            if hasattr(m, "init"):
-                m.init(app)
+            mod = _import_flexible(name)
+            if hasattr(mod, "init"):
+                mod.init(app)
         except Exception as e:
-            print(f"Error initializing module app_core.{module}: {e}")
+            msg = f"Error initializing module {name}: {e}"
+            if required:
+                raise RuntimeError(msg)
+            print(msg)

@@ -1,170 +1,90 @@
-[
-  {
-    "status": "complete",
-    "title": "Convert to src-based project structure",
-    "action": "Move main application code into src/bulletin_builder/, create __init__.py, and update imports accordingly.",
-    "acceptance": "App runs from CLI and tests still pass using new structure."
-  },
-  {
-    "status": "complete",
-    "title": "Add basic PyInstaller packaging",
-    "action": "Add PyInstaller spec file and script to build a standalone executable for Windows and MacOS.",
-    "acceptance": "Users can run bulletin_builder.exe without installing Python."
-  },
-  {
-    "status": "complete",
-    "title": "Create drag-and-drop WYSIWYG editor",
-    "action": "Add a visual editor using tkinter or PyQt5 to let users drag text blocks, images, buttons, and sections to design a bulletin.",
-    "acceptance": "User can preview and rearrange layout visually and export to HTML."
-  },
-  {
-    "status": "complete",
-    "title": "Template gallery with previews",
-    "action": "Create a system for saving and loading reusable HTML templates with thumbnail previews.",
-    "acceptance": "User can browse templates visually and apply them with a click."
-  },
-  {
-    "status": "complete",
-    "title": "Responsive layout preview",
-    "action": "Add toggle for desktop, tablet, and mobile preview modes within the GUI using a scaled iframe or equivalent.",
-    "acceptance": "User can preview how the email/bulletin will look on different screen sizes."
-  },
-  {
-    "status": "complete",
-    "title": "Auto image optimizer",
-    "action": "Compress and resize images during import to reduce email size while retaining quality.",
-    "acceptance": "Image uploads are optimized and result in significantly smaller HTML output size."
-  },
-  {
-    "status": "complete",
-    "title": "Add calendar event exporter (.ics)",
-    "action": "Allow user to add event info and export ICS files for email invites or to embed calendar links.",
-    "acceptance": "User can download a valid .ics file matching event details entered."
-  },
-  {
-    "status": "complete",
-    "title": "Google Sheets & CSV integration for announcements",
-    "action": "Allow loading tabular event data from Google Sheets or CSV files to auto-generate content blocks.",
-    "acceptance": "User can generate bulletins from structured sheet rows with minimal input."
-  },
-  {
-    "status": "complete",
-    "title": "Dark mode editor theme toggle",
-    "action": "Add a toggle in the GUI to switch between light and dark editing modes for eye comfort.",
-    "acceptance": "GUI theme updates dynamically when toggled."
-  },
-  {
-    "status": "complete",
-    "title": "One-click email preview & test send",
-    "action": "Integrate a basic SMTP client to allow previewing bulletins by sending them to an email address.",
-    "acceptance": "User can enter their email and receive the bulletin in their inbox as a test."
-  },
-  {
-    "status": "complete",
-    "title": "Markdown support in text editor",
-    "action": "Allow advanced users to write markdown that auto-renders to styled HTML in the bulletin preview.",
-    "acceptance": "User inputted markdown is rendered correctly and styled appropriately in the output."
-  },
-  {
-    "status": "complete",
-    "title": "Auto-generate subject line suggestions with AI",
-    "action": "Use OpenAI API to suggest catchy subject lines based on bulletin content.",
-    "acceptance": "User can click 'Suggest Subject' and receive 3+ AI-generated ideas."
-  },
-  {
-    "status": "complete",
-    "title": "Undo/redo functionality in editor",
-    "action": "Track changes and allow users to undo and redo edits made during the session.",
-    "acceptance": "User can click undo/redo buttons to revert changes with visual feedback."
-  },
-  {
-    "status": "complete",
-    "title": "Content block library",
-    "action": "Create a library of reusable components like event blocks, contact info, map links, etc.",
-    "acceptance": "User can insert a pre-made block and it renders styled in the output."
-  },
-  {
-    "status": "complete",
-    "title": "Real-time HTML + plain text export",
-    "action": "Add simultaneous generation of plain-text fallback email versions for accessibility and deliverability.",
-    "acceptance": "Both HTML and text versions are exported and styled appropriately."
-  },
-  {
-    "status": "complete",
-    "title": "Keyboard shortcut support",
-    "action": "Add keyboard navigation for power users: e.g., Ctrl+S to save, Ctrl+Z to undo, etc.",
-    "acceptance": "Documented shortcuts work reliably in the editor interface."
-  },
-  {
-    "status": "complete",
-    "title": "Live changelog sidebar",
-    "action": "Display live summary of edits made in current session (add image, edited block, changed style).",
-    "acceptance": "Sidebar shows list of actions with timestamps as user makes changes."
-  },
-  {
-    "status": "complete",
-    "title": "Add Community Events Feed Integration",
-    "action": "Add a module to fetch event data (title, date, time, image) from a remote source like Google Sheets, JSON API, or WebCal.",
-    "acceptance": "User can import events from a public URL or connected sheet and preview them in the bulletin builder."
-  },
-  {
-    "status": "complete",
-    "title": "Auto-Generate Event Blocks from Feed",
-    "action": "Parse each fetched event into a styled content block and insert them with default formatting (e.g., header, image, time).",
-    "acceptance": "User can see cleanly formatted event blocks added automatically and can edit them if needed."
-  },
-  {
-    "status": "complete",
-    "title": "Smart Event Sorting and Grouping",
-    "action": "Sort events chronologically and group by date headers (e.g., 'This Week', 'Next Week', etc).",
-    "acceptance": "Bulletin automatically displays events grouped and sorted in a user-friendly way."
-  },
-  {
-    "status": "complete",
-    "title": "Event Image Auto-Resizer",
-    "action": "Resize and crop event images for consistent formatting (e.g., 4:3 ratio, max width).",
-    "acceptance": "All event images appear uniform and do not distort the bulletin layout."
-  },
-  {
-    "status": "complete",
-    "title": "Add ‘Smart Suggestions’ Panel",
-    "action": "Analyze recent bulletin content and suggest block types (e.g., if many events: suggest adding a 'Community Highlights' banner).",
-    "acceptance": "User receives real-time layout suggestions based on bulletin content and patterns."
-  },
-  {
-    "status": "complete",
-    "title": "Link Event Feed to Admin Calendar",
-    "action": "Enable auto-sync from community calendars like Google Calendar, Airtable, or a JSON endpoint (e.g., lakealmanorcountryclub.com/data/events.json).",
-    "acceptance": "Events can be imported and previewed from a connected calendar feed with minimal setup."
-  },
-  {
-    "status": "complete",
-    "title": "Recurring Events Handling",
-    "action": "Detect recurring events and allow user to select which occurrences to include.",
-    "acceptance": "User can include only upcoming events or specific days from recurring schedules (e.g., Yoga every Tuesday)."
-  },
-  {
-    "status": "complete",
-    "title": "Bulletin Section Recommender AI",
-    "action": "Based on the imported events, suggest sections such as 'Top Picks', 'Kids Events', 'Live Music', etc.",
-    "acceptance": "User sees smart prompts to categorize event content and can accept or modify sections."
-  },
-  {
-    "status": "complete",
-    "title": "User-Defined Event Tags and Filtering",
-    "action": "Allow custom tags (e.g., 'Family', 'Free', 'Concert') for events and enable filtering during import.",
-    "acceptance": "User can filter events by tag and group them visually in the bulletin."
-  },
-  {
-    "status": "complete",
-    "title": "Event Conflict Detection",
-    "action": "Analyze times of imported events and flag overlaps or double-bookings to the user.",
-    "acceptance": "User is alerted when two events share overlapping time slots and can adjust layout accordingly."
-  },
-  {
-    "status": "complete",
-    "title": "Add Event Link + Map Button Support",
-    "action": "Each event block supports adding an external link (to website or map). Auto-format as a styled button.",
-    "acceptance": "User can click a 'View Map' or 'More Info' button on each event block."
-  }
-]
+{
+  "project": "Bulletin Builder",
+  "version": "2.0",
+  "overview": "Full overhaul of the Bulletin Builder application including UI/UX redesign, performance improvements, code cleanup, bug fixes, and major feature expansions to enable element-based email building while preserving strict email export rules.",
+  "phases": [
+    {
+      "name": "Codebase Cleanup & Stability",
+      "goal": "Remove unused files, reorganize modules, and ensure all imports are valid with no missing dependencies.",
+      "tasks": [
+        "Identify and delete unused Python files, images, and assets from the repository.",
+        "Fix broken imports such as 'bulletin_builder.menu' and ensure all modules load without error.",
+        "Remove redundant UI components such as duplicate 'Save as Component' buttons.",
+        "Fix Tkinter geometry manager conflicts by ensuring each container uses either grid or pack, not both.",
+        "Resolve all 'clear_editor_panel' related stacking issues by replacing panels instead of appending."
+      ]
+    },
+    {
+      "name": "UI/UX Overhaul",
+      "goal": "Modern, consistent, themeable UI with improved usability for all sections.",
+      "tasks": [
+        "Implement a theme system with Light, Dark, and Hybrid modes, selectable in settings.",
+        "Redesign the layout for better section navigation — left panel for sections, right panel for editor, status bar at bottom.",
+        "Add a responsive layout so the app scales correctly on different resolutions.",
+        "Ensure all buttons, icons, and labels use consistent styling and spacing.",
+        "Add tooltips and hover states for all interactive elements.",
+        "Improve accessibility with proper font sizes, color contrast, and keyboard navigation."
+      ]
+    },
+    {
+      "name": "Performance Optimization",
+      "goal": "Make the app faster and more responsive by reducing load times and preventing unnecessary re-renders.",
+      "tasks": [
+        "Lazy-load section content only when selected.",
+        "Cache loaded assets and templates in memory to avoid redundant file reads.",
+        "Profile startup and remove any heavy blocking operations.",
+        "Optimize image loading and resizing in the WYSIWYG editor.",
+        "Ensure smooth drag-and-drop for components and section reordering."
+      ]
+    },
+    {
+      "name": "Element-Based Email Builder",
+      "goal": "Allow adding modular content elements without automatically generating Table of Contents entries.",
+      "tasks": [
+        "Add toolbar buttons for H1, H2, paragraph text, single image (portrait or landscape), two-column, and three-column layouts.",
+        "Allow drag-and-drop to position elements within a section.",
+        "Ensure added elements do not auto-link to TOC unless explicitly marked by the user.",
+        "Enable style editing for each element, respecting email-safe rules.",
+        "Implement copy, duplicate, and delete actions for each element."
+      ]
+    },
+    {
+      "name": "Strict Email Export Compliance",
+      "goal": "Ensure exported HTML emails always follow compatibility rules unless overridden.",
+      "tasks": [
+        "Automatically set margin:0; padding:0; for all <img> and <a> elements.",
+        "Set table cells to border=0, cellpadding=0, cellspacing=0 by default.",
+        "Allow per-element exceptions only when explicitly set by the user.",
+        "Ensure all inline CSS is applied for maximum email client compatibility.",
+        "Run an automated validation step before export to catch non-compliant elements."
+      ]
+    },
+    {
+      "name": "New Features & Quality of Life",
+      "goal": "Add actually useful, user-requested features to improve workflow.",
+      "tasks": [
+        "Add a real-time preview panel for both desktop and mobile email views.",
+        "Add undo/redo support in the WYSIWYG editor.",
+        "Enable saving and reusing custom elements as components.",
+        "Integrate an AI helper for quick copy suggestions, image alt text, and accessibility checks.",
+        "Add export to both HTML and ready-to-send email package formats."
+      ]
+    },
+    {
+      "name": "Testing & Final Polish",
+      "goal": "Ship with zero runtime errors and a clean, optimized user experience.",
+      "tasks": [
+        "Run full unit and integration test coverage for core modules.",
+        "Test email output in major email clients (Outlook, Gmail, Apple Mail).",
+        "Test all supported operating systems and screen resolutions.",
+        "Remove all debug logging unless in development mode.",
+        "Update documentation and create a quickstart guide."
+      ]
+    }
+  ],
+  "constraints": [
+    "Email exports must always follow strict compatibility rules unless explicitly overridden.",
+    "UI must remain responsive and usable at all supported screen sizes.",
+    "No breaking changes to saved bulletin files unless migration logic is provided."
+  ]
+}

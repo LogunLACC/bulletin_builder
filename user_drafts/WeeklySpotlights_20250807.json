@@ -1,39 +1,101 @@
 {
   "sections": [
     {
+      "type": "image",
+      "title": "Email Header",
+      "src": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/05/EmailHeader.png",
+      "alt": "LACC Email Header"
+    },
+    {
+      "title": "Annual Membership Meeting",
+      "type": "announcements",
+      "body": "Time: Saturday, Aug 9, 2025, 08:00 AM<br>\nLocation: LACC Clubhouse<br>\nMeeting ID: 892 6746 2570<br>\nPasscode: 692272",
+      "link": "https://hoamco.zoom.us/j/89267462570?pwd=lC6oVI69KhCQLbbcnQOAaXrrelwT7S.1",
+      "link_text": "Join Zoom Meeting"
+    },
+    {
+      "title": "Finance Committee Meeting - Canceled",
+      "type": "announcements",
+      "body": "The Finance Committee Meeting scheduled for Tuesday, August 12, 2025, at 11:00 AM has been canceled.",
+      "link": "",
+      "link_text": ""
+    },
+    {
+      "title": "Volunteer to Count Ballots",
+      "type": "announcements",
+      "body": "The counting of ballots for the 2025 LACC Board of Directors Elections will take place on August 9, 2025, at 7:45 AM in the LACC Clubhouse.",
+      "link": "tel:7752507291",
+      "link_text": "Contact Mike Sylvester: 775.250.7291"
+    },
+    {
+      "title": "Sports Center's Closing Date",
+      "type": "announcements",
+      "body": "Sunday, September 14, 2025, will be the last day of the season for the Sports Center. Be sure to visit many times leading up to and on that Sunday to make their closing day a special event!",
+      "link": "Sports Center | Lake Almanor Country Club",
+      "link_text": "Sports Center"
+    },
+    {
+      "title": "Lake Almanor Open",
+      "type": "announcements",
+      "body": "While the Lake Almanor Open is full with a waiting list, the Pro Shop will still be open and accepting Tee Times if available.",
+      "link": "https://foreupsoftware.com/index.php/booking/19352/1480#teetimes",
+      "link_text": "Book Tee Time"
+    },
+    {
+      "title": "Courage Triathlon",
+      "type": "announcements",
+      "body": "The event officially begins at 6:00 AM, though the race will not start until 10:00 AM. Please be mindful of participants on the road and in the water that day. Come out and support these racers who are raising awareness and funds for a cause we wish didn't exist. We are incredibly grateful for the events, groups, and courageous participants who provide safe houses and resources for child victims of sex trafficking.",
+      "link": "https://lakealmanorcountryclub.com/event/courage-triathlon-2/",
+      "link_text": "More Details"
+    },
+    {
+      "title": "LACC Events",
+      "type": "lacc_events",
+      "content": [
+        {
+          "date": "Fri, 15 Aug",
+          "time": "6:00 PM",
+          "description": "Karaoke",
+          "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/06/KARAOKE_FRIDAY_AUG_15__6-8_PM.png",
+          "link": "https://lakealmanorcountryclub.com/event/karaoke-3/",
+          "map_link": "https://maps.app.goo.gl/1heccHHVkWJj3Sus5"
+        },
+        {
+          "date": "Mon, 18 Aug",
+          "time": "4:00 PM",
+          "description": "Lovey Dovey",
+          "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/07/LoveyDovey0818-Flyer-Landscape.jpg",
+          "link": "https://lakealmanorcountryclub.com/event/lovey-dovey-tournament/",
+          "map_link": "https://maps.app.goo.gl/1heccHHVkWJj3Sus5"
+        }
+      ],
+      "layout_style": "Card"
+    },
+    {
       "title": "Community Events",
       "type": "community_events",
       "content": [
         {
-          "date": "Thu, 07 Aug 2025",
-          "time": "",
-          "description": "Plumas Disc Golf's Summer Putting League",
-          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czYvYmFubmVycy8wMjk5MzdiMTY4NGViMTkyYmMzOThhZjA0MTJiNmQ1NjU4YWU3OTU4YzE0NTM4ZDRkZThmNTY4OTcyOGFkYzhmLXJpbWctdzEyMDAtaDE2ODEtZGNmZmZmZmYtZ21pcj92PTE3NTQwMjE2Mjc.avif",
+          "date": "Saturday, Aug 9",
+          "time": "11:00 AM - 2:00 PM",
+          "description": "4th Annual Plumas-Sierra County Law Enforcement Fair",
+          "image_url": "https://www.sierradailynews.com/wp-content/uploads/2025/07/505500154_1142195374614757_4513626183279978571_n.jpg",
           "tags": [],
-          "link": "https://allevents.in/quincy/plumas-disc-golfs-summer-putting-league/200028599530048",
-          "map_link": ""
-        },
-        {
-          "date": "Thu, 07 Aug 2025",
-          "time": "",
-          "description": "Thirsty Thursday",
-          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czIvYmFubmVycy8zNDEzYjYwMmNkY2EyYzE4ZmM5MzFkZTQwYzRhN2YwMWEwZTliYWIzYTdlZGM3OTVkMTQzODVjNjZkZTJkNDAzLXJpbWctdzEyMDAtaDE2MDAtZGM5MTY1NDUtZ21pcj92PTE3NTQwMjE2Mjc.avif",
-          "tags": [],
-          "link": "https://allevents.in/quincy/thirsty-thursday/200028599530149",
-          "map_link": ""
+          "link": "https://www.sierradailynews.com/events/4th-annual-plumas-sierra-county-law-enforcement-fair#",
+          "map_link": "https://maps.app.goo.gl/kGLCQhna2C1cJcSq8"
         },
         {
           "date": "Fri, 08 Aug 2025",
-          "time": "",
+          "time": "4:00 PM - 7:00 PM",
           "description": "Chester Main Street Market",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy9hNmEzOWRlODViMjYxZmVkMjQ0MDMzMzc4NWE0NjJlOWJkZjBmMDk3OTliMTgxZDMzMTJmNzBhODU4ZWIyYTljLXJpbWctdzEyMDAtaDkyOC1kY2ZmZmZmZi1nbWlyP3Y9MTc1NDMwMjE1Nw.avif",
           "tags": [],
           "link": "https://allevents.in/chester/chester-main-street-market/200028492409639",
-          "map_link": ""
+          "map_link": "https://maps.app.goo.gl/1oa2VjDuvE4EEVzt7"
         },
         {
           "date": "Fri, 08 Aug 2025",
-          "time": "",
+          "time": "7:30  PM",
           "description": "Live Music with High Desert Habit",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy8zMDc0MWU2Y2Y0NjIzNzJiODNlZWViOTZmOGRiNTI1MzYyMmNjMWQ2NzVkY2EwNGU2ODljNDk3Y2RlMDRjMGQ3LXJpbWctdzEyMDAtaDYyOC1kYzJmMmMyZC1nbWlyP3Y9MTc1NDM1MzMxNw.avif",
           "tags": [],
@@ -51,16 +113,16 @@
         },
         {
           "date": "Fri, 08 Aug 2025",
-          "time": "",
+          "time": "6:00 PM",
           "description": "Frequincy Presents: JELLY BREAD!!",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czIvYmFubmVycy9mNzE5NmQ2NDFiNDUyN2YwOTkwYjNkYjRhZGZjNjMxZjVlNzc5ZmQ3MTA5MzIwNTZlYTQ5NTc3NTM3NjdjZTMyLXJpbWctdzk2OC1oMTE5OC1kYzJlMmEzMS1nbWlyP3Y9MTc1NDAyMTYzMg.avif",
           "tags": [],
           "link": "https://allevents.in/quincy/frequincy-presents-jelly-bread/200028599530253",
-          "map_link": ""
+          "map_link": "https://maps.app.goo.gl/S3cgYxc1fLA5Vkdj6"
         },
         {
           "date": "Sat, 09 Aug 2025",
-          "time": "",
+          "time": "6:00 PM",
           "description": "Denim & Diamonds Chester Rotary Playground Fundraiser",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czYvYmFubmVycy83NjU5OTY4MzZjMjZhNWUyNWZlZGE1NGMxMGFhYWI3NTJmMzhmNmY1MTRkNmM3MjYyODYwOTZhOGQ1MzhlNWI0LXJpbWctdzEyMDAtaDYzMC1kYzAxMDEwMS1nbWlyP3Y9MTc1NDE5MDYzOQ.avif",
           "tags": [],
@@ -69,16 +131,16 @@
         },
         {
           "date": "Sat, 09 Aug 2025",
-          "time": "",
-          "description": "desensitization and groundwork clinic",
+          "time": "9:00 AM - 11:00 AM",
+          "description": "Desensitization and groundwork clinic",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czQvYmFubmVycy8xNGVmZmZjMjAxNDVkM2U2YjJmMTAyOGE2OGRmYTBlZTZlMjUyYzlhNmE5MWQ0YjI0YTU1M2I3YTY1OTdmZGUwLXJpbWctdzkzNi1oOTM2LWRjZjRmNGY0LWdtaXI_dj0xNzUzNzk3NTc4.avif",
           "tags": [],
           "link": "https://allevents.in/susanville/desensitization-and-groundwork-clinic/200028287842810",
-          "map_link": ""
+          "map_link": "https://www.facebook.com/Nakanishi.Equine"
         },
         {
           "date": "Sat, 09 Aug 2025",
-          "time": "",
+          "time": "9:00 PM",
           "description": "Wild West",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czkvYmFubmVycy9kOWIzZmZhMzExMGY2YjdiYWRjYjRiYjMwNDEwYzdiYmUwYTM2Y2EzM2FkOWM2M2MzNmU2OWVhNGEwNWI4NTc2LXJpbWctdzEyMDAtaDYyOC1kYzE3YTNhMi1nbWlyP3Y9MTc1NDM1MzMxNw.avif",
           "tags": [],
@@ -87,16 +149,16 @@
         },
         {
           "date": "Sat, 09 Aug 2025",
-          "time": "",
+          "time": "5:30 PM",
           "description": "TRIPLE TOSS - Corn Hole, Horse Shoes, and Bowling Tournament",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czIvYmFubmVycy85MmFjMTNhNzZlMzY3MTVjZmI1MWNlNjU2YjdiYTIwZDkyNGI0ZTU1ZDk2MzIxZjQ1YTc1YzM3NWE3NzczMmUxLXJpbWctdzEwMjQtaDE1MzYtZGNmOGJhMDUtZ21pcj92PTE3NTQzMzE3ODA.avif",
           "tags": [],
           "link": "https://allevents.in/quincy/triple-toss-corn-hole-horse-shoes-and-bowling-tournament/200028535617445",
-          "map_link": ""
+          "map_link": "https://maps.app.goo.gl/p7FBT1iYiXLGRPL29"
         },
         {
           "date": "Sun, 10 Aug 2025",
-          "time": "",
+          "time": "6:00 PM",
           "description": "Reverend Beat Man ft. Church Ladies",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEvYmFubmVycy81YzI1YzJjNWI3ZTAwZDhiNGY4MWIwZTI1N2E2NTM2MDVlNDY0ZmFiZjZkN2E0OWNjZWExNmMyM2FkODQ1NzU4LXJpbWctdzEyMDAtaDE1NTMtZGMxYTFhMWEtZ21pcj92PTE3NTQzNTcwMjM.avif",
           "tags": [],
@@ -104,53 +166,53 @@
           "map_link": ""
         },
         {
-          "date": "Thu, 14 Aug 2025",
-          "time": "",
-          "description": "Trivia Night",
-          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czIvYmFubmVycy80NDczM2UyYWM0MWMwOGZhYWU5NWVjNDcxZjBhOTE2Y2MwZTMzYjg5ODkwMGZmMzMwZGMzYWM3ZmI3NmY5ZWNkLXJpbWctdzEyMDAtaDY3NS1kYzc3NDRlZS1nbWlyP3Y9MTc1NDM1OTcyMQ.avif",
+          "date": "Sat, 16 Aug 2025",
+          "time": "6:00 AM - 2:00 PM",
+          "description": "Courage Triathlon",
+          "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/07/1000029804.png",
           "tags": [],
-          "link": "https://allevents.in/susanville/trivia-night/200028617794949",
-          "map_link": ""
+          "link": "https://lakealmanorcountryclub.com/event/courage-triathlon-2/",
+          "map_link": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/07/1000029778.png"
         },
         {
           "date": "Sat, 16 Aug 2025",
-          "time": "",
+          "time": "4:00 PM",
           "description": "Celebrating 100 Years: Concert at Lassen Community College",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy80MzllNzRhYTRkM2E5MWQxODk4N2IyMDRmOWYxYWVhZGFhZDBkMGQxYzVkZWM2YTJhNGViYTAxNWFmNWVkZGZmLXJpbWctdzk0MC1oNzg4LWRjMTcxNjE4LWdtaXIuanBnP3Y9MTc1MzY4Njg0NQ.avif",
           "tags": [],
           "link": "https://allevents.in/susanville/celebrating-100-years-concert-at-lassen-community-college/100001527231172549",
-          "map_link": ""
+          "map_link": "https://maps.app.goo.gl/hpyrE8rrjKJLMWMK9"
         },
         {
           "date": "Sat, 16 Aug 2025",
-          "time": "",
-          "description": "8/16/2025 Plumas Renewal CCW Course",
-          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy9mZWFmMWRiMjc1NGM4OWYzNWRlNzFmMmRlNzkwMjZhNjI0MTI3MDU2MTJkNzZmNzA2NWQ2MmY5MGE4ODJiOTNmLXJpbWctdzEyMDAtaDgwMC1kYzFjMWQxYi1nbWlyLmpwZz92PTE3NTMxNjcyMzM.avif",
+          "time": "7:00 PM",
+          "description": "Music Under the Stars \u2013 Tom Rigney & Flambeau",
+          "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/06/2025-Music-Under-the-Stars-Flyer-final.png",
           "tags": [],
-          "link": "https://allevents.in/quincy/8-16-2025-plumas-renewal-ccw-course/100001479189769419",
-          "map_link": ""
+          "link": "https://lakealmanorcountryclub.com/event/music-under-the-stars-tom-rigney-flambeau-2/",
+          "map_link": "https://maps.app.goo.gl/N9j4BDoDEeoxsxpJ9"
         },
         {
           "date": "Fri, 22 Aug 2025",
-          "time": "",
+          "time": "12:00 PM",
           "description": "Sierradipity Arts Fair",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czMvYmFubmVycy9mN2M0OTc0OTc4M2Q0YWNiZDNhNTBkZjI5MzIyNDM3ZDM4ZDk5MGM0M2JjNTQ3ZThmZjJkNTdmOWMwZmRlMWM1LXJpbWctdzg1MS1oMzE1LWRjZmZmZmZmLWdtaXI_dj0xNzUzOTEyOTcx.avif",
           "tags": [],
           "link": "https://allevents.in/quincy/sierradipity-arts-fair/200028267561838",
-          "map_link": ""
+          "map_link": "https://maps.app.goo.gl/qKm61FRpCAfvGxAc8"
         },
         {
           "date": "Sat, 23 Aug 2025",
-          "time": "",
+          "time": "7:00 PM",
           "description": "Music under the Stars - The Shadows Band",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEwL2Jhbm5lcnMvOTcxMzNkMDJjMDc4ZWRmNjA3OGFkNTU5MThlN2FhYWYyM2M3MDU0ZDk3ZTE4YTVkNzQ4NGMwYjllNmM2OTVmNS1yaW1nLXc4NTEtaDMxNS1kY2ZmYjU0Mi1nbWlyP3Y9MTc1NDMwODEyMA.avif",
           "tags": [],
           "link": "https://allevents.in/chester/music-under-the-stars-the-shadows-band/200028492762801",
-          "map_link": ""
+          "map_link": "https://maps.app.goo.gl/N9j4BDoDEeoxsxpJ9"
         },
         {
           "date": "Sat, 30 Aug 2025",
-          "time": "",
+          "time": "12:00 PM",
           "description": "Almanor Cardboard Regatta",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy9jZjMxMTBkMDlmMjFjZTQxYTFkN2U2YjMwZDFmODRhZmYwNmViY2E2NzM4MTc3MjM5Nzc1NzgzNTZjNjA2NDRhLXJpbWctdzEwMjQtaDE1MzYtZGNmZWRlOTYtZ21pcj92PTE3NTMyODUzOTc.avif",
           "tags": [],
@@ -158,44 +220,44 @@
           "map_link": ""
         },
         {
-          "date": "Sun, 31 Aug 2025",
-          "time": "",
-          "description": "Fall Soccer Sign up Deadline Aug 31",
-          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czkvYmFubmVycy8xOTllMDdhMWFjMGVmN2Y3MTJkNDBjZGRiMzgzM2I3OGFkMDJhYjI3ZjRjODcxYjY5Nzc0YmMzODMwNGEzOWJiLXJpbWctdzEyMDAtaDE1NTMtZGNmZmZmZmYtZ21pcj92PTE3NTQzMDIxNTk.avif",
+          "date": "Saturday, 30 Aug 2025",
+          "time": "10:00 AM - 4:00 PM",
+          "description": "LACF 22nd Annual Arts & Crafts Faire",
+          "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/08/Flyer-2025-Arts-Crafts-Faire-5-8-25.jpg",
           "tags": [],
-          "link": "https://allevents.in/chester/fall-soccer-sign-up-deadline-aug-31/200028492409538",
-          "map_link": ""
+          "link": "https://lakealmanorcountryclub.com/event/lacf-22nd-annual-arts-crafts-faire/",
+          "map_link": "https://maps.app.goo.gl/598rZMsCPvreaz928"
         },
         {
           "date": "Sun, 31 Aug 2025",
-          "time": "",
+          "time": "7:00 PM",
           "description": "Music under the Stars - Township",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy9kZmJlM2I1MmNjOGRhZjQ2MTg3NjMyMjFmOTZhMWVjNGEyOWMwMjA3ZTRkOTkwYzBlNmNjMGE0M2E4MWQxMDEyLXJpbWctdzg1MS1oMzE1LWRjZDhhODYzLWdtaXI_dj0xNzU0MzA4MTIy.avif",
           "tags": [],
           "link": "https://allevents.in/chester/music-under-the-stars-township/200028492763202",
-          "map_link": ""
+          "map_link": "https://maps.app.goo.gl/N9j4BDoDEeoxsxpJ9"
         },
         {
           "date": "Sat, 06 Sep 2025",
-          "time": "",
+          "time": "9:00 AM",
           "description": "37th annual Street Rod Extravaganza",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEvYmFubmVycy9iZDM3Y2E5Y2FjZmMxODgzYTUyYWM1ZjYxZTY3MzhhMTU3OTM1ZDM3NWY0ZjI1NGIwMDFkZGUzZGJlYTJmMzg0LXJpbWctdzEwMDAtaDU4My1kY2ZmZmZmZi1nbWlyP3Y9MTc1NDE1MTA3Mw.avif",
           "tags": [],
           "link": "https://allevents.in/chester/37th-annual-street-rod-extravaganza/200027700540823",
-          "map_link": ""
+          "map_link": "https://maps.app.goo.gl/XSFDywy8qjVGowRXA"
         },
         {
           "date": "Sat, 06 Sep 2025",
-          "time": "",
+          "time": "6:00 PM",
           "description": "Music under the Stars - Soul Posse",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czkvYmFubmVycy9lNjI4ZjdkMzdmMDNlM2Q4MWZjNmZhMjZjODFjNzMwNGI1NjRmNGYxMDkxYjBhNWQ0YmJmNWQ2MmFhZDdmYzFmLXJpbWctdzg1MS1oMzE1LWRjZmZiNTQyLWdtaXI_dj0xNzU0MzA4MTIz.avif",
           "tags": [],
           "link": "https://allevents.in/chester/music-under-the-stars-soul-posse/200028321491001",
-          "map_link": ""
+          "map_link": "https://maps.app.goo.gl/N9j4BDoDEeoxsxpJ9"
         },
         {
           "date": "Sat, 06 Sep 2025",
-          "time": "",
+          "time": "5:00 PM",
           "description": "RMEF Feather River Banquet \u2013 Quincy, CA",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy85MjMxMDAxMGYzNDc2NWQ5NTQ4MWQwOTU2ODFmZTU5ZmFiZTRkMzEwOWEzYTFkNGI1ZDExZjExZTVkNzk2YTc4LXJpbWctdzEyMDAtaDYyOC1kYzAzMDMwMy1nbWlyP3Y9MTc1NDI0Mzc4NQ.avif",
           "tags": [],
@@ -204,17 +266,17 @@
         },
         {
           "date": "Sat, 13 Sep 2025",
-          "time": "",
+          "time": "6:00 PM",
           "description": "Music under the Stars - Susanville Rock",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czMvYmFubmVycy9jM2MxZGY5NmRkY2IzZmI1NjNjYmY1OWIyOWIyMWZiZTU3MDBlYWQwZmVlZWE3NjFiNmViYmU3ZDJjODBjY2EwLXJpbWctdzg1MS1oMzE1LWRjYzU5OTU1LWdtaXI_dj0xNzU0MzA4MTIz.avif",
           "tags": [],
           "link": "https://allevents.in/chester/music-under-the-stars-susanville-rock/200028492762701",
-          "map_link": ""
+          "map_link": "https://maps.app.goo.gl/N9j4BDoDEeoxsxpJ9"
         },
         {
           "date": "Sat, 20 Sep 2025",
-          "time": "",
-          "description": "September Saturday Night",
+          "time": "6:00 PM",
+          "description": "Plumas Family Raceway",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czMvYmFubmVycy83M2Y0ZTk5MWE4ODVhYmIwMGU0YTU2ZmNjNjBlYWYzY2NmNWM5M2YyODhjYjhhZWY1YTA1ZTY2YzRkY2U4NTFjLXJpbWctdzExNTktaDIwNDgtZGM2NWEyZmUtZ21pcj92PTE3NTM5MTU2NjY.avif",
           "tags": [],
           "link": "https://allevents.in/quincy/september-saturday-night/200028383803339",
@@ -222,7 +284,7 @@
         },
         {
           "date": "Sat, 27 Sep 2025",
-          "time": "",
+          "time": "5:00 PM",
           "description": "Lake Almanor Ducks Unlimited Annual Banquet 2025",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czUvYmFubmVycy80NDM5MzRjMTU2MGZkNDcxMDUzYWQ5MGQyODQzNGYxNTA0YmI4ZmUzNDMxZmNiZDZlMzZiZDhiZGIxZDhlYzZjLXJpbWctdzgwMC1oMTAzNS1kY2Y0ZWVlNi1nbWlyP3Y9MTc1Mzc0NTE0MA.avif",
           "tags": [],
@@ -231,12 +293,12 @@
         },
         {
           "date": "Sat, 25 Oct 2025",
-          "time": "",
+          "time": "12:00 PM - 4:00 PM",
           "description": "AUDITIONS \u2b50\ufe0fLCBOB 2026 Concert Series\u2b50\ufe0f",
           "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy81NTZhMWE0ZWNhMmEyZGQwMTljZDM2ZDljYjkyOGY2MDhkMzQyMjkyNDc0Mjg2MGNmMTJiMDE2YTM2NDZkYzlkLXJpbWctdzEyMDAtaDY3Ni1kYzJjMWExMy1nbWlyP3Y9MTc1NDM1OTcyMA.avif",
           "tags": [],
           "link": "https://allevents.in/susanville/auditions-\ufe0flcbob-2026-concert-series\ufe0f/200028548646548",
-          "map_link": ""
+          "map_link": "https://maps.app.goo.gl/aXTGcowsb7by5fKS9"
         }
       ],
       "layout_style": "Card"
@@ -250,8 +312,8 @@
       "primary": "#103040",
       "secondary": "#506070"
     },
-    "google_api_key": "\"AIzaSyCpFkwVHVSeoemvelWhac_cTYdUgmg_RJg\"",
-    "openai_api_key": "\"REDACTED_OPENAI_KEY\"",
+    "google_api_key": "AIzaSyAyFv7Ah1gqT-PWtOfU9AbJlvlOwOMonE0",
+    "openai_api_key": "REDACTED_OPENAI_KEY",
     "events_feed_url": "\"https://example.com/events.json\"",
     "appearance_mode": "Dark"
   },
