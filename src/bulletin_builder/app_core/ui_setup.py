@@ -11,6 +11,13 @@ from bulletin_builder.app_core.config import (
 )
 
 def init(app):
+    # Ensure left panel (lp) is fully responsive
+    lp.grid_rowconfigure(0, weight=1)
+    lp.grid_columnconfigure(0, weight=1)
+
+    # Ensure right panel is fully responsive
+    app.right_panel.grid_rowconfigure(0, weight=1)
+    app.right_panel.grid_columnconfigure(0, weight=1)
     """Build all UI elements and wire them to app handlers."""
     # --- Window Setup ---
     app.title("LACC Bulletin Builder")
