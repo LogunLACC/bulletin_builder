@@ -71,7 +71,7 @@ def init(app):
     button_frame.pack(pady=8, fill="x")
     button_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
 
-    button_style = {"font": ("Segoe UI", 12), "height": 36, "corner_radius": 8, "fg_color": "#1F6AA5", "hover_color": "#155a8a"}
+    button_style = {"font": ("Segoe UI", 14, "bold"), "height": 40, "corner_radius": 10, "fg_color": "#1F6AA5", "hover_color": "#155a8a", "text_color": "#FFFFFF"}
 
     add_btn = ctk.CTkButton(button_frame, text="Add", command=app.add_section_dialog, **button_style)
     add_btn.grid(row=0, column=0, padx=4, pady=2, sticky="ew")
@@ -87,16 +87,23 @@ def init(app):
     ToolTip(down_btn, "Move the selected section down.")
 
     app.section_listbox = tk.Listbox(lp,
-        bg="#232b36", fg="white",
-        selectbackground="#1F6AA5", selectforeground="white",
-        borderwidth=0, highlightthickness=0,
-        font=("Roboto", 12),
+        bg="#232b36", fg="#FFFFFF",
+        selectbackground="#1F6AA5", selectforeground="#FFFFFF",
+        borderwidth=2, highlightthickness=2,
+        font=("Segoe UI", 14),
         relief="flat",
-        highlightbackground="#1F6AA5",
-        highlightcolor="#1F6AA5"
+        highlightbackground="#FFD700",
+        highlightcolor="#FFD700",
+        activestyle="none",
+        takefocus=True
     )
     app.section_listbox.pack(fill="both", expand=True, pady=10)
     app.section_listbox.bind("<<ListboxSelect>>", app.on_section_select)
+    app.section_listbox.bind("<FocusIn>", lambda e: app.section_listbox.config(highlightbackground="#FFD700"))
+    app.section_listbox.bind("<FocusOut>", lambda e: app.section_listbox.config(highlightbackground="#1F6AA5"))
+    # Ensure all main buttons are focusable and have visible focus highlight
+    for btn in [add_btn, remove_btn, up_btn, down_btn, app.email_button, app.send_test_button, app.export_html_text_button, app.ics_button]:
+        btn.configure(takefocus=True, border_width=2, border_color="#FFD700")
 
     expf = ctk.CTkFrame(lp)
     expf.pack(fill="x", pady=5)
