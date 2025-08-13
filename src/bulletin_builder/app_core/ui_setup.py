@@ -46,6 +46,22 @@ def init(app):
     button_frame.pack(pady=5, fill="x")
     button_frame.grid_columnconfigure((0, 1, 2, 3), weight=1) # Make buttons expand
 
+    # --- Content Tab ---
+    content = app.tab_view.tab("Content")
+    # Layout: left panel (sections), right panel (editor)
+    content.grid_columnconfigure(0, weight=1, minsize=220)
+    content.grid_columnconfigure(1, weight=3)
+    content.grid_rowconfigure(0, weight=1)
+
+    # Left panel: section list + controls (visually distinct)
+    lp = ctk.CTkFrame(content, fg_color="#232b36", border_width=2, border_color="#1F6AA5")
+    lp.grid(row=0, column=0, sticky="nsew", padx=(0,8), pady=10)
+
+    # Create a frame to hold the section management buttons
+    button_frame = ctk.CTkFrame(lp, fg_color="transparent")
+    button_frame.pack(pady=5, fill="x")
+    button_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)  # Make buttons expand
+
     # --- Add/modify this section ---
     ctk.CTkButton(button_frame, text="Add", command=app.add_section_dialog).grid(row=0, column=0, padx=2)
     ctk.CTkButton(button_frame, text="Remove", command=app.remove_section).grid(row=0, column=1, padx=2)
@@ -53,10 +69,13 @@ def init(app):
     ctk.CTkButton(button_frame, text="Move Down", command=app.move_section_down).grid(row=0, column=3, padx=2)
 
     app.section_listbox = tk.Listbox(lp,
-        bg="#2B2B2B", fg="white",
+        bg="#232b36", fg="white",
         selectbackground="#1F6AA5", selectforeground="white",
         borderwidth=0, highlightthickness=0,
-        font=("Roboto", 12)
+        font=("Roboto", 12),
+        relief="flat",
+        highlightbackground="#1F6AA5",
+        highlightcolor="#1F6AA5"
     )
     app.section_listbox.pack(fill="both", expand=True, pady=10)
     app.section_listbox.bind("<<ListboxSelect>>", app.on_section_select)
@@ -79,21 +98,14 @@ def init(app):
     else:
         print("Warning: build_suggestions_panel not found on app; skipping suggestions panel.")
 
-    # Right panel: editor or placeholder
-    app.right_panel = ctk.CTkFrame(content)
-    app.right_panel.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
+    # Right panel: editor or placeholder (visually distinct)
+    app.right_panel = ctk.CTkFrame(content, fg_color="#f7f9fa", border_width=1, border_color="#cccccc")
+    app.right_panel.grid(row=0, column=1, sticky="nsew", padx=(0,10), pady=10)
     app.show_placeholder()
 
-    # --- Settings Tab ---
-    sett = app.tab_view.tab("Settings")
-    app.settings_frame = SettingsFrame(
-        sett,
-        refresh_callback=app.refresh_listbox_titles,
-        save_api_key_callback=app.save_api_key_to_config,
-        save_openai_key_callback=app.save_openai_key_to_config,
-        save_events_url_callback=app.save_events_url_to_config,
-    )
-    app.settings_frame.pack(fill="both", expand=True, padx=10, pady=10)
+    # Status bar: always visible, full width, modern look
+    app.status_bar = ctk.CTkLabel(app, text="", anchor="w", fg_color="#1F6AA5", text_color="white", height=28)
+    app.status_bar.grid(row=1, column=0, sticky="ew", padx=0)
 
     # Load the saved keys from config.ini
     saved_google_key = load_google_api_key()
