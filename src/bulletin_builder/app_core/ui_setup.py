@@ -11,6 +11,8 @@ from bulletin_builder.app_core.config import (
 )
 
 def init(app):
+    # Import tooltip helper
+    from bulletin_builder.ui.tooltip import ToolTip
     # Ensure left panel (lp) is fully responsive
     lp.grid_rowconfigure(0, weight=1)
     lp.grid_columnconfigure(0, weight=1)
@@ -71,10 +73,18 @@ def init(app):
 
     button_style = {"font": ("Segoe UI", 12), "height": 36, "corner_radius": 8, "fg_color": "#1F6AA5", "hover_color": "#155a8a"}
 
-    ctk.CTkButton(button_frame, text="Add", command=app.add_section_dialog, **button_style).grid(row=0, column=0, padx=4, pady=2, sticky="ew")
-    ctk.CTkButton(button_frame, text="Remove", command=app.remove_section, **button_style).grid(row=0, column=1, padx=4, pady=2, sticky="ew")
-    ctk.CTkButton(button_frame, text="Move Up", command=app.move_section_up, **button_style).grid(row=0, column=2, padx=4, pady=2, sticky="ew")
-    ctk.CTkButton(button_frame, text="Move Down", command=app.move_section_down, **button_style).grid(row=0, column=3, padx=4, pady=2, sticky="ew")
+    add_btn = ctk.CTkButton(button_frame, text="Add", command=app.add_section_dialog, **button_style)
+    add_btn.grid(row=0, column=0, padx=4, pady=2, sticky="ew")
+    ToolTip(add_btn, "Add a new section to the bulletin.")
+    remove_btn = ctk.CTkButton(button_frame, text="Remove", command=app.remove_section, **button_style)
+    remove_btn.grid(row=0, column=1, padx=4, pady=2, sticky="ew")
+    ToolTip(remove_btn, "Remove the selected section.")
+    up_btn = ctk.CTkButton(button_frame, text="Move Up", command=app.move_section_up, **button_style)
+    up_btn.grid(row=0, column=2, padx=4, pady=2, sticky="ew")
+    ToolTip(up_btn, "Move the selected section up.")
+    down_btn = ctk.CTkButton(button_frame, text="Move Down", command=app.move_section_down, **button_style)
+    down_btn.grid(row=0, column=3, padx=4, pady=2, sticky="ew")
+    ToolTip(down_btn, "Move the selected section down.")
 
     app.section_listbox = tk.Listbox(lp,
         bg="#232b36", fg="white",
@@ -92,12 +102,16 @@ def init(app):
     expf.pack(fill="x", pady=5)
     app.email_button = ctk.CTkButton(expf, text="Copy for Email", command=app.on_copy_for_email_clicked, **button_style)
     app.email_button.pack(fill="x", pady=(0,6))
+    ToolTip(app.email_button, "Copy the bulletin as email-ready HTML.")
     app.send_test_button = ctk.CTkButton(expf, text="Send Test Email...", command=app.on_send_test_email_clicked, **button_style)
     app.send_test_button.pack(fill="x", pady=(0,6))
+    ToolTip(app.send_test_button, "Send a test email to yourself.")
     app.export_html_text_button = ctk.CTkButton(expf, text="Export HTML + Text...", command=app.on_export_html_text_clicked, **button_style)
     app.export_html_text_button.pack(fill="x", pady=(0,6))
+    ToolTip(app.export_html_text_button, "Export the bulletin as HTML and plain text files.")
     app.ics_button = ctk.CTkButton(expf, text="Export Event .ics", command=app.on_export_ics_clicked, **button_style)
     app.ics_button.pack(fill="x", pady=(0,2))
+    ToolTip(app.ics_button, "Export all events as a calendar .ics file.")
 
     # Smart Suggestions Panel
     if hasattr(app, 'build_suggestions_panel'):
