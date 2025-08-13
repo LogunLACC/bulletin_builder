@@ -69,7 +69,7 @@ class SettingsFrame(ctk.CTkFrame):
         ctk.CTkLabel(self, text="Appearance:").grid(row=8, column=0, sticky="w", pady=(0,5))
         self.appearance_option = ctk.CTkOptionMenu(
             self,
-            values=["Light", "Dark"],
+            values=["Light", "Dark", "Hybrid"],
             command=self._on_appearance_changed,
         )
         # initialize with current mode
@@ -111,7 +111,26 @@ class SettingsFrame(ctk.CTkFrame):
             current_mode = "Dark"
         appearance = settings_data.get("appearance_mode", current_mode)
         try:
-            ctk.set_appearance_mode(appearance)
+            if appearance == "Hybrid":
+                ctk.set_appearance_mode("Light")
+                app = self.winfo_toplevel()
+                for panel_name in ("left_panel", "right_panel"):
+                    panel = getattr(app, panel_name, None)
+                    if panel:
+                        try:
+                            panel.configure(fg_color="#222222")
+                        except Exception:
+                            pass
+            else:
+                ctk.set_appearance_mode(appearance)
+                app = self.winfo_toplevel()
+                for panel_name in ("left_panel", "right_panel"):
+                    panel = getattr(app, panel_name, None)
+                    if panel:
+                        try:
+                            panel.configure(fg_color="default")
+                        except Exception:
+                            pass
         except Exception:
             pass
         self.appearance_option.set(appearance)
@@ -182,6 +201,28 @@ class SettingsFrame(ctk.CTkFrame):
     def _on_appearance_changed(self, mode: str):
         """Apply the selected appearance mode immediately."""
         try:
-            ctk.set_appearance_mode(mode)
+            if mode == "Hybrid":
+                # Hybrid: Light for main/editor, Dark for side panels (or vice versa)
+                # For now, set app-wide to Light, then manually darken side panels if possible
+                ctk.set_appearance_mode("Light")
+                app = self.winfo_toplevel()
+                # Try to set side panels to dark (if accessible)
+                for panel_name in ("left_panel", "right_panel"):
+                    panel = getattr(app, panel_name, None)
+                    if panel:
+                        try:
+                            panel.configure(fg_color="#222222")
+                        except Exception:
+                            pass
+            else:
+                ctk.set_appearance_mode(mode)
+                app = self.winfo_toplevel()
+                for panel_name in ("left_panel", "right_panel"):
+                    panel = getattr(app, panel_name, None)
+                    if panel:
+                        try:
+                            panel.configure(fg_color="default")
+                        except Exception:
+                            pass
         except Exception:
             pass

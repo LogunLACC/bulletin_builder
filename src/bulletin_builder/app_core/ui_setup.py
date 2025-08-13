@@ -15,7 +15,7 @@ def init(app):
     # --- Window Setup ---
     app.title("LACC Bulletin Builder")
     app.geometry("1200x800")
-    ctk.set_appearance_mode("Dark")
+    # Appearance mode will be set by settings frame based on saved settings
     ctk.set_default_color_theme("blue")
 
     # --- Main Layout (Tabs + Status Bar) ---
