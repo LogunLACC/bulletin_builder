@@ -66,14 +66,15 @@ def init(app):
 
     # Create a frame to hold the section management buttons
     button_frame = ctk.CTkFrame(lp, fg_color="transparent")
-    button_frame.pack(pady=5, fill="x")
-    button_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)  # Make buttons expand
+    button_frame.pack(pady=8, fill="x")
+    button_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
 
-    # --- Add/modify this section ---
-    ctk.CTkButton(button_frame, text="Add", command=app.add_section_dialog).grid(row=0, column=0, padx=2)
-    ctk.CTkButton(button_frame, text="Remove", command=app.remove_section).grid(row=0, column=1, padx=2)
-    ctk.CTkButton(button_frame, text="Move Up", command=app.move_section_up).grid(row=0, column=2, padx=2)
-    ctk.CTkButton(button_frame, text="Move Down", command=app.move_section_down).grid(row=0, column=3, padx=2)
+    button_style = {"font": ("Segoe UI", 12), "height": 36, "corner_radius": 8, "fg_color": "#1F6AA5", "hover_color": "#155a8a"}
+
+    ctk.CTkButton(button_frame, text="Add", command=app.add_section_dialog, **button_style).grid(row=0, column=0, padx=4, pady=2, sticky="ew")
+    ctk.CTkButton(button_frame, text="Remove", command=app.remove_section, **button_style).grid(row=0, column=1, padx=4, pady=2, sticky="ew")
+    ctk.CTkButton(button_frame, text="Move Up", command=app.move_section_up, **button_style).grid(row=0, column=2, padx=4, pady=2, sticky="ew")
+    ctk.CTkButton(button_frame, text="Move Down", command=app.move_section_down, **button_style).grid(row=0, column=3, padx=4, pady=2, sticky="ew")
 
     app.section_listbox = tk.Listbox(lp,
         bg="#232b36", fg="white",
@@ -89,14 +90,14 @@ def init(app):
 
     expf = ctk.CTkFrame(lp)
     expf.pack(fill="x", pady=5)
-    app.email_button = ctk.CTkButton(expf, text="Copy for Email", command=app.on_copy_for_email_clicked)
-    app.email_button.pack(fill="x", pady=(0,5))
-    app.send_test_button = ctk.CTkButton(expf, text="Send Test Email...", command=app.on_send_test_email_clicked)
-    app.send_test_button.pack(fill="x", pady=(0,5))
-    app.export_html_text_button = ctk.CTkButton(expf, text="Export HTML + Text...", command=app.on_export_html_text_clicked)
-    app.export_html_text_button.pack(fill="x", pady=(0,5))
-    app.ics_button = ctk.CTkButton(expf, text="Export Event .ics", command=app.on_export_ics_clicked)
-    app.ics_button.pack(fill="x")
+    app.email_button = ctk.CTkButton(expf, text="Copy for Email", command=app.on_copy_for_email_clicked, **button_style)
+    app.email_button.pack(fill="x", pady=(0,6))
+    app.send_test_button = ctk.CTkButton(expf, text="Send Test Email...", command=app.on_send_test_email_clicked, **button_style)
+    app.send_test_button.pack(fill="x", pady=(0,6))
+    app.export_html_text_button = ctk.CTkButton(expf, text="Export HTML + Text...", command=app.on_export_html_text_clicked, **button_style)
+    app.export_html_text_button.pack(fill="x", pady=(0,6))
+    app.ics_button = ctk.CTkButton(expf, text="Export Event .ics", command=app.on_export_ics_clicked, **button_style)
+    app.ics_button.pack(fill="x", pady=(0,2))
 
     # Smart Suggestions Panel
     if hasattr(app, 'build_suggestions_panel'):
