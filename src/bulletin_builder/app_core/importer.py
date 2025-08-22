@@ -1,3 +1,86 @@
+# --- Non-disruptive CSV parser helpers (append-only) -------------------
+def _bb_norm(value):
+    """Normalize a single CSV cell value to a stripped string (None -> '')."""
+    if value is None:
+        return ""
+    return str(value).strip()
+
+def _bb_norm_header(h):
+    """Normalize a header name for mapping (lowercase, underscores)."""
+    s = _bb_norm(h).lower()
+    for ch in (" ", "-", ".", "/"):
+        s = s.replace(ch, "_")
+    return s
+
+_BB_HEADER_MAP = {
+    # title
+    "title": "title",
+    "subject": "title",
+    "headline": "title",
+    # body
+    "body": "body",
+    "message": "body",
+    "text": "body",
+    "content": "body",
+    "description": "body",
+    # link url
+    "link": "link",
+    "url": "link",
+    "href": "link",
+    "website": "link",
+    # link text
+    "link_text": "link_text",
+    "cta": "link_text",
+    "button_text": "link_text",
+    "anchor": "link_text",
+}
+
+def parse_announcements_csv(text):
+    """
+    Parse CSV text into a list of dicts:
+      {title, body, link, link_text}
+    - Handles BOM
+    - Detects delimiter (comma/semicolon/tab/pipe)
+    - Accepts many header synonyms (case-insensitive)
+    - Skips blank lines
+    - Defaults link_text to 'Learn more' when link is present but text is blank
+    This helper is append-only and does not modify existing import logic.
+    """
+    import csv, io
+    if not text:
+        return []
+    # Strip BOM if present
+    if text.startswith("\ufeff"):
+        text = text.lstrip("\ufeff")
+    # Detect delimiter
+    try:
+        sample = text[:2048]
+        dialect = csv.Sniffer().sniff(sample, delimiters=[",", ";", "\t", "|"])
+    except Exception:
+        dialect = csv.excel
+    reader = csv.DictReader(io.StringIO(text), dialect=dialect)
+    if not reader.fieldnames:
+        return []
+    # Build a header mapping once
+    hdr_map = {}
+    for raw in reader.fieldnames:
+        mapped = _BB_HEADER_MAP.get(_bb_norm_header(raw))
+        hdr_map[raw] = mapped  # may be None for unrecognized
+    items = []
+    for raw_row in reader:
+        if not raw_row:
+            continue
+        row = {"title": "", "body": "", "link": "", "link_text": ""}
+        for raw_key, value in raw_row.items():
+            target = hdr_map.get(raw_key)
+            if not target:
+                continue
+            row[target] = _bb_norm(value)
+        if any(row.values()):
+            if row["link"] and not row["link_text"]:
+                row["link_text"] = "Learn more"
+            items.append(row)
+    return items
 # -*- coding: utf-8 -*-
 import csv
 import io
@@ -32,18 +115,30 @@ def init(app):
             return
         try:
             with open(path, "r", encoding="utf-8", newline="") as f:
-                reader = csv.DictReader(f)
-                rows = list(reader)
+                text = f.read()
+            # Use robust parser
+            parsed = parse_announcements_csv(text)
+            announcements = parsed
+            _apply_announcements_to_app(app, announcements)
+            print("Imported Announcements:", announcements)
+            if hasattr(app, "refresh_listbox_titles"):
+                app.refresh_listbox_titles()
+            if hasattr(app, "show_placeholder"):
+                app.show_placeholder()
+            if hasattr(app, "update_preview"):
+                app.update_preview()
+            if hasattr(app, "show_status_message"):
+                app.show_status_message(f"Imported {len(announcements)} announcements")
         except Exception as e:
             messagebox.showerror("Import Error", str(e))
             return
-        _rows_to_sections(app, rows)
 
     # ---------- GOOGLE SHEET (public CSV URL) ----------
     def import_google_sheet():
         url = simpledialog.askstring("Google Sheet URL", "Enter public CSV URL:")
         if not url:
             return
+        url = url.strip().strip('"\'')
         if hasattr(app, "_show_progress"):
             app._show_progress("Fetching Google Sheet…")
 
@@ -51,26 +146,33 @@ def init(app):
             try:
                 with urllib.request.urlopen(url, timeout=NET_TIMEOUT) as resp:
                     text = resp.read().decode("utf-8")
-                reader = csv.DictReader(io.StringIO(text))
-                rows = list(reader)
+                # Reuse the robust CSV parser so headers like 'Link Text' map correctly
+                parsed = parse_announcements_csv(text)
             except Exception as e:
-                err = e  # capture
+                err = e
                 app.after(0, lambda err=err: messagebox.showerror("Import Error", str(err)))
                 if hasattr(app, "_hide_progress"):
                     app.after(0, app._hide_progress)
                 return
 
-            app.after(0, lambda: (_rows_to_sections(app, rows),
-                                  hasattr(app, "_hide_progress") and app._hide_progress()))
+            def _apply():
+                _apply_announcements_to_app(app, parsed)
+                if hasattr(app, "_hide_progress"):
+                    app._hide_progress()
+
+            app.after(0, _apply)
 
         _submit(app, _worker)
 
     # ---------- EVENTS FEED (JSON/CSV URL) ----------
     def import_events_feed(url: str | None = None):
+
         if not url:
             url = simpledialog.askstring("Events Feed URL", "Enter events JSON/CSV URL:")
         if not url:
             return
+        # Sanitize URL: strip whitespace and quotes
+        url = url.strip().strip('"\'')
 
         if hasattr(app, "_show_progress"):
             app._show_progress("Fetching events…")
@@ -86,11 +188,27 @@ def init(app):
 
             raw_events_local = expand_recurring_events(raw_events)
 
+
             def _apply():
                 # (Optional) interactive filters by date/tags could go here
+                import datetime
+                today = datetime.date.today()
                 events = events_to_blocks(raw_events_local)
-                process_event_images(events)
-                conflicts = detect_conflicts(events)
+                # Filter out past events
+                future_events = []
+                outdated_events = []
+                for ev in events:
+                    date_str = ev.get("date")
+                    try:
+                        ev_date = datetime.date.fromisoformat(date_str) if date_str else None
+                    except Exception:
+                        ev_date = None
+                    if ev_date and ev_date < today:
+                        outdated_events.append(ev)
+                    else:
+                        future_events.append(ev)
+                process_event_images(future_events)
+                conflicts = detect_conflicts(future_events)
                 if conflicts:
                     msg_lines = ["Overlapping events detected:"]
                     for a, b in conflicts:
@@ -100,13 +218,13 @@ def init(app):
                         )
                     messagebox.showwarning("Event Conflicts", "\n".join(msg_lines))
 
-                if not events:
-                    messagebox.showinfo("Import Events", "No events found.")
+                if not future_events:
+                    messagebox.showinfo("Import Events", "No future events found.")
                 else:
                     app.sections_data.append({
                         "title": "Community Events",
                         "type": "community_events",
-                        "content": events,
+                        "content": future_events,
                         "layout_style": "Card",
                     })
                     if hasattr(app, "refresh_listbox_titles"):
@@ -116,7 +234,10 @@ def init(app):
                     if hasattr(app, "update_preview"):
                         app.update_preview()
                     if hasattr(app, "show_status_message"):
-                        app.show_status_message(f"Imported {len(events)} events")
+                        app.show_status_message(f"Imported {len(future_events)} events")
+                # Warn if outdated events were present
+                if outdated_events and hasattr(app, "show_status_message"):
+                    app.show_status_message(f"Warning: {len(outdated_events)} outdated events were ignored (date before today)")
 
                 if hasattr(app, "_hide_progress"):
                     app._hide_progress()
@@ -152,27 +273,28 @@ def _submit(app, fn):
     else:
         threading.Thread(target=fn, daemon=True).start()
 
-def _rows_to_sections(app, rows):
-    """Convert CSV rows into a section and refresh UI."""
-    if not rows:
-        messagebox.showinfo("Import CSV", "No rows found.")
+
+# New: robust mapping for announcements CSV import
+def _apply_announcements_to_app(app, announcements):
+    """Update or create the Announcements section and refresh the UI."""
+    if not hasattr(app, "sections_data"):
+        app.sections_data = []
+    sections = app.sections_data
+    ann_section = next((s for s in sections if s.get("type") == "announcements"), None)
+    if ann_section is None:
+        ann_section = {"type": "announcements", "title": "Announcements", "content": []}
+        sections.append(ann_section)
+    ann_section["content"] = announcements
+    # Make the current announcements section discoverable by any editor frame
+    try:
+        app._last_announcements_section = ann_section
+    except Exception:
+        pass
+    if not announcements:
+        if hasattr(app, "show_status_message"):
+            app.show_status_message("No announcements were imported (0 items)")
         return
-    items = []
-    for r in rows:
-        items.append({
-            "title": (r.get("title") or r.get("name") or "").strip(),
-            "description": (r.get("description") or r.get("details") or "").strip(),
-            "date": (r.get("date") or r.get("start_date") or "").strip(),
-            "time": (r.get("time") or r.get("start_time") or "").strip(),
-            "location": (r.get("location") or r.get("venue") or "").strip(),
-            "url": (r.get("url") or r.get("link") or "").strip(),
-        })
-    app.sections_data.append({
-        "title": "Announcements",
-        "type": "announcements",
-        "content": items,
-        "layout_style": "List",
-    })
+    print("Imported Announcements:", announcements)
     if hasattr(app, "refresh_listbox_titles"):
         app.refresh_listbox_titles()
     if hasattr(app, "show_placeholder"):
@@ -180,4 +302,4 @@ def _rows_to_sections(app, rows):
     if hasattr(app, "update_preview"):
         app.update_preview()
     if hasattr(app, "show_status_message"):
-        app.show_status_message(f"Imported {len(items)} announcements")
+        app.show_status_message(f"Imported {len(announcements)} announcements")

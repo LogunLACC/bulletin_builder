@@ -1,5 +1,7 @@
 Bulletin Builder/
+    app_attribute_scan.log
     bulletin_builder.spec
+    cleaned_sorted_events.json
     cleanup-bulletin-builder.ps1
     cleanup.log
     cleanup_bulletin_builder.sh
@@ -8,45 +10,16 @@ Bulletin Builder/
     LICENSE
     list_structure.py
     PowerSearch.ps1
+    process_events.py
     project_structure.txt
     pyproject.toml
     README.md
     requirements.txt
     roadmap.json
+    test_imports.py
+    test_theme_modes.py
     assets/
-        tmp05ttiadq_opt.jpg
-        tmp1htxg_jg_opt.jpg
-        tmp26g2mgbs_opt.jpg
-        tmp3ac4arpl_opt.jpg
-        tmp4w0uxu9a_opt.jpg
-        tmp5noj_aze_opt.jpg
-        tmp6ykam9ro_opt.jpg
-        tmp8jik8rh5_opt.jpg
-        tmp9y6w4cvo_opt.jpg
-        tmpb0ks9dff_opt.jpg
-        tmpdexg0fky_opt.jpg
-        tmpdomwtvqn_opt.jpg
-        tmpdv7y9hm2_opt.jpg
-        tmpf8_vm7x5_opt.jpg
-        tmpji7kciqc_opt.jpg
-        tmpjvyuw0s3_opt.jpg
-        tmpkmycc4t0_opt.jpg
-        tmpkrf58mjm_opt.jpg
-        tmpmhiwj_ga_opt.jpg
-        tmpnxk7n618_opt.jpg
-        tmpon73a1rr_opt.jpg
-        tmpoyponc1a_opt.jpg
-        tmppm_n8wlm_opt.jpg
-        tmppt_1m6yh_opt.jpg
-        tmpqpx0ob8h_opt.jpg
-        tmptrq57peg_opt.jpg
-        tmptw1gb59m_opt.jpg
-        tmpva9s48bk_opt.jpg
-        tmpvic0y2id_opt.jpg
-        tmpyb3emmm0_opt.jpg
-        tmpyksx6n7j_opt.jpg
-        tmpznuihk1a_opt.jpg
-        tmpzqxa52x5_opt.jpg
+        TriviaJune25_opt.jpg
     components/
         BOD.json
         Committee Meeting This Week.json
@@ -56,6 +29,7 @@ Bulletin Builder/
     scripts/
         build_exe.py
         bulletin.html
+        bulletin_email_postprocess.py
         localize_images.py
         updated.html
         media/
@@ -99,12 +73,14 @@ Bulletin Builder/
             __init__.py
             __main__.py
             app_core/
+                bulletin_renderer.py
                 component_library.py
                 config.py
                 core_init.py
                 drafts.py
                 exporter.py
                 handlers.py
+                image_utils.py
                 importer.py
                 loader.py
                 menu.py
@@ -143,6 +119,7 @@ Bulletin Builder/
                 image.py
                 settings.py
                 template_gallery.py
+                tooltip.py
                 __init__.py
         templates/
             partials/
@@ -156,9 +133,14 @@ Bulletin Builder/
     templates/
         partials/
         themes/
+    tests/
+        test_exporter.py
+        test_importer_parser.py
+        test_smoke.py
     user_drafts/
         Announcements.csv
         Announcements2.csv
+        basic.json
         Clubhouse07152025_v1.json
         Clubhouse07152025_v2.json
         Clubhouse07152025_v3.json

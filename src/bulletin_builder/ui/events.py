@@ -32,9 +32,8 @@ class EventsFrame(ctk.CTkFrame):
             title_label = ctk.CTkLabel(top_frame, text="Section Title")
             title_label.grid(row=0, column=0, padx=(0, 10))
             # Layout fix: ensure frame expands and grid works
-            self.grid_propagate(True)
-            self.pack_propagate(False)
-            self.pack(fill="both", expand=True)
+            self.grid_rowconfigure(99, weight=1)
+            self.grid_columnconfigure(0, weight=1)
             print("[DEBUG] EventsFrame __init__ completed successfully.")
         except Exception as e:
             print(f"[ERROR] Exception in EventsFrame __init__: {e}")
@@ -52,15 +51,14 @@ class EventsFrame(ctk.CTkFrame):
         style_frame.grid(row=1, column=0, sticky="ew", pady=(0, 10))
         
         style_label = ctk.CTkLabel(style_frame, text="Layout Style:")
-        style_label.pack(side="left", padx=(0, 10))
-
+        style_label.grid(row=0, column=0, padx=(0, 10), sticky="w")
         self.style_selector = ctk.CTkSegmentedButton(
             style_frame,
             values=["Card", "Grid"],
             command=self.on_style_change
         )
         self.style_selector.set(self.section_data.get('layout_style', 'Card'))
-        self.style_selector.pack(side="left")
+        self.style_selector.grid(row=0, column=1, sticky="w")
 
         self.scrollable_frame = ctk.CTkScrollableFrame(self, label_text="Event Items")
         self.scrollable_frame.grid(row=2, column=0, sticky="nsew")

@@ -83,17 +83,17 @@ def init(app):
         idx = sel[0]
         section = app.sections_data[idx]
         print(f"[DEBUG] on_section_select: idx={idx}, section type={section.get('type')}, title={section.get('title')}")
-        # LAZY-LOAD: Only create the selected section's frame, destroy all others
-        FrameCls = SectionRegistry.get_frame(section['type'])
-        for w in app.editor_container.winfo_children():
-            w.destroy()
-        # Construct the frame for the selected section only
-        if section['type'] == 'announcements':
-            frame = FrameCls(app.editor_container, section, app.refresh_listbox_titles, app.save_component, app.ai_callback)
-        else:
-            frame = FrameCls(app.editor_container, section, app.refresh_listbox_titles, app.save_component)
-        # Only the selected frame is present; no caching of others
-        app.replace_editor_frame(frame)
+        try:
+            FrameCls = SectionRegistry.get_frame(section['type'])
+            if section['type'] == 'announcements':
+                frame = FrameCls(app.editor_container, section=section, on_dirty=app.refresh_listbox_titles)
+            else:
+                frame = FrameCls(app.editor_container, section, app.refresh_listbox_titles, app.save_component)
+            # Do NOT call pack() or grid() on frame here; let replace_editor_frame handle it
+            app.replace_editor_frame(frame)
+            print(f"[DEBUG] Editor frame replaced for section {idx}")
+        except Exception as e:
+            print(f"[ERROR] Could not build/replace editor frame: {e}")
         app.active_editor_index = idx
 
     # --- Update Data ---

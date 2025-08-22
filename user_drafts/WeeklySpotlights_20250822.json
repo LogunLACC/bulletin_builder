@@ -1,0 +1,148 @@
+{
+  "sections": [
+    {
+      "type": "announcements",
+      "title": "Announcements",
+      "content": [
+        {
+          "title": "Board of Directors - ? Missed the meeting? We\u2019ve got you covered!",
+          "body": "If you couldn\u2019t make it in person\u2014or tune in live\u2014no worries. You can catch the full recording from Saturday, August 16, right here. ????  Passcode is: rf$.P1m%",
+          "link": "https://us02web.zoom.us/rec/share/Pel_b3tkQ52V1up5mcXGj3J1XYnxPrfO1WKTQSknn1GWviVBnscmwDX2bGz87x-I.qWO4ns4xN1Yk0lo8",
+          "link_text": "Watch Recording"
+        },
+        {
+          "title": "*IMPORTANT* Blue-green algae, Lyngbya (Cyanophyta)",
+          "body": "The Lake Almanor Watershed Group conducted their investigations in the eastern and western basins of Lake Almanor on August 5, 2025. I collected plankton samples and have examined them. I found significant numbers of a genus of blue-green algae, Lyngbya (Cyanophyta). Some species of this alga are known to produce toxins, but I don\u2019t know if this species does. However, it is always a good idea to remind folks to rinse off their children and pets after letting them swim and to not let them drink water from the lake in large amounts.\n\nIf you have any further questions, I'm happy to answer them. LAWG appreciates the support that LACC has provided for our water quality work.\n\nDr. Gina Johnston",
+          "link": "https://sierrainstitute.us/program/lake-almanor-watershed-group/",
+          "link_text": "Read More"
+        },
+        {
+          "title": "Almanor Open",
+          "body": "Good news for our golfers: the Golf Course and Pro Shop are open during the Almanor Open. Tee times are first-come, first-served\u2014don\u2019t miss your shot!",
+          "link": "https://foreupsoftware.com/index.php/booking/19352/1480#teetimes",
+          "link_text": "Book Tee Time"
+        }
+      ]
+    },
+    {
+      "title": "Community Events",
+      "type": "community_events",
+      "content": [
+        {
+          "date": "Fri, 22 Aug 2025",
+          "time": "12:00 PM",
+          "description": "Sierradipity Arts Fair",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czMvYmFubmVycy9mN2M0OTc0OTc4M2Q0YWNiZDNhNTBkZjI5MzIyNDM3ZDM4ZDk5MGM0M2JjNTQ3ZThmZjJkNTdmOWMwZmRlMWM1LXJpbWctdzg1MS1oMzE1LWRjZmZmZmZmLWdtaXI_dj0xNzUzOTEyOTcx.avif",
+          "tags": [],
+          "link": "https://allevents.in/quincy/sierradipity-arts-fair/200028267561838",
+          "map_link": ""
+        },
+        {
+          "date": "Sat, 23 Aug 2025",
+          "time": "7:00 PM",
+          "description": "Music under the Stars - The Shadows Band",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEwL2Jhbm5lcnMvOTcxMzNkMDJjMDc4ZWRmNjA3OGFkNTU5MThlN2FhYWYyM2M3MDU0ZDk3ZTE4YTVkNzQ4NGMwYjllNmM2OTVmNS1yaW1nLXc4NTEtaDMxNS1kY2ZmYjU0Mi1nbWlyP3Y9MTc1NDMwODEyMA.avif",
+          "tags": [],
+          "link": "https://allevents.in/chester/music-under-the-stars-the-shadows-band/200028492762801",
+          "map_link": ""
+        },
+        {
+          "date": "Sat, 30 Aug 2025",
+          "time": "12:00 PM",
+          "description": "Almanor Cardboard Regatta",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy9jZjMxMTBkMDlmMjFjZTQxYTFkN2U2YjMwZDFmODRhZmYwNmViY2E2NzM4MTc3MjM5Nzc1NzgzNTZjNjA2NDRhLXJpbWctdzEwMjQtaDE1MzYtZGNmZWRlOTYtZ21pcj92PTE3NTMyODUzOTc.avif",
+          "tags": [],
+          "link": "https://allevents.in/chester/almanor-cardboard-regatta/200028278299230",
+          "map_link": ""
+        },
+        {
+          "date": "Sun, 31 Aug 2025",
+          "time": "8:00 PM",
+          "description": "Fall Soccer Sign up Deadline Aug 31",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czkvYmFubmVycy8xOTllMDdhMWFjMGVmN2Y3MTJkNDBjZGRiMzgzM2I3OGFkMDJhYjI3ZjRjODcxYjY5Nzc0YmMzODMwNGEzOWJiLXJpbWctdzEyMDAtaDE1NTMtZGNmZmZmZmYtZ21pcj92PTE3NTQzMDIxNTk.avif",
+          "tags": [],
+          "link": "https://allevents.in/chester/fall-soccer-sign-up-deadline-aug-31/200028492409538",
+          "map_link": ""
+        },
+        {
+          "date": "Sun, 31 Aug 2025",
+          "time": "7:00 PM",
+          "description": "Music under the Stars - Township",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy9kZmJlM2I1MmNjOGRhZjQ2MTg3NjMyMjFmOTZhMWVjNGEyOWMwMjA3ZTRkOTkwYzBlNmNjMGE0M2E4MWQxMDEyLXJpbWctdzg1MS1oMzE1LWRjZDhhODYzLWdtaXI_dj0xNzU0MzA4MTIy.avif",
+          "tags": [],
+          "link": "https://allevents.in/chester/music-under-the-stars-township/200028492763202",
+          "map_link": ""
+        },
+        {
+          "date": "Sat, 06 Sep 2025",
+          "time": "9:00 AM",
+          "description": "37th annual Street Rod Extravaganza",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEvYmFubmVycy9iZDM3Y2E5Y2FjZmMxODgzYTUyYWM1ZjYxZTY3MzhhMTU3OTM1ZDM3NWY0ZjI1NGIwMDFkZGUzZGJlYTJmMzg0LXJpbWctdzEwMDAtaDU4My1kY2ZmZmZmZi1nbWlyP3Y9MTc1NDE1MTA3Mw.avif",
+          "tags": [],
+          "link": "https://allevents.in/chester/37th-annual-street-rod-extravaganza/200027700540823",
+          "map_link": ""
+        },
+        {
+          "date": "Sat, 06 Sep 2025",
+          "time": "6:00 PM",
+          "description": "Music under the Stars - Soul Posse",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czkvYmFubmVycy9lNjI4ZjdkMzdmMDNlM2Q4MWZjNmZhMjZjODFjNzMwNGI1NjRmNGYxMDkxYjBhNWQ0YmJmNWQ2MmFhZDdmYzFmLXJpbWctdzg1MS1oMzE1LWRjZmZiNTQyLWdtaXI_dj0xNzU0MzA4MTIz.avif",
+          "tags": [],
+          "link": "https://allevents.in/chester/music-under-the-stars-soul-posse/200028321491001",
+          "map_link": ""
+        },
+        {
+          "date": "Sat, 06 Sep 2025",
+          "time": "5:00 PM",
+          "description": "RMEF Feather River Banquet \u2013 Quincy, CA",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy85MjMxMDAxMGYzNDc2NWQ5NTQ4MWQwOTU2ODFmZTU5ZmFiZTRkMzEwOWEzYTFkNGI1ZDExZjExZTVkNzk2YTc4LXJpbWctdzEyMDAtaDYyOC1kYzAzMDMwMy1nbWlyP3Y9MTc1NDI0Mzc4NQ.avif",
+          "tags": [],
+          "link": "https://allevents.in/quincy/rmef-feather-river-banquet-quincy-ca/200028321690331",
+          "map_link": ""
+        },
+        {
+          "date": "Sat, 13 Sep 2025",
+          "time": "6:00 PM",
+          "description": "Music under the Stars - Susanville Rock",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czMvYmFubmVycy9jM2MxZGY5NmRkY2IzZmI1NjNjYmY1OWIyOWIyMWZiZTU3MDBlYWQwZmVlZWE3NjFiNmViYmU3ZDJjODBjY2EwLXJpbWctdzg1MS1oMzE1LWRjYzU5OTU1LWdtaXI_dj0xNzU0MzA4MTIz.avif",
+          "tags": [],
+          "link": "https://allevents.in/chester/music-under-the-stars-susanville-rock/200028492762701",
+          "map_link": ""
+        },
+        {
+          "date": "Sat, 27 Sep 2025",
+          "time": "5:00 PM",
+          "description": "Lake Almanor Ducks Unlimited Annual Banquet 2025",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czUvYmFubmVycy80NDM5MzRjMTU2MGZkNDcxMDUzYWQ5MGQyODQzNGYxNTA0YmI4ZmUzNDMxZmNiZDZlMzZiZDhiZGIxZDhlYzZjLXJpbWctdzgwMC1oMTAzNS1kY2Y0ZWVlNi1nbWlyP3Y9MTc1Mzc0NTE0MA.avif",
+          "tags": [],
+          "link": "https://allevents.in/chester/lake-almanor-ducks-unlimited-annual-banquet-2025/200028581090441",
+          "map_link": ""
+        },
+        {
+          "date": "Sat, 25 Oct 2025",
+          "time": "12:00 PM",
+          "description": "AUDITIONS \u2b50\ufe0fLCBOB 2026 Concert Series\u2b50\ufe0f",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy81NTZhMWE0ZWNhMmEyZGQwMTljZDM2ZDljYjkyOGY2MDhkMzQyMjkyNDc0Mjg2MGNmMTJiMDE2YTM2NDZkYzlkLXJpbWctdzEyMDAtaDY3Ni1kYzJjMWExMy1nbWlyP3Y9MTc1NDM1OTcyMA.avif",
+          "tags": [],
+          "link": "https://allevents.in/susanville/auditions-\ufe0flcbob-2026-concert-series\ufe0f/200028548646548",
+          "map_link": ""
+        }
+      ],
+      "layout_style": "Grid"
+    }
+  ],
+  "settings": {
+    "bulletin_title": "LACC Bulletin",
+    "bulletin_date": "Friday, August 22, 2025",
+    "theme_css": "default.css",
+    "colors": {
+      "primary": "#103040",
+      "secondary": "#506070"
+    },
+    "google_api_key": "AIzaSyAyFv7Ah1gqT-PWtOfU9AbJlvlOwOMonE0",
+    "openai_api_key": "REDACTED_OPENAI_KEY",
+    "events_feed_url": "https://raw.githubusercontent.com/LogunLACC/bulletin_builder/refs/heads/main/events.json",
+    "appearance_mode": "Light"
+  },
+  "template_name": "main_layout.html"
+}

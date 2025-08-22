@@ -55,7 +55,8 @@ def load_events_feed_url() -> str:
     config = configparser.ConfigParser()
     if os.path.exists(CONFIG_FILE):
         config.read(CONFIG_FILE)
-        return config.get("events", "feed_url", fallback="")
+        url = config.get("events", "feed_url", fallback="")
+        return url.strip().strip('"\'')
     return ""
 
 
@@ -65,6 +66,7 @@ def save_events_feed_url(url: str) -> None:
         config.read(CONFIG_FILE)
     if "events" not in config:
         config["events"] = {}
-    config["events"]["feed_url"] = url
+    # Always save stripped URL
+    config["events"]["feed_url"] = url.strip().strip('"\'')
     with open(CONFIG_FILE, "w") as f:
         config.write(f)

@@ -27,6 +27,15 @@ SectionRegistry.available_types = classmethod(lambda cls: list(cls._frames.keys(
 
 
 def init(app):
+    import time
+    startup_times = []
+    def mark(label):
+        t = time.perf_counter()
+        startup_times.append((label, t))
+        print(f"[PROFILE] {label}: {t:.4f}s")
+    mark("start")
+    mark("UI helpers ready")
+    mark("status bar, progress, base attrs")
 
 
     # (moved to after UI setup)
@@ -123,7 +132,11 @@ def init(app):
     app._show_progress = _show_progress
     app._hide_progress = _hide_progress
     # --- Base attributes ---
-    app.sections_data = []
+    app.sections_data = [{
+        'title': 'Welcome',
+        'type': 'custom_text',
+        'content': {'text': 'This is a preview section. Add your content!'}
+    }]
     app.current_draft_path = None
     app.current_editor_frame = None
     app.active_editor_index = None
@@ -132,20 +145,34 @@ def init(app):
     app.google_api_key = load_api_key()
     app.openai_api_key = load_openai_key()
     app.events_feed_url = load_events_feed_url()
-    genai.configure(api_key=app.google_api_key)
+    mark("keys loaded")
 
-    # Configure OpenAI when key available
-    if app.openai_api_key:
-        openai.api_key = app.openai_api_key
+    # Defer AI API config to first use (lazy)
+    def ensure_ai_config():
+        if getattr(app, "_ai_configured", False):
+            return
+        try:
+            if app.google_api_key:
+                genai.configure(api_key=app.google_api_key)
+            if app.openai_api_key:
+                openai.api_key = app.openai_api_key
+            app._ai_configured = True
+            print("[PROFILE] AI APIs configured")
+        except Exception as e:
+            print(f"[PROFILE] AI config error: {e}")
+    app.ensure_ai_config = ensure_ai_config
 
     # --- Renderer setup ---
     tpl_dir = Path(__file__).parent.parent / "templates"
-    app.renderer = BulletinRenderer(templates_dir=tpl_dir, template_name='main_layout.html')
+    app.renderer = BulletinRenderer(templates_dir=tpl_dir)
+    app.renderer.set_template('main_layout.html')  # If your Template Gallery changes templates later, it'll use renderer.set_template(...)
+    mark("renderer ready")
 
     # --- Progress indicator ---
     app.progress = ctk.CTkProgressBar(app, mode="indeterminate")
     app.progress.place(relx=0.5, rely=0.5, anchor="center")
     app.progress.lower()
+    mark("progress bar ready")
 
     def _show_progress(msg: str = ""):
         try:
@@ -169,12 +196,15 @@ def init(app):
 
     app._show_progress = _show_progress
     app._hide_progress = _hide_progress
+    mark("progress helpers ready")
 
     # Executor for threaded background tasks like exporting
     app._thread_executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+    mark("thread executor ready")
 
      # --- AI callback ---
     def ai_callback(prompt: str) -> str:
+        app.ensure_ai_config()
         try:
             model = genai.GenerativeModel("gemini-1.5-flash")
             resp = model.generate_content(prompt)
@@ -186,11 +216,11 @@ def init(app):
     app.ai_callback = ai_callback
 
     def generate_subject_lines(content: str) -> list[str]:
+        app.ensure_ai_config()
         if not app.openai_api_key:
             messagebox.showwarning("OpenAI Key Missing", "Please enter your OpenAI API key in Settings.")
             return []
         try:
-            openai.api_key = app.openai_api_key
             resp = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
@@ -210,6 +240,12 @@ def init(app):
             return []
 
     app.generate_subject_lines = generate_subject_lines
+    mark("handlers, drafts, sections, exporter, preview, UI setup")
+    mark("editor container ready")
+    print("[PROFILE] Startup complete. Timings:")
+    t0 = startup_times[0][1]
+    for label, t in startup_times:
+        print(f"  {label:30s} {t-t0:8.4f}s")
 
     # --- Core UI handlers (placeholder, list-refresh, etc.) ---
     from bulletin_builder.app_core.handlers import init as handlers_init
@@ -235,20 +271,29 @@ def init(app):
     from bulletin_builder.app_core.ui_setup import init as ui_setup_init
     ui_setup_init(app)
 
-    # Now that right_panel exists, create a single editor container inside it
-    if hasattr(app, "right_panel") and not hasattr(app, "editor_container"):
-        app.editor_container = ctk.CTkFrame(app.right_panel, fg_color="#ffcccc")  # Debug: red background
-        app.editor_container.pack(fill="both", expand=True)
-        # Ensure right_panel expands using grid, not pack
-        app.right_panel.grid(row=0, column=1, sticky="nsew")
-        # Remove pack_propagate(False) unless explicit size is set
-        app.right_panel.grid_propagate(False)
-        app.editor_container.pack_propagate(True)
-        app.editor_container.grid_propagate(True)
-
-    # Helper to replace the editor frame (always clears old one)
-    def replace_editor_frame(new_frame):
+    import os
+    if os.environ.get("BB_DEBUG_RP") == "1":
+        # --- BATTLE-TESTED RP/EDITOR SETUP ---
+        # Always create right_panel and editor_container, even if UI setup missed it
+        if hasattr(app, "right_panel"):
+            app.right_panel.destroy()
+        app.right_panel = ctk.CTkFrame(app, fg_color="#e0e0e0")
+        app.right_panel.grid(row=0, column=1, sticky="nsew", padx=0, pady=10)
+        app.right_panel.grid_rowconfigure(0, weight=1)
+        app.right_panel.grid_columnconfigure(0, weight=1)
+        app.grid_columnconfigure(0, weight=3)  # main content
+        app.grid_columnconfigure(1, weight=3)  # right panel
         if hasattr(app, "editor_container"):
+            app.editor_container.destroy()
+        app.editor_container = ctk.CTkFrame(app.right_panel, fg_color="#ffcccc")  # Debug: red background
+        app.editor_container.grid(row=0, column=0, sticky="nsew")
+        print("[DEBUG] right_panel and editor_container created and gridded.")
+
+        # Helper to replace the editor frame (always clears old one)
+        def replace_editor_frame(new_frame):
+            if not hasattr(app, "editor_container"):
+                print("[ERROR] editor_container missing!")
+                return
             # Destroy previous editor frame if it exists
             if getattr(app, "current_editor_frame", None) is not None:
                 try:
@@ -259,26 +304,16 @@ def init(app):
                 app.current_editor_frame = None
             if new_frame is not None:
                 try:
-                    print(f"[DEBUG] Attempting to pack new editor frame: {new_frame}, parent: {new_frame.master}, parent is editor_container: {new_frame.master is app.editor_container}")
-                    print(f"[DEBUG] new_frame.winfo_exists(): {new_frame.winfo_exists()}")
-                    print(f"[DEBUG] new_frame.winfo_ismapped(): {new_frame.winfo_ismapped()}")
-                    if str(new_frame) and app.editor_container.winfo_ismapped():
-                        new_frame.pack_forget()  # Remove any previous packing
-                        new_frame.pack(fill="both", expand=True)
-                        new_frame.update_idletasks()
-                        app.current_editor_frame = new_frame
-                        # Print geometry info for debug
-                        print(f"[DEBUG] editor_container size: {app.editor_container.winfo_width()}x{app.editor_container.winfo_height()}")
-                        print(f"[DEBUG] new_frame size: {new_frame.winfo_width()}x{new_frame.winfo_height()}")
-                        print(f"[DEBUG] Packed new editor frame: {new_frame}")
-                        print(f"[DEBUG] editor_container children: {[str(w) for w in app.editor_container.winfo_children()]}")
-                    else:
-                        print(f"[DEBUG] Skipping pack: frame destroyed or editor_container not mapped")
+                    print(f"[DEBUG] Packing new editor frame: {new_frame}")
+                    new_frame.pack(fill="both", expand=True)
+                    new_frame.update_idletasks()
+                    app.current_editor_frame = new_frame
+                    print(f"[DEBUG] editor_container children: {[str(w) for w in app.editor_container.winfo_children()]}")
                 except Exception as e:
                     print(f"[DEBUG] Could not pack new editor frame: {e}")
             else:
                 app.current_editor_frame = None
-    app.replace_editor_frame = replace_editor_frame
+        app.replace_editor_frame = replace_editor_frame
 
-    from bulletin_builder.app_core import component_library
-    component_library.init(app)
+        from bulletin_builder.app_core import component_library
+        component_library.init(app)

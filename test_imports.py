@@ -1,9 +1,6 @@
-# test_imports.py
-"""
-Test script to verify all core modules in bulletin_builder load without import errors.
-"""
-import sys
+
 import importlib
+import pytest
 
 MODULES = [
     'bulletin_builder',
@@ -35,20 +32,6 @@ MODULES = [
     'bulletin_builder.ui.template_gallery',
 ]
 
-failures = []
-for mod in MODULES:
-    try:
-        importlib.import_module(mod)
-        print(f"[OK] {mod}")
-    except Exception as e:
-        print(f"[FAIL] {mod}: {e}")
-        failures.append((mod, str(e)))
-
-if failures:
-    print("\nSome modules failed to import:")
-    for mod, err in failures:
-        print(f" - {mod}: {err}")
-    sys.exit(1)
-else:
-    print("\nAll modules imported successfully.")
-    sys.exit(0)
+@pytest.mark.parametrize("mod", MODULES)
+def test_import_module(mod):
+    importlib.import_module(mod)

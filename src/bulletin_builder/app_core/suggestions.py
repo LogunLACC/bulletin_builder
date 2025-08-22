@@ -76,6 +76,13 @@ def init(app):
         if not suggestions:
             suggestions.append("No suggestions")
 
+        if not hasattr(app, "suggestions_list") or not app.suggestions_list:
+            return
+        try:
+            if not app.suggestions_list.winfo_exists():
+                return
+        except Exception:
+            return
         app.suggestions_list.delete(0, tk.END)
         for s in suggestions:
             app.suggestions_list.insert(tk.END, s)

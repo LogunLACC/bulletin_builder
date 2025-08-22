@@ -6,6 +6,8 @@ from bulletin_builder.app_core.config import (
     save_openai_key,
     save_events_feed_url,
 )
+from tkinter import filedialog, messagebox
+from bulletin_builder.app_core.exporter import collect_context, render_bulletin_html, render_email_html
 
 # Force PyInstaller to include these dynamically-imported modules
 import bulletin_builder.app_core.importer  # noqa: F401
@@ -22,6 +24,10 @@ class BulletinBuilderApp(ctk.CTk):
     """
     def __init__(self):
         super().__init__()
+        try:
+            self.minsize(1100, 700)  # tweak as desired
+        except Exception:
+            pass
 
         # Expose config savers for SettingsFrame
         self.save_api_key_to_config = save_api_key
@@ -82,12 +88,60 @@ class BulletinBuilderApp(ctk.CTk):
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.destroy)
 
+        # --- Export submenu ---
+        export_menu = tk.Menu(file_menu, tearoff=0)
+        export_menu.add_command(label="Bulletin HTML…", command=self.export_bulletin_html)
+        export_menu.add_command(label="Email HTML…", command=self.export_email_html)
+        file_menu.add_cascade(label="Export", menu=export_menu)
+
         menubar.add_cascade(label="File", menu=file_menu)
         self.configure(menu=menubar)
 
     def refresh_listbox_titles(self):
         """Fallback implementation replaced during init_app."""
         pass
+
+    def export_bulletin_html(self):
+        try:
+            ctx = collect_context(self)
+            html = render_bulletin_html(ctx)
+            default = f'{ctx["title"].replace(" ","_")}_{ctx["date"].replace(",","").replace(" ","_")}.html'
+            path = filedialog.asksaveasfilename(
+                defaultextension=".html",
+                initialfile=default,
+                filetypes=[("HTML", "*.html")],
+                title="Export Bulletin HTML"
+            )
+            if not path: return
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(html)
+            if hasattr(self, "show_status_message"):
+                self.show_status_message(f"Exported Bulletin HTML → {path}")
+            else:
+                messagebox.showinfo("Export", f"Saved: {path}")
+        except Exception as e:
+            messagebox.showerror("Export Error", str(e))
+
+    def export_email_html(self):
+        try:
+            ctx = collect_context(self)
+            html = render_email_html(ctx)
+            default = f'{ctx["title"].replace(" ","_")}_{ctx["date"].replace(",","").replace(" ","_")}_email.html'
+            path = filedialog.asksaveasfilename(
+                defaultextension=".html",
+                initialfile=default,
+                filetypes=[("HTML", "*.html")],
+                title="Export Email HTML"
+            )
+            if not path: return
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(html)
+            if hasattr(self, "show_status_message"):
+                self.show_status_message(f"Exported Email HTML → {path}")
+            else:
+                messagebox.showinfo("Export", f"Saved: {path}")
+        except Exception as e:
+            messagebox.showerror("Export Error", str(e))
 
 
 def main():

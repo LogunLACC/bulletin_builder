@@ -5,7 +5,8 @@ MODULES = [
     ("handlers", False),
     ("drafts", False),
     ("sections", False),
-    ("suggestions", False),
+    ("suggestions", False),   # Ensure full menubar (File + Tools) is wired even if ui_setup's fallback kicks in
+    ("menu", False),
     ("importer", False),      # CSV/Sheet/Feed importers
     ("exporter", False),      # HTML/TXT export, ICS, email
     ("preview", True),        # defines show_placeholder + update_preview

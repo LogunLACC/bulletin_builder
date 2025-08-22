@@ -1,39 +1,83 @@
+
 import os
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markdown import markdown
-from typing import Optional, List, Dict
-from datetime import datetime, date
+
+from typing import Optional, List, Dict, Any
 from collections import OrderedDict
+from datetime import datetime, date
 
 
 class BulletinRenderer:
-    def __init__(self, templates_dir, template_name: str = "main_layout.html"):
-        """
-        Initializes the renderer.
-        Args:
-            templates_dir (str or Path): The path to the main templates directory.
-        """
-        self.templates_dir = Path(templates_dir)
-        self.template_name = template_name
-        if not self.templates_dir.is_dir():
-            raise FileNotFoundError(
-                f"Templates directory not found at: {self.templates_dir}"
-            )
+    def __init__(self, templates_dir: Path | str | None = None, theme: str = "default.css", template_name: str | None = None):
+        # Resolve template directory (allow None and auto-detect)
+        def _auto_templates_dir() -> Path:
+            here = Path(__file__).resolve()
+            candidates = [
+                Path.cwd() / "templates",
+                here.parent / "templates",
+                here.parent.parent / "templates",
+                here.parents[2] / "templates" if len(here.parents) >= 3 else here.parent / "templates",
+            ]
+            for c in candidates:
+                if (c / "index.html").exists():
+                    return c
+            return candidates[0]
 
+        self.templates_dir = Path(templates_dir) if templates_dir else _auto_templates_dir()
+        self.theme = theme
+        # default template used by preview/export unless overridden at render()
+        self.template_name = template_name or "main_layout.html"
+        # Optional legacy cache kept for compatibility
+        self._template_cache = getattr(self, "_template_cache", {})
+        # Jinja environment used by preview/export
         self.env = Environment(
-            loader=FileSystemLoader(
-                [
-                    self.templates_dir,
-                    self.templates_dir / "gallery",
-                ]
-            ),
+            loader=FileSystemLoader(str(self.templates_dir)),
             autoescape=select_autoescape(["html", "xml"]),
+            enable_async=False,
         )
-        # Register a simple Markdown filter
-        self.env.filters["markdown"] = lambda text: markdown(
-            text or "", output_format="html"
-        )
+        # Filters
+        def _md(value):
+            """
+            Accept strings OR dicts like {"text": "..."} and return HTML.
+            This prevents errors like: AttributeError: 'dict' object has no attribute 'strip'
+            """
+            try:
+                if isinstance(value, dict):
+                    value = value.get("text", "")
+                elif value is None:
+                    value = ""
+                else:
+                    value = str(value)
+                return markdown(value, output_format="html")
+            except Exception as e:
+                # Fail soft: return a safe string instead of crashing the preview
+                print(f"[WARN] markdown filter failed: {e!r}")
+                return str(value or "")
+        self.env.filters["markdown"] = _md
+        self.env.filters["group_events"] = self._group_events
+        self.env.filters["group_events_by_tag"] = self._group_events_by_tag
+
+
+    def _get_template(self, name: str):
+        # Prefer Jinja environment
+        return self.env.get_template(name)
+
+    def render(self, context: dict) -> str:
+        # Provide safe defaults so templates don't explode if callers omit fields
+        ctx = dict(context)
+        ctx.setdefault("settings", {})     # templates use settings.*
+        ctx.setdefault("theme", self.theme)
+        ctx.setdefault("sections", [])
+        ctx.setdefault("bulletin", {"title": "", "date": ""})
+        template_name = ctx.pop("template", self.template_name)
+        try:
+            return self._get_template(template_name).render(**ctx)
+        except Exception as e:
+            # Bubble a readable error up to the UI while keeping logs actionable
+            print(f"[ERROR] Render failed in template '{template_name}': {e!r}")
+            raise
 
         # Register event grouping filters
         self.env.filters["group_events"] = self._group_events
@@ -112,48 +156,3 @@ class BulletinRenderer:
     def set_template(self, name: str):
         """Change the layout template used for rendering."""
         self.template_name = name
-
-    def render_html(
-        self,
-        sections_data: list,
-        settings: dict = None,
-        template_name: Optional[str] = None,
-    ) -> str:
-        """
-        Renders the final HTML for the bulletin, injecting theme styles.
-        """
-        from bulletin_builder.settings import Settings  # ✅ Import your settings class
-
-        if settings is None:
-            settings = Settings()
-        elif isinstance(settings, dict):
-            try:
-                settings = Settings(**settings)
-            except Exception as e:
-                print(f"Failed to cast dict to Settings object: {e}")
-                settings = Settings()
-
-        # --- Theme Loading Logic ---
-        theme_styles = ""
-        theme_filename = settings.theme_css
-        if theme_filename:
-            theme_path = self.templates_dir / "themes" / theme_filename
-            if theme_path.is_file():
-                try:
-                    theme_styles = theme_path.read_text(encoding="utf-8")
-                except Exception as e:
-                    print(f"Error reading theme file {theme_path}: {e}")
-            else:
-                print(f"Theme file not found: {theme_path}")
-
-        try:
-            tpl_name = template_name or self.template_name
-            template = self.env.get_template(tpl_name)
-
-            html_output = template.render(
-                sections=sections_data, settings=settings, theme_styles=theme_styles
-            )
-            return html_output
-        except Exception as e:
-            print(f"Error rendering template: {e}")
-            return f"<html><body><h1>Template Render Error</h1><p>{e}</p></body></html>"

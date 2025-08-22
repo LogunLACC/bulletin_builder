@@ -20,7 +20,7 @@ class TemplateGallery(ctk.CTkToplevel):
             frame = ctk.CTkFrame(container)
             frame.pack(fill="x", pady=10)
 
-            html = self.app.renderer.render_html([], {"bulletin_title": tpl_path.stem}, template_name=tpl_path.name)
+            html = self.app.renderer.render({"sections": [], "settings": {"bulletin_title": tpl_path.stem}, "template": tpl_path.name})
             preview = HTMLLabel(frame, html=html, width=300, height=150, background="white")
             preview.pack(side="left", padx=10)
 

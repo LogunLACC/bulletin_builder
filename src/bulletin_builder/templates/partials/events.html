@@ -1,13 +1,9 @@
 {# This is the MASTER partial for all event sections #}
-{% if section.title %}
-    <h2>{{ section.title }}</h2>
-{% endif %}
 
 {% if section.content %}
     {% for tag_group in section.content | group_events_by_tag %}
         <h3>{{ tag_group.header }}</h3>
-        {% for group in tag_group.events | group_events(settings.bulletin_date) %}
-            <h4>{{ group.header }}</h4>
+    {% for group in tag_group.events | group_events(settings.bulletin_date) %}
         {% if section.layout_style == 'Grid' %}
         <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse; font-size: 0;">
             {% for row in group.events|batch(2) %}
@@ -18,7 +14,15 @@
                         <tr>
                             <td style="border: none; padding: 0;">
                                 <a href="{{ event.image_url or '#' }}" target="_blank" style="margin: 0; padding: 0; text-decoration: none;">
-                                    <img src="{{ event.image_url or 'https://placehold.co/300x400/eeeeee/999999?text=No+Image' }}" alt="{{ event.description or 'Event' }}" style="width: 100%; height: auto; margin: 0; padding: 0; display: block; border-radius: 8px;" />
+                                    <picture>
+                                        {% if event.image_url and event.image_url.endswith('.avif') %}
+                                            <source srcset="{{ event.image_url }}" type="image/avif">
+                                            <source srcset="{{ event.image_url[:-5] + '.jpg' }}" type="image/jpeg">
+                                            <img src="{{ event.image_url[:-5] + '.jpg' }}" alt="{{ event.description or 'Event' }}" style="width: 100%; height: auto; margin: 0; padding: 0; display: block; border-radius: 8px;" />
+                                        {% else %}
+                                            <img src="{{ event.image_url or 'https://placehold.co/300x400/eeeeee/999999?text=No+Image' }}" alt="{{ event.description or 'Event' }}" style="width: 100%; height: auto; margin: 0; padding: 0; display: block; border-radius: 8px;" />
+                                        {% endif %}
+                                    </picture>
                                 </a>
                             </td>
                         </tr>
@@ -57,7 +61,15 @@
                         <tr>
                             <td style="border: none; padding: 0;">
                                 <a href="{{ event.image_url }}" target="_blank" style="margin: 0; padding: 0; text-decoration: none;">
-                                    <img src="{{ event.image_url }}" alt="{{ event.description or 'Event' }}" style="width: 100%; height: auto; margin: 0; padding: 0; display: block; border-radius: 8px 8px 0 0;" />
+                                    <picture>
+                                        {% if event.image_url and event.image_url.endswith('.avif') %}
+                                            <source srcset="{{ event.image_url }}" type="image/avif">
+                                            <source srcset="{{ event.image_url[:-5] + '.jpg' }}" type="image/jpeg">
+                                            <img src="{{ event.image_url[:-5] + '.jpg' }}" alt="{{ event.description or 'Event' }}" style="width: 100%; height: auto; margin: 0; padding: 0; display: block; border-radius: 8px 8px 0 0;" />
+                                        {% else %}
+                                            <img src="{{ event.image_url }}" alt="{{ event.description or 'Event' }}" style="width: 100%; height: auto; margin: 0; padding: 0; display: block; border-radius: 8px 8px 0 0;" />
+                                        {% endif %}
+                                    </picture>
                                 </a>
                             </td>
                         </tr>

@@ -1,8 +1,7 @@
 {# This partial is for sections with type 'custom_text' #}
-{% if section.title %}
-    <h2>{{ section.title }}</h2>
-{% endif %}
 <div class="custom-text">
-    {{ section.content | markdown | safe }}
+    {# Render freeform text when section.content may be a string OR dict with "text" #}
+    {% set _text = section.content.text if section.content is mapping and 'text' in section.content else section.content %}
+    {{ _text | markdown | safe }}
 </div>
 

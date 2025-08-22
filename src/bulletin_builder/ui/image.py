@@ -15,8 +15,8 @@ class ImageFrame(ctk.CTkFrame):
             self.refresh_callback = refresh_callback
             self.save_component_callback = save_component_callback
 
+            self.grid_rowconfigure(99, weight=1)
             self.grid_columnconfigure(1, weight=1)
-            self.grid_rowconfigure(3, weight=1)
 
             title_label = ctk.CTkLabel(self, text="Section Title")
             title_label.grid(row=0, column=0, padx=(0, 10), pady=(0, 10), sticky="w")

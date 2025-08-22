@@ -40,7 +40,10 @@ def _trigger_preview(app):
 
 def _render_preview_logic(app):
     settings = app.settings_frame.dump() if hasattr(app, "settings_frame") else {}
-    raw_html = app.renderer.render_html(app.sections_data, settings)
+    context = dict(settings)
+    context["sections"] = app.sections_data
+    context["settings"] = settings
+    raw_html = app.renderer.render(context)
 
     body = raw_html
     lower = body.lower()
@@ -68,11 +71,17 @@ def _apply_preview(app, fut):
     exc = fut.exception()
     if exc:
         app.after(0, lambda: messagebox.showerror("Preview Error", str(exc)))
+
     else:
         raw_html, rendered = fut.result()
-        mode = app.preview_mode_toggle.get() if hasattr(app, "preview_mode_toggle") else "Code"
+        mode = app.preview_mode_var.get() if hasattr(app, "preview_mode_var") else "Code"
+
+
 
         if mode == "Rendered" and hasattr(app, "rendered_preview"):
+            # Show HTMLLabel, hide code preview
+            app.rendered_preview.grid(row=1, column=0, sticky="nsew")
+            app.code_preview.grid_forget()
             # Try rendered → raw → fallback to code view
             for html in (rendered, raw_html):
                 try:
@@ -81,9 +90,14 @@ def _apply_preview(app, fut):
                 except Exception:
                     continue
             else:
+                # If all HTML render attempts fail, switch UI mode to Code
+                if hasattr(app, "preview_mode_var"):
+                    app.preview_mode_var.set("Code")
                 mode = "Code"  # fall through to code view
 
         if mode != "Rendered" and hasattr(app, "code_preview"):
+            app.code_preview.grid(row=1, column=0, sticky="nsew")
+            app.rendered_preview.grid_forget()
             app.code_preview.delete("1.0", "end")
             app.code_preview.insert("1.0", raw_html)
 
@@ -108,7 +122,10 @@ def _toggle_preview(app, mode):
 def _open_in_browser(app):
     import webbrowser
     settings = app.settings_frame.dump() if hasattr(app, "settings_frame") else {}
-    html = app.renderer.render_html(app.sections_data, settings)
+    context = dict(settings)
+    context["sections"] = app.sections_data
+    context["settings"] = settings
+    html = app.renderer.render(context)
     tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".html")
     tmp.write(html.encode("utf-8"))
     tmp.close()

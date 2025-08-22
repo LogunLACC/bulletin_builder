@@ -12,14 +12,21 @@
     <ul class="toc">
         {% for section in sections %}
             {% if section.title %}
-            <li><a href="#section-{{ loop.index }}">{{ section.title }}</a></li>
+            {% set section_id = section.title|lower|replace(' ', '-')|replace('.', '')|replace(',', '')|replace('!', '')|replace('?', '') %}
+            <li><a href="#{{ section_id }}">{{ section.title }}</a></li>
             {% endif %}
         {% endfor %}
     </ul>
     {% endif %}
 
     {% for section in sections %}
-        <div class="section" id="section-{{ loop.index }}">
+        {% if section.title %}
+            {% set section_id = section.title|lower|replace(' ', '-')|replace('.', '')|replace(',', '')|replace('!', '')|replace('?', '') %}
+            <section id="{{ section_id }}" class="section">
+                <h2 id="{{ section_id }}-h2">{{ section.title }}</h2>
+        {% else %}
+            <section class="section">
+        {% endif %}
             {# Intelligently choose the correct template #}
             {% if 'events' in section.type %}
                 {# If the type contains 'events', use the master events partial #}
@@ -28,6 +35,6 @@
                 {# Otherwise, use the specific partial for that type #}
                 {% include ['partials/' ~ section.type ~ '.html', 'partials/default.html'] ignore missing with context %}
             {% endif %}
-        </div>
+            </section>
     {% endfor %}
 {% endblock %}

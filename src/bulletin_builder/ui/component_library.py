@@ -50,15 +50,33 @@ class ComponentLibrary(ctk.CTkToplevel):
         for path in sorted(COMP_DIR.glob("*.json")):
             self.listbox.insert(tk.END, path.stem)
             self._paths.append(path)
+    # In-memory cache for loaded component JSON files
+    _component_cache = {}
 
+    def load_components(self):
+        self.listbox.delete(0, tk.END)
+        self._paths = []
+        if not COMP_DIR.exists():
+            return
+        for path in sorted(COMP_DIR.glob("*.json")):
+            self.listbox.insert(tk.END, path.stem)
+            self._paths.append(path)
     def insert_selected(self):
         sel = self.listbox.curselection()
         if not sel:
             return
         path = self._paths[sel[0]]
-        try:
-            data = json.loads(path.read_text(encoding="utf-8"))
-        except Exception:
-            return
+        cache = self._component_cache
+        if path in cache:
+            data = cache[path]
+        else:
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+                cache[path] = data
+                # LRU: pop oldest if over 32
+                if len(cache) > 32:
+                    cache.pop(next(iter(cache)))
+            except Exception:
+                return
         self.app.insert_component(data)
         self.destroy()
