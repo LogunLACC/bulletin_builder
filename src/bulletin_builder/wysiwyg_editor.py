@@ -1,3 +1,4 @@
+from bulletin_builder.postprocess import ensure_postprocessed
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import filedialog, simpledialog
@@ -483,8 +484,9 @@ class WysiwygEditor(ctk.CTkToplevel):
         html_lines.append("</body></html>")
         path = filedialog.asksaveasfilename(defaultextension='.html', filetypes=[('HTML','*.html')])
         if path:
+            html = ensure_postprocessed("\n".join(html_lines))
             with open(path, 'w', encoding='utf-8') as f:
-                f.write("\n".join(html_lines))
+                f.write(html)
 
 def launch_gui():
     import os

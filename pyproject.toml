@@ -10,7 +10,8 @@ dependencies = [
     "requests",
     "pillow",
     "markdown",
-    "openai"
+    "openai",
+    "beautifulsoup4"
 ]
 
 [project.scripts]

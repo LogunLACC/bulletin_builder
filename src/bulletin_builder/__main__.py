@@ -1,3 +1,4 @@
+from bulletin_builder.postprocess import ensure_postprocessed
 import os
 import customtkinter as ctk
 from bulletin_builder.app_core.loader import init_app
@@ -113,6 +114,7 @@ class BulletinBuilderApp(ctk.CTk):
                 title="Export Bulletin HTML"
             )
             if not path: return
+            html = ensure_postprocessed(html)
             with open(path, "w", encoding="utf-8") as f:
                 f.write(html)
             if hasattr(self, "show_status_message"):
@@ -123,9 +125,11 @@ class BulletinBuilderApp(ctk.CTk):
             messagebox.showerror("Export Error", str(e))
 
     def export_email_html(self):
+        from bulletin_builder.postprocess import ensure_postprocessed
         try:
             ctx = collect_context(self)
             html = render_email_html(ctx)
+            html = ensure_postprocessed(html)
             default = f'{ctx["title"].replace(" ","_")}_{ctx["date"].replace(",","").replace(" ","_")}_email.html'
             path = filedialog.asksaveasfilename(
                 defaultextension=".html",
@@ -137,7 +141,7 @@ class BulletinBuilderApp(ctk.CTk):
             with open(path, "w", encoding="utf-8") as f:
                 f.write(html)
             if hasattr(self, "show_status_message"):
-                self.show_status_message(f"Exported Email HTML → {path}")
+                self.show_status_message(f"Exported Email HTML  {path}")
             else:
                 messagebox.showinfo("Export", f"Saved: {path}")
         except Exception as e:

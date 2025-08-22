@@ -1,3 +1,4 @@
+from bulletin_builder.postprocess import ensure_postprocessed
 import pytest
 from bulletin_builder.app_core import exporter
 

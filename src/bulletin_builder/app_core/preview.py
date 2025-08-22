@@ -1,3 +1,4 @@
+from bulletin_builder.postprocess import ensure_postprocessed
 import re, os, tempfile, urllib.request, concurrent.futures
 from pathlib import Path
 from tkinter import messagebox
@@ -125,15 +126,19 @@ def _open_in_browser(app):
     context = dict(settings)
     context["sections"] = app.sections_data
     context["settings"] = settings
-    html = app.renderer.render(context)
-    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".html")
-    tmp.write(html.encode("utf-8"))
-    tmp.close()
-    webbrowser.open(tmp.name)
+    raw_html = app.renderer.render(context)
 
-def _set_preview_device(app, device):
-    app.device_mode = device
-    widths = {"Desktop": 800, "Tablet": 600, "Mobile": 375}
-    width = widths.get(device, 800)
-    if hasattr(app, "preview_area"):
-        app.preview_area.configure(width=width)
+    # Post-process preview HTML for email compatibility
+    html = ensure_postprocessed(raw_html)
+
+    body = html
+    lower = body.lower()
+    idx = lower.find("</style>")
+    if idx != -1:
+        body = body[idx + len("</style>"):]
+
+    def download_image(match):
+        # Minimal stub: just return the original src
+        return match.group(0)
+    rendered = re.sub(r'src=["\'](https?://[^"\']+)["\']', download_image, body)
+    return html, rendered
