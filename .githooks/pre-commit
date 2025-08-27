@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Cross-platform pre-commit shim: prefer PowerShell if available (Windows), otherwise try pwsh.
+HOOK_DIR="$(dirname "$0")"
+if command -v pwsh >/dev/null 2>&1; then
+  exec pwsh -NoProfile -ExecutionPolicy Bypass -File "$HOOK_DIR/pre-commit.ps1" "$@"
+elif command -v powershell >/dev/null 2>&1; then
+  exec powershell -NoProfile -ExecutionPolicy Bypass -File "$HOOK_DIR/pre-commit.ps1" "$@"
+else
+  # No PowerShell available; fall back to doing nothing so non-Windows users aren't blocked.
+  exit 0
+fi
