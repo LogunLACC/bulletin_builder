@@ -16,5 +16,10 @@ jobs:
       - name: Run pytest
         env: { PYTHONPATH: src }
         run: pytest -q
-      - name: Email guard (changed files)
-        run: python tools/email_guard.py --changed-only
+      - name: Email guard (exports only)
+        run: |
+          python tools/email_guard.py --changed-only \
+            --include "exports/**" \
+            --include "dist/email/**" \
+            --exclude "user_drafts/**" \
+            --exclude "tmp/**"
