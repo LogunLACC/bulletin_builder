@@ -128,7 +128,13 @@ class BulletinRenderer:
             settings = Settings()
         elif isinstance(settings, dict):
             try:
-                settings = Settings(**settings)
+                # Filter out fields that don't belong in Settings class
+                valid_fields = {
+                    'bulletin_title', 'bulletin_date', 'colors', 'template_path',
+                    'theme_css', 'appearance_mode'
+                }
+                filtered_settings = {k: v for k, v in settings.items() if k in valid_fields}
+                settings = Settings(**filtered_settings)
             except Exception as e:
                 print(f"Failed to cast dict to Settings object: {e}")
                 settings = Settings()
@@ -153,6 +159,7 @@ class BulletinRenderer:
             html_output = template.render(
                 sections=sections_data, settings=settings, theme_styles=theme_styles
             )
+            
             return html_output
         except Exception as e:
             print(f"Error rendering template: {e}")

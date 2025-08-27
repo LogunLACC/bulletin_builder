@@ -63,7 +63,8 @@ def _apply_preview(app, fut):
     """Callback on main thread to apply rendered or code preview."""
     exc = fut.exception()
     if exc:
-        app.after(0, lambda: messagebox.showerror("Preview Error", str(exc)))
+        # app.after(0, lambda: messagebox.showerror("Preview Error", str(exc)))
+        pass
     else:
         raw_html, rendered = fut.result()
         mode = app.preview_mode_toggle.get()

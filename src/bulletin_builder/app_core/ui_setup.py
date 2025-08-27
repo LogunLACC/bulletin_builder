@@ -146,5 +146,5 @@ def init(app):
     app.bind("<Control-o>", lambda e: app.open_draft())
     app.bind("<Control-n>", lambda e: app.new_draft())
 
-    if hasattr(app, "compute_suggestions"):
-        app.compute_suggestions()
+    # if hasattr(app, "compute_suggestions"):
+    #     app.compute_suggestions()

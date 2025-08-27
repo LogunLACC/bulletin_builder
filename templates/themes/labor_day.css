@@ -1,0 +1,9 @@
+/* Labor Day Theme */
+body {
+    color: #34495e; /* Dark Slate */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.section h2 {
+    color: #2c3e50; /* Professional Blue */
+}

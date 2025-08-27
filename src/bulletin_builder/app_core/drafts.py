@@ -39,7 +39,8 @@ def init(app):
         try:
             data = json.loads(Path(path).read_text(encoding='utf-8'))
         except Exception as e:
-            messagebox.showerror('Open Error',str(e)); return
+            # messagebox.showerror('Open Error',str(e))
+            return
         app.sections_data[:] = data.get('sections',[])
         app.current_draft_path = path
         app.renderer.set_template(data.get('template_name', 'main_layout.html'))
@@ -71,7 +72,8 @@ def init(app):
             Path(app.current_draft_path).write_text(json.dumps(payload,indent=2), encoding='utf-8')
             app.show_status_message(f"Draft saved: {Path(app.current_draft_path).name}")
         except Exception as e:
-            messagebox.showerror('Save Error',str(e))
+            # messagebox.showerror('Save Error',str(e))
+            pass
 
     app.new_draft  = new_draft
     app.open_draft = open_draft

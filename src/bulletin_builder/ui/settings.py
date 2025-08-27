@@ -163,7 +163,8 @@ class SettingsFrame(ctk.CTkFrame):
         prompt_text = "\n".join(content_parts)
         suggestions = app.generate_subject_lines(prompt_text)
         if suggestions:
-            messagebox.showinfo("Subject Suggestions", "\n".join(suggestions), parent=self)
+            # messagebox.showinfo("Subject Suggestions", "\n".join(suggestions), parent=self)
+            pass
 
     def _on_appearance_changed(self, mode: str):
         """Apply the selected appearance mode immediately."""

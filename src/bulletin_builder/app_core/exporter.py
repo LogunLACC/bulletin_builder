@@ -99,7 +99,14 @@ def init(app):
     def _do_copy_for_email():
         settings = app.settings_frame.dump()
         html = app.renderer.render_html(app.sections_data, settings)
-        return transform(html)
+        html = transform(html)
+        # Upgrade HTTP URLs to HTTPS to prevent mixed content
+        from .url_upgrade import upgrade_http_to_https
+        html = upgrade_http_to_https(html)
+        # Apply LACC email sanitization rules for email output
+        from .sanitize import sanitize_email_html
+        html = sanitize_email_html(html)
+        return html
 
     def _on_copy_for_email_done(fut):
         try:
@@ -126,6 +133,12 @@ def init(app):
         settings = app.settings_frame.dump()
         html = app.renderer.render_html(app.sections_data, settings)
         html = transform(html)
+        # Upgrade HTTP URLs to HTTPS to prevent mixed content
+        from .url_upgrade import upgrade_http_to_https
+        html = upgrade_http_to_https(html)
+        # Apply LACC email sanitization rules for email output
+        from .sanitize import sanitize_email_html
+        html = sanitize_email_html(html)
         path = filedialog.asksaveasfilename(
             defaultextension=".html",
             filetypes=[("HTML Documents", "*.html")],
@@ -235,6 +248,9 @@ def init(app):
         settings = app.settings_frame.dump()
         html = app.renderer.render_html(app.sections_data, settings)
         html = transform(html)
+        # Apply LACC email sanitization rules for email output
+        from .sanitize import sanitize_email_html
+        html = sanitize_email_html(html)
 
         smtp_cfg = _load_smtp_config()
         host = smtp_cfg.get("host", "localhost")
@@ -266,7 +282,8 @@ def init(app):
             fut.result()
             app.after(0, lambda: app.show_status_message("Test email sent!"))
         except Exception as e:
-            app.after(0, lambda: messagebox.showerror("Email Error", str(e)))
+            # app.after(0, lambda: messagebox.showerror("Email Error", str(e)))
+            pass
         finally:
             app.after(0, app._hide_progress)
             app.after(0, lambda: app.export_button.configure(state="normal"))

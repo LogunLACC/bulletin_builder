@@ -19,9 +19,10 @@ def init(app):
         try:
             with open(path, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2)
-            messagebox.showinfo("Component Saved", f"Saved {path.name}", parent=app)
+            # messagebox.showinfo("Component Saved", f"Saved {path.name}", parent=app)
         except Exception as e:
-            messagebox.showerror("Save Error", str(e), parent=app)
+            # messagebox.showerror("Save Error", str(e), parent=app)
+            pass
 
     def insert_component(data: dict):
         app.sections_data.append(data)

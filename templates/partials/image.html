@@ -1,0 +1,12 @@
+{# This partial is for sections with type 'image' #}
+{% if section.title %}
+    <h2>{{ section.title }}</h2>
+{% endif %}
+
+{% if section.src %}
+<p style="text-align: center;">
+    <img src="{{ section.src }}" alt="{{ section.alt or 'User-provided image' }}" style="max-width: 100%; height: auto; border-radius: 5px; margin: 0; padding: 0; display: block;" />
+</p>
+{% else %}
+<p style="text-align: center; color: #999;">[Image not selected]</p>
+{% endif %}

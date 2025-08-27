@@ -1,0 +1,25 @@
+{# This partial is for sections with type 'announcements' #}
+{% if section.title %}
+    <h2>{{ section.title }}</h2>
+{% endif %}
+
+{% if section.body %}
+    <div class="announcement-body">
+        {{ section.body | markdown | safe }}
+    </div>
+{% endif %}
+
+{% if section.link and section.link_text %}
+    <p style="text-align: left; margin-top: 15px;">
+        <a href="{{ section.link }}" target="_blank" style="color: {{ settings.colors.primary or '#1F6AA5' }}; text-decoration: underline; margin: 0; padding: 0;">
+            {{ section.link_text }}
+        </a>
+    </p>
+{% elif section.link %}
+    <p style="text-align: left; margin-top: 15px;">
+        <a href="{{ section.link }}" target="_blank" style="color: {{ settings.colors.primary or '#1F6AA5' }}; text-decoration: underline; margin: 0; padding: 0;">
+            Click here for more information
+        </a>
+    </p>
+{% endif %}
+

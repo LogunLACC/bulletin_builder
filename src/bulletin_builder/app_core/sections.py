@@ -35,7 +35,7 @@ class AddSectionDialog(ctk.CTkToplevel):
         title = self.title_entry.get().strip()
         sec_type = self.type_menu.get()
         if not title:
-            tk.messagebox.showwarning("Input Error", "Please enter a title.", parent=self)
+            # tk.messagebox.showwarning("Input Error", "Please enter a title.", parent=self)
             return
         self.result = (title, sec_type)
         self.destroy()

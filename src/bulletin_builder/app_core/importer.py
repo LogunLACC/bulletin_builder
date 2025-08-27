@@ -46,7 +46,7 @@ def init(app):
                 reader = csv.DictReader(f)
                 rows = list(reader)
         except Exception as e:
-            messagebox.showerror('Import Error', str(e))
+            # messagebox.showerror('Import Error', str(e))
             return
         _rows_to_sections(rows)
 
@@ -60,7 +60,7 @@ def init(app):
             reader = csv.DictReader(io.StringIO(text))
             rows = list(reader)
         except Exception as e:
-            messagebox.showerror('Import Error', str(e))
+            # messagebox.showerror('Import Error', str(e))
             return
         _rows_to_sections(rows)
 
@@ -72,7 +72,7 @@ def init(app):
         try:
             raw_events = fetch_events(url)
         except Exception as e:
-            messagebox.showerror('Import Error', str(e))
+            # messagebox.showerror('Import Error', str(e))
             return
 
         raw_events = expand_recurring_events(raw_events)
@@ -116,9 +116,9 @@ def init(app):
                     f"- {a.get('description','')} ({a.get('date')} {a.get('time')}) \u2194 "
                     f"{b.get('description','')} ({b.get('date')} {b.get('time')})"
                 )
-            messagebox.showwarning('Event Conflicts', '\n'.join(msg_lines))
+            # messagebox.showwarning('Event Conflicts', '\n'.join(msg_lines))
         if not events:
-            messagebox.showinfo('Import Events', 'No events found.')
+            # messagebox.showinfo('Import Events', 'No events found.')
             return
         app.sections_data.append({
             'title': 'Community Events',

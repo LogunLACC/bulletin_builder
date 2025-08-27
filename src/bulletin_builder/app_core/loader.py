@@ -7,15 +7,9 @@ def init_app(app):
     Initialize core attributes and then discover all feature modules under app_core,
     calling their `init(app)` functions to register functionality.
     """
-    base_pkg = __name__  # e.g., 'bulletin_builder.app_core'
+    base_pkg = "bulletin_builder.app_core"  # Fixed base package name
 
-    try:
-        from .core_init import init as _core_init
-        _core_init(app)
-    except Exception as e:
-        print(f"Error in core_init: {e}")
-
-    # 2) then drafts, handlers, sections, components, exporter, preview, suggestions, importer...
+    # Initialize feature modules (core_init is called separately from main app)
     for module in (
         "handlers",
         "drafts",
