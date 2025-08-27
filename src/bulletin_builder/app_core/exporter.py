@@ -20,6 +20,7 @@ def _render_section_html(section):
     return f'<div>{escape(section.get("title", ""))}</div>'
 # --- Imports ---
 from bulletin_builder.postprocess import ensure_postprocessed
+from bulletin_builder.app_core.sanitize import sanitize_email_html
 import sys
 import traceback
 from html import escape
@@ -86,6 +87,8 @@ def render_email_html(ctx):
       f'</body>'
     )
     print(f"[EXPORTER][DEBUG] render_email_html returning HTML length: {len(html)}")
+    # Sanitize HTML to enforce LACC formatting rules
+    html = sanitize_email_html(html)
     # Post-process HTML for email compatibility
     html = ensure_postprocessed(html)
     return html
@@ -93,6 +96,8 @@ def render_email_html(ctx):
     print("[EXPORTER][ERROR] render_email_html failed:", e, file=sys.stderr)
     print(traceback.format_exc(), file=sys.stderr)
     html = f"<body><pre style='color:red;'>Export error: {escape(str(e))}\n{escape(traceback.format_exc())}\nCTX: {escape(str(ctx))}</pre></body>"
+    # Sanitize HTML to enforce LACC formatting rules
+    html = sanitize_email_html(html)
     html = ensure_postprocessed(html)
     return html
 # Minimal init required for app import
@@ -158,6 +163,8 @@ def render_bulletin_html(ctx):
   </center>
 </body>'''
     print(f"[EXPORTER][DEBUG] render_bulletin_html returning HTML length: {len(html)}")
+    # Sanitize HTML to enforce LACC formatting rules
+    html = sanitize_email_html(html)
     html = ensure_postprocessed(html)
     return html
   except Exception as e:
