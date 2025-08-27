@@ -1,12 +1,18 @@
 from bulletin_builder.postprocess import ensure_postprocessed
 import os
 import customtkinter as ctk
+<<<<<<< HEAD
 from bulletin_builder.app_core.loader import init_app
 from bulletin_builder.app_core.config import (
+=======
+from .app_core.loader import init_app
+from .app_core.config import (
+>>>>>>> origin/harden/email-sanitize-and-ci
     save_api_key,
     save_openai_key,
     save_events_feed_url,
 )
+<<<<<<< HEAD
 from tkinter import filedialog, messagebox
 from bulletin_builder.app_core.exporter import collect_context, render_bulletin_html, render_email_html
 
@@ -14,6 +20,8 @@ from bulletin_builder.app_core.exporter import collect_context, render_bulletin_
 import bulletin_builder.app_core.importer  # noqa: F401
 import bulletin_builder.app_core.suggestions  # noqa: F401
 
+=======
+>>>>>>> origin/harden/email-sanitize-and-ci
 import argparse
 from bulletin_builder.wysiwyg_editor import launch_gui
 
@@ -25,6 +33,7 @@ class BulletinBuilderApp(ctk.CTk):
     """
     def __init__(self):
         super().__init__()
+<<<<<<< HEAD
         try:
             self.minsize(1100, 700)  # tweak as desired
         except Exception:
@@ -54,6 +63,16 @@ class BulletinBuilderApp(ctk.CTk):
         # ---------------------------------------------------------------------
 
         # Wire up all subsystems (core_init, handlers, drafts, sections, preview, UI)
+=======
+        # Expose config savers for SettingsFrame
+        self.save_api_key_to_config = save_api_key
+        self.save_openai_key_to_config = save_openai_key
+        self.save_events_url_to_config = save_events_feed_url
+
+        # Wire up all subsystems (core_init, handlers, drafts, sections, exporter, preview, UI)
+        from .app_core.core_init import init as core_init
+        core_init(self)
+>>>>>>> origin/harden/email-sanitize-and-ci
         init_app(self)
 
         # Try the menu builder that init_app should have attached; otherwise fall back
@@ -102,6 +121,7 @@ class BulletinBuilderApp(ctk.CTk):
         """Fallback implementation replaced during init_app."""
         pass
 
+<<<<<<< HEAD
     def export_bulletin_html(self):
         try:
             ctx = collect_context(self)
@@ -160,6 +180,8 @@ def main():
         print("📰 CLI mode coming soon! Use '--gui' to launch the editor.")
 
 
+=======
+>>>>>>> origin/harden/email-sanitize-and-ci
 if __name__ == '__main__':
     # Ensure required directories exist
     for d in [

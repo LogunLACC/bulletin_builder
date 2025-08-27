@@ -1,10 +1,13 @@
 import customtkinter as ctk
 import tkinter.messagebox as messagebox
 from datetime import date
+<<<<<<< HEAD
 from bulletin_builder.app_core.config import (
     save_google_api_key, save_openai_key, save_events_feed_url,
     load_google_api_key, load_openai_key, load_events_feed_url,
 )
+=======
+>>>>>>> origin/harden/email-sanitize-and-ci
 
 class SettingsFrame(ctk.CTkFrame):
     """
@@ -24,6 +27,7 @@ class SettingsFrame(ctk.CTkFrame):
         self.save_api_key_callback = save_api_key_callback
         self.save_openai_key_callback = save_openai_key_callback
         self.save_events_url_callback = save_events_url_callback
+<<<<<<< HEAD
         # Build all controls
         self._build_widgets()
         self.pack_propagate(False)
@@ -32,6 +36,11 @@ class SettingsFrame(ctk.CTkFrame):
         self._populate_from_config()
         # Force CTkEntry placeholders to draw at startup when empty
         self.after(50, self._refresh_placeholders)
+=======
+
+        # Build all controls
+        self._build_widgets()
+>>>>>>> origin/harden/email-sanitize-and-ci
 
     def _build_widgets(self):
         import os
@@ -95,6 +104,7 @@ class SettingsFrame(ctk.CTkFrame):
 
         self.grid_columnconfigure(1, weight=1)
 
+<<<<<<< HEAD
     def _populate_from_config(self):
         ga = (load_google_api_key() or "").strip()
         oa = (load_openai_key() or "").strip()
@@ -154,12 +164,19 @@ class SettingsFrame(ctk.CTkFrame):
         """Populate all fields, always falling back to sensible defaults."""
         settings_data = settings_data or {}
         colors = (settings_data.get("colors") or {})
+=======
+    def load_data(self, settings_data: dict, google_key: str, openai_key: str, events_url: str):
+        """Populate all fields, falling back to sensible defaults."""
+        settings_data = settings_data or {}
+        colors = settings_data.get("colors", {})
+>>>>>>> origin/harden/email-sanitize-and-ci
 
         # Defaults
         default_title     = "LACC Bulletin"
         default_date      = date.today().strftime("%A, %B %d, %Y")
         default_primary   = "#103040"
         default_secondary = "#506070"
+<<<<<<< HEAD
         default_theme     = self.themes[0] if getattr(self, "themes", None) else "default.css"
         default_appearance = "Dark"
 
@@ -168,6 +185,14 @@ class SettingsFrame(ctk.CTkFrame):
         self.title_entry.insert(0, settings_data.get("bulletin_title") or default_title)
         self.date_entry.delete(0, "end")
         self.date_entry.insert(0, settings_data.get("bulletin_date") or default_date)
+=======
+
+        # Bulletin Title & Date
+        self.title_entry.delete(0, "end")
+        self.title_entry.insert(0, settings_data.get("bulletin_title", default_title))
+        self.date_entry.delete(0, "end")
+        self.date_entry.insert(0, settings_data.get("bulletin_date", default_date))
+>>>>>>> origin/harden/email-sanitize-and-ci
 
         # Theme
         theme = settings_data.get("theme_css") or default_theme
@@ -209,9 +234,15 @@ class SettingsFrame(ctk.CTkFrame):
 
         # Colors
         self.primary_color_entry.delete(0, "end")
+<<<<<<< HEAD
         self.primary_color_entry.insert(0, colors.get("primary") or default_primary)
         self.secondary_color_entry.delete(0, "end")
         self.secondary_color_entry.insert(0, colors.get("secondary") or default_secondary)
+=======
+        self.primary_color_entry.insert(0, colors.get("primary", default_primary))
+        self.secondary_color_entry.delete(0, "end")
+        self.secondary_color_entry.insert(0, colors.get("secondary", default_secondary))
+>>>>>>> origin/harden/email-sanitize-and-ci
 
         # API Key (also persist immediately)
         self.google_api_entry.delete(0, "end")
@@ -222,8 +253,17 @@ class SettingsFrame(ctk.CTkFrame):
         self.openai_api_entry.insert(0, openai_key or "")
         self.save_openai_key_callback(self.openai_api_entry.get())
 
+<<<<<<< HEAD
 
 
+=======
+        self.events_feed_entry.delete(0, "end")
+        self.events_feed_entry.insert(0, events_url or "")
+        self.save_events_url_callback(self.events_feed_entry.get())
+
+        # Fire a preview refresh
+        self.refresh_callback()
+>>>>>>> origin/harden/email-sanitize-and-ci
 
     def dump(self) -> dict:
         """Read out current settings to embed in drafts or exports."""
@@ -264,7 +304,8 @@ class SettingsFrame(ctk.CTkFrame):
         
         suggestions = app.generate_subject_lines(prompt_text)
         if suggestions:
-            messagebox.showinfo("Subject Suggestions", "\n".join(suggestions), parent=self)
+            # messagebox.showinfo("Subject Suggestions", "\n".join(suggestions), parent=self)
+            pass
 
     def _on_appearance_changed(self, mode: str):
         """Apply the selected appearance mode immediately."""

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="header">
+        <h1>{{ settings.bulletin_title or 'Weekly Bulletin' }}</h1>
+        {% if settings.bulletin_date %}
+        <p>{{ settings.bulletin_date }}</p>
+        {% endif %}
+    </div>
+
+    {% if sections %}
+    <ul class="toc">
+        {% for section in sections %}
+            {% if section.title %}
+            <li><a style="margin:0; padding:0;" href="#section-{{ loop.index }}">{{ section.title }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% for section in sections %}
+        <div class="section" id="section-{{ loop.index }}">
+            {# Intelligently choose the correct template #}
+            {% if 'events' in section.type %}
+                {# If the type contains 'events', use the master events partial #}
+                {% include 'partials/events.html' with context %}
+            {% elif section.type %}
+                {# Otherwise, use the specific partial for that type #}
+                {% include ['partials/' ~ section.type ~ '.html', 'partials/default.html'] ignore missing with context %}
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.alt-header {background-color: {{ settings.colors.primary or '#1F6AA5' }}; color:white; text-align:center; padding:20px;}
+.alt-section{border:2px dashed {{ settings.colors.secondary or '#506070' }}; padding:20px; margin-bottom:20px;}
+</style>
+<div class="alt-header">
+    <h1>{{ settings.bulletin_title or 'Weekly Bulletin' }}</h1>
+    {% if settings.bulletin_date %}<p>{{ settings.bulletin_date }}</p>{% endif %}
+</div>
+{% for section in sections %}
+<div class="alt-section" id="section-{{ loop.index }}">
+    {% if 'events' in section.type %}
+        {% include 'partials/events.html' with context %}
+    {% elif section.type %}
+        {% include ['partials/' ~ section.type ~ '.html', 'partials/default.html'] ignore missing with context %}
+    {% endif %}
+</div>
+{% endfor %}
+{% endblock %}

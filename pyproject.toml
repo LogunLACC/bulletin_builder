@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.scripts]
-bulletin = "bulletin_builder.__main__:main"
+bulletin = "bulletin_builder.cli:main"
 
 [build-system]
 requires = ["setuptools"]

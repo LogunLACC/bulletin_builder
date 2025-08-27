@@ -36,9 +36,9 @@ class EmailDialog(ctk.CTkToplevel):
     def on_ok(self):
         addr = self.email_entry.get().strip()
         if not addr:
-            tk.messagebox.showwarning(
-                "Input Error", "Please enter an email address.", parent=self
-            )
+            # tk.messagebox.showwarning(
+            #     "Input Error", "Please enter an email address.", parent=self
+            # )
             return
         self.result = addr
         self.destroy()

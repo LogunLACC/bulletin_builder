@@ -4,7 +4,10 @@ import re
 
 
 def init(app):
-    """Attach smart suggestion helpers to the application."""
+    """Attach smart suggestion            # app.update_preview()
+        # compute_suggestions()
+
+    app.compute_suggestions = compute_suggestionspers to the application."""
 
     def build_panel(parent):
         frame = ctk.CTkFrame(parent)
@@ -104,7 +107,7 @@ def init(app):
             )
             app.refresh_listbox_titles()
             app.show_placeholder()
-            app.update_preview()
+            # app.update_preview()
         elif "Community Highlights" in suggestion:
             app.sections_data.append(
                 {
@@ -117,7 +120,7 @@ def init(app):
             )
             app.refresh_listbox_titles()
             app.show_placeholder()
-            app.update_preview()
+            # app.update_preview()
         compute_suggestions()
 
     app.compute_suggestions = compute_suggestions

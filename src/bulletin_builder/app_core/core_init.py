@@ -1,5 +1,8 @@
 # app_core/core_init.py
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/harden/email-sanitize-and-ci
 import customtkinter as ctk
 import tkinter.messagebox as messagebox
 from pathlib import Path
@@ -14,6 +17,7 @@ from bulletin_builder.app_core.config import (
     load_openai_key,
     load_events_feed_url,
 )
+<<<<<<< HEAD
 from bulletin_builder.ui.base_section import SectionRegistry
 
 # ensure all UI frame classes register themselves
@@ -21,12 +25,23 @@ from bulletin_builder.ui import custom_text  # noqa:F401
 from bulletin_builder.ui import events       # noqa:F401
 from bulletin_builder.ui import image        # noqa:F401
 from bulletin_builder.ui import announcements  # noqa:F401
+=======
+from ..ui.base_section import SectionRegistry
+
+
+# ensure all UI frame classes register themselves
+from ..ui import custom_text  # noqa:F401
+from ..ui import events       # noqa:F401
+from ..ui import image        # noqa:F401
+from ..ui import announcements  # noqa:F401
+>>>>>>> origin/harden/email-sanitize-and-ci
 
 # Helper to list registered section types
 SectionRegistry.available_types = classmethod(lambda cls: list(cls._frames.keys()))
 
 
 def init(app):
+<<<<<<< HEAD
     import time
     startup_times = []
     def mark(label):
@@ -137,6 +152,10 @@ def init(app):
         'type': 'custom_text',
         'content': {'text': 'This is a preview section. Add your content!'}
     }]
+=======
+    # --- Base attributes ---
+    app.sections_data = []
+>>>>>>> origin/harden/email-sanitize-and-ci
     app.current_draft_path = None
     app.current_editor_frame = None
     app.active_editor_index = None
@@ -145,6 +164,7 @@ def init(app):
     app.google_api_key = load_api_key()
     app.openai_api_key = load_openai_key()
     app.events_feed_url = load_events_feed_url()
+<<<<<<< HEAD
     mark("keys loaded")
 
     # Defer AI API config to first use (lazy)
@@ -167,6 +187,15 @@ def init(app):
     app.renderer = BulletinRenderer(templates_dir=tpl_dir)
     app.renderer.set_template('main_layout.html')  # If your Template Gallery changes templates later, it'll use renderer.set_template(...)
     mark("renderer ready")
+=======
+    # genai.configure(api_key=app.google_api_key)
+
+    # Configure OpenAI when key available
+    if app.openai_api_key and app.openai_api_key != "REPLACE ME WITH YOUR OPENAI API KEY":
+        openai.api_key = app.openai_api_key    # --- Renderer setup ---
+    tpl_dir = Path(__file__).parent.parent / "templates"
+    app.renderer = BulletinRenderer(templates_dir=tpl_dir, template_name='main_layout.html')
+>>>>>>> origin/harden/email-sanitize-and-ci
 
     # --- Progress indicator ---
     app.progress = ctk.CTkProgressBar(app, mode="indeterminate")
@@ -200,6 +229,7 @@ def init(app):
 
     # Executor for threaded background tasks like exporting
     app._thread_executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+<<<<<<< HEAD
     mark("thread executor ready")
 
      # --- AI callback ---
@@ -212,14 +242,33 @@ def init(app):
         except Exception as e:
             messagebox.showerror("AI Error", f"AI request failed: {e}")
             return ""
+=======
+
+     # --- AI callback ---
+    def ai_callback(prompt: str) -> str:
+        # try:
+        #     model = genai.GenerativeModel("gemini-1.5-flash")
+        #     resp = model.generate_content(prompt)
+        #     return resp.text
+        # except Exception as e:
+        #     # messagebox.showerror("AI Error", f"AI request failed: {e}")
+        #     return ""
+        return "AI response temporarily disabled"
+>>>>>>> origin/harden/email-sanitize-and-ci
 
     app.ai_callback = ai_callback
 
     def generate_subject_lines(content: str) -> list[str]:
+<<<<<<< HEAD
         app.ensure_ai_config()
         if not app.openai_api_key:
             messagebox.showwarning("OpenAI Key Missing", "Please enter your OpenAI API key in Settings.")
             return []
+=======
+        # if not app.openai_api_key:
+        #     messagebox.showwarning("OpenAI Key Missing", "Please enter your OpenAI API key in Settings.")
+        #     return []
+>>>>>>> origin/harden/email-sanitize-and-ci
         try:
             resp = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
@@ -236,10 +285,11 @@ def init(app):
             lines = [l.strip("-•* ") for l in text.splitlines() if l.strip()]
             return lines
         except Exception as e:
-            messagebox.showerror("AI Error", f"OpenAI request failed: {e}")
+            # messagebox.showerror("AI Error", f"OpenAI request failed: {e}")
             return []
 
     app.generate_subject_lines = generate_subject_lines
+<<<<<<< HEAD
     mark("handlers, drafts, sections, exporter, preview, UI setup")
     mark("editor container ready")
     print("[PROFILE] Startup complete. Timings:")
@@ -317,3 +367,5 @@ def init(app):
 
         from bulletin_builder.app_core import component_library
         component_library.init(app)
+=======
+>>>>>>> origin/harden/email-sanitize-and-ci

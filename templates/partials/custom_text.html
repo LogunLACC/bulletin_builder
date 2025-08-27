@@ -1,0 +1,8 @@
+{# This partial is for sections with type 'custom_text' #}
+{% if section.title %}
+    <h2>{{ section.title }}</h2>
+{% endif %}
+<div class="custom-text">
+    {{ section.content | markdown | safe }}
+</div>
+

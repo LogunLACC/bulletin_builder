@@ -130,7 +130,11 @@ def init(app):
             if hasattr(app, "show_status_message"):
                 app.show_status_message(f"Imported {len(announcements)} announcements")
         except Exception as e:
+<<<<<<< HEAD
             messagebox.showerror("Import Error", str(e))
+=======
+            # messagebox.showerror('Import Error', str(e))
+>>>>>>> origin/harden/email-sanitize-and-ci
             return
 
     # ---------- GOOGLE SHEET (public CSV URL) ----------
@@ -138,9 +142,21 @@ def init(app):
         url = simpledialog.askstring("Google Sheet URL", "Enter public CSV URL:")
         if not url:
             return
+<<<<<<< HEAD
         url = url.strip().strip('"\'')
         if hasattr(app, "_show_progress"):
             app._show_progress("Fetching Google Sheet…")
+=======
+        try:
+            with urllib.request.urlopen(url) as resp:
+                text = resp.read().decode('utf-8')
+            reader = csv.DictReader(io.StringIO(text))
+            rows = list(reader)
+        except Exception as e:
+            # messagebox.showerror('Import Error', str(e))
+            return
+        _rows_to_sections(rows)
+>>>>>>> origin/harden/email-sanitize-and-ci
 
         def _worker():
             try:
@@ -171,8 +187,16 @@ def init(app):
             url = simpledialog.askstring("Events Feed URL", "Enter events JSON/CSV URL:")
         if not url:
             return
+<<<<<<< HEAD
         # Sanitize URL: strip whitespace and quotes
         url = url.strip().strip('"\'')
+=======
+        try:
+            raw_events = fetch_events(url)
+        except Exception as e:
+            # messagebox.showerror('Import Error', str(e))
+            return
+>>>>>>> origin/harden/email-sanitize-and-ci
 
         if hasattr(app, "_show_progress"):
             app._show_progress("Fetching events…")
@@ -188,6 +212,33 @@ def init(app):
 
             raw_events_local = expand_recurring_events(raw_events)
 
+<<<<<<< HEAD
+=======
+        events = events_to_blocks(raw_events)
+        process_event_images(events)
+        conflicts = detect_conflicts(events)
+        if conflicts:
+            msg_lines = ["Overlapping events detected:"]
+            for a, b in conflicts:
+                msg_lines.append(
+                    f"- {a.get('description','')} ({a.get('date')} {a.get('time')}) \u2194 "
+                    f"{b.get('description','')} ({b.get('date')} {b.get('time')})"
+                )
+            # messagebox.showwarning('Event Conflicts', '\n'.join(msg_lines))
+        if not events:
+            # messagebox.showinfo('Import Events', 'No events found.')
+            return
+        app.sections_data.append({
+            'title': 'Community Events',
+            'type': 'community_events',
+            'content': events,
+            'layout_style': 'Card'
+        })
+        app.refresh_listbox_titles()
+        app.show_placeholder()
+        app.update_preview()
+        app.show_status_message(f"Imported {len(events)} events")
+>>>>>>> origin/harden/email-sanitize-and-ci
 
             def _apply():
                 # (Optional) interactive filters by date/tags could go here

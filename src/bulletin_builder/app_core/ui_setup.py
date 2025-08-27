@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import tkinter as tk
 from tkhtmlview import HTMLLabel
+<<<<<<< HEAD
 from bulletin_builder.ui.settings import SettingsFrame
 from bulletin_builder.ui.tooltip import ToolTip
 
@@ -51,6 +52,10 @@ def _build_menus(app):
     app.config(menu=menubar)
     app.menubar = menubar
 
+=======
+from pathlib import Path
+from ..ui.settings import SettingsFrame
+>>>>>>> origin/harden/email-sanitize-and-ci
 
 def init(app):
     """Stable, two-column Content view + clean tab switching."""
@@ -93,6 +98,39 @@ def init(app):
     # ---------- window + base grid ----------
     app.title("LACC Bulletin Builder")
     app.geometry("1200x800")
+<<<<<<< HEAD
+=======
+    ctk.set_appearance_mode("Dark")
+    ctk.set_default_color_theme("blue")
+
+    # --- Menu Bar ---
+    menubar = tk.Menu(app)
+    filemenu = tk.Menu(menubar, tearoff=0)
+    filemenu.add_command(label="New Draft", command=app.new_draft)
+    filemenu.add_separator()
+    filemenu.add_command(label="Open Draft...", command=app.open_draft)
+    filemenu.add_separator()
+    filemenu.add_command(label="Save", command=app.save_draft)
+    filemenu.add_command(label="Save As...", command=lambda: app.save_draft(save_as=True))
+    filemenu.add_separator()
+    filemenu.add_command(label="Exit", command=app.quit)
+    menubar.add_cascade(label="File", menu=filemenu)
+
+    tools_menu = tk.Menu(menubar, tearoff=0)
+    tools_menu.add_command(label="WYSIWYG Editor", command=app.open_wysiwyg_editor)
+    tools_menu.add_command(label="Template Gallery", command=app.open_template_gallery)
+    tools_menu.add_command(label="Component Library", command=app.open_component_library)
+    tools_menu.add_separator()
+    tools_menu.add_command(label="Import Announcements CSV...", command=app.import_announcements_csv)
+    tools_menu.add_command(label="Import Announcements from Sheet...", command=app.import_announcements_sheet)
+    tools_menu.add_command(label="Import Events Feed...", command=app.import_events_feed)
+    menubar.add_cascade(label="Tools", menu=tools_menu)
+
+    app.config(menu=menubar)
+
+    # --- Main Layout (Tabs + Status Bar) ---
+    app.grid_columnconfigure(0, weight=1)
+>>>>>>> origin/harden/email-sanitize-and-ci
     app.grid_rowconfigure(0, weight=1)
     app.grid_columnconfigure(0, weight=1)
 
@@ -197,20 +235,54 @@ def init(app):
         lambda e: getattr(app, "on_section_select", lambda *_: None)(e)
     )
 
+<<<<<<< HEAD
     app.section_listbox.delete(0, tk.END)
     for i, sec in enumerate(getattr(app, "sections_data", [])):
         app.section_listbox.insert(tk.END, f"{i+1}. {sec.get('title','Untitled')}")
+=======
+    expf = ctk.CTkFrame(lp)
+    expf.pack(fill="x", pady=5)
+    app.email_button = ctk.CTkButton(expf, text="Copy for Email", command=app.on_copy_for_email_clicked)
+    app.email_button.pack(fill="x", pady=(0,5))
+    app.send_test_button = ctk.CTkButton(expf, text="Send Test Email...", command=app.on_send_test_email_clicked)
+    app.send_test_button.pack(fill="x", pady=(0,5))
+    app.export_button = ctk.CTkButton(expf, text="Export to PDF...", command=app.on_export_pdf_clicked)
+    app.export_button.pack(fill="x", pady=(0,5))
+    app.export_html_text_button = ctk.CTkButton(expf, text="Export HTML + Text...", command=app.on_export_html_text_clicked)
+    app.export_html_text_button.pack(fill="x", pady=(0,5))
+    app.ics_button = ctk.CTkButton(expf, text="Export Event .ics", command=app.on_export_ics_clicked)
+    app.ics_button.pack(fill="x")
+
+    # Smart Suggestions Panel
+    sugg_frame = app.build_suggestions_panel(lp)
+    sugg_frame.pack(fill="x", pady=5)
+>>>>>>> origin/harden/email-sanitize-and-ci
 
     # Actions under the editor
     actions = ctk.CTkFrame(app.editor_container, fg_color="transparent")
     actions.grid(row=1, column=0, sticky="ew", pady=(8, 0))
     actions.grid_columnconfigure(0, weight=1)
 
+<<<<<<< HEAD
     def _mk(btn_text, cb_attr):
         return ctk.CTkButton(
             actions, text=btn_text, **btn_style,
             command=getattr(app, cb_attr, lambda: None)
         )
+=======
+    # --- Settings Tab ---
+    sett = app.tab_view.tab("Settings")
+    app.settings_frame = SettingsFrame(
+        sett,
+        refresh_callback=app.refresh_listbox_titles,
+        save_api_key_callback=app.save_api_key_to_config,
+        save_openai_key_callback=app.save_openai_key_to_config,
+        save_events_url_callback=app.save_events_url_to_config,
+    )
+    app.settings_frame.pack(fill="both", expand=True, padx=10, pady=10)
+    # Load defaults + persisted API key on startup
+    app.settings_frame.load_data({}, app.google_api_key, app.openai_api_key, app.events_feed_url)
+>>>>>>> origin/harden/email-sanitize-and-ci
 
     # Use grid instead of pack for all action buttons
     _mk("Copy for Email", "on_copy_for_email_clicked").grid(row=0, column=0, sticky="ew", pady=(0, 6))
@@ -232,6 +304,7 @@ def init(app):
     all_views["Settings"] = settings_view
     app.settings_view = settings_view
 
+<<<<<<< HEAD
     # Always pass a callable for refresh_callback, not the app instance
     refresh_cb = getattr(app, "refresh_callback", None)
     if not callable(refresh_cb):
@@ -341,3 +414,38 @@ def init(app):
     app.bind("<Control-Shift-S>", lambda e: getattr(app, "save_draft_as", getattr(app, "save_draft", lambda: None))())
     app.bind("<Control-o>", lambda e: getattr(app, "open_draft", lambda: None)())
     app.bind("<Control-n>", lambda e: getattr(app, "new_draft", lambda: None)())
+=======
+    app.preview_mode_toggle = ctk.CTkSegmentedButton(
+        ctrl, values=["Rendered", "Code"], command=app.toggle_preview_mode
+    )
+    app.preview_mode_toggle.set("Rendered")
+    app.preview_mode_toggle.pack(side="left", padx=5)
+
+    app.device_mode_toggle = ctk.CTkSegmentedButton(
+        ctrl,
+        values=["Desktop", "Tablet", "Mobile"],
+        command=app.set_preview_device,
+    )
+    app.device_mode_toggle.set("Desktop")
+    app.device_mode_toggle.pack(side="left", padx=5)
+
+    app.preview_area = ctk.CTkFrame(prev)
+    app.preview_area.pack(padx=10, pady=10)
+    app.preview_area.pack_propagate(False)
+
+    app.rendered_preview = HTMLLabel(app.preview_area, background="white")
+    app.code_preview = ctk.CTkTextbox(app.preview_area, wrap="word", font=("Courier New", 12))
+    # neither packed until toggle
+
+    app.set_preview_device("Desktop")
+
+    # --- Keyboard Shortcuts ---
+    app.bind("<Control-s>", lambda e: app.save_draft())
+    app.bind("<Control-S>", lambda e: app.save_draft())  # for some platforms
+    app.bind("<Control-Shift-S>", lambda e: app.save_draft(save_as=True))
+    app.bind("<Control-o>", lambda e: app.open_draft())
+    app.bind("<Control-n>", lambda e: app.new_draft())
+
+    # if hasattr(app, "compute_suggestions"):
+    #     app.compute_suggestions()
+>>>>>>> origin/harden/email-sanitize-and-ci

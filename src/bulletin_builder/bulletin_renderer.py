@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/harden/email-sanitize-and-ci
 import os
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -6,6 +9,7 @@ from markdown import markdown
 
 from typing import Optional, List, Dict, Any
 from collections import OrderedDict
+<<<<<<< HEAD
 from datetime import datetime, date
 
 
@@ -32,6 +36,24 @@ class BulletinRenderer:
         # Optional legacy cache kept for compatibility
         self._template_cache = getattr(self, "_template_cache", {})
         # Jinja environment used by preview/export
+=======
+
+
+class BulletinRenderer:
+    def __init__(self, templates_dir, template_name: str = "main_layout.html"):
+        """
+        Initializes the renderer.
+        Args:
+            templates_dir (str or Path): The path to the main templates directory.
+        """
+        self.templates_dir = Path(templates_dir)
+        self.template_name = template_name
+        if not self.templates_dir.is_dir():
+            raise FileNotFoundError(
+                f"Templates directory not found at: {self.templates_dir}"
+            )
+
+>>>>>>> origin/harden/email-sanitize-and-ci
         self.env = Environment(
             loader=FileSystemLoader(str(self.templates_dir)),
             autoescape=select_autoescape(["html", "xml"]),
@@ -156,3 +178,58 @@ class BulletinRenderer:
     def set_template(self, name: str):
         """Change the layout template used for rendering."""
         self.template_name = name
+<<<<<<< HEAD
+=======
+
+    def render_html(
+        self,
+        sections_data: list,
+        settings: dict = None,
+        template_name: Optional[str] = None,
+    ) -> str:
+        """
+        Renders the final HTML for the bulletin, injecting theme styles.
+        """
+        from bulletin_builder.settings import Settings  # ✅ Import your settings class
+
+        if settings is None:
+            settings = Settings()
+        elif isinstance(settings, dict):
+            try:
+                # Filter out fields that don't belong in Settings class
+                valid_fields = {
+                    'bulletin_title', 'bulletin_date', 'colors', 'template_path',
+                    'theme_css', 'appearance_mode'
+                }
+                filtered_settings = {k: v for k, v in settings.items() if k in valid_fields}
+                settings = Settings(**filtered_settings)
+            except Exception as e:
+                print(f"Failed to cast dict to Settings object: {e}")
+                settings = Settings()
+
+        # --- Theme Loading Logic ---
+        theme_styles = ""
+        theme_filename = settings.theme_css
+        if theme_filename:
+            theme_path = self.templates_dir / "themes" / theme_filename
+            if theme_path.is_file():
+                try:
+                    theme_styles = theme_path.read_text(encoding="utf-8")
+                except Exception as e:
+                    print(f"Error reading theme file {theme_path}: {e}")
+            else:
+                print(f"Theme file not found: {theme_path}")
+
+        try:
+            tpl_name = template_name or self.template_name
+            template = self.env.get_template(tpl_name)
+
+            html_output = template.render(
+                sections=sections_data, settings=settings, theme_styles=theme_styles
+            )
+            
+            return html_output
+        except Exception as e:
+            print(f"Error rendering template: {e}")
+            return f"<html><body><h1>Template Render Error</h1><p>{e}</p></body></html>"
+>>>>>>> origin/harden/email-sanitize-and-ci

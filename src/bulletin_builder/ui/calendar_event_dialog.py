@@ -53,7 +53,7 @@ class CalendarEventDialog(ctk.CTkToplevel):
         start_str = self.start_entry.get().strip()
         end_str = self.end_entry.get().strip()
         if not title or not date_str or not start_str:
-            tk.messagebox.showwarning("Input Error", "Title, date, and start time are required.", parent=self)
+            # tk.messagebox.showwarning("Input Error", "Title, date, and start time are required.", parent=self)
             return
         try:
             start_dt = datetime.strptime(f"{date_str} {start_str}", "%Y-%m-%d %H:%M")
@@ -62,7 +62,7 @@ class CalendarEventDialog(ctk.CTkToplevel):
             else:
                 end_dt = start_dt
         except Exception:
-            tk.messagebox.showwarning("Input Error", "Invalid date or time format.", parent=self)
+            # tk.messagebox.showwarning("Input Error", "Invalid date or time format.", parent=self)
             return
         self.result = {
             "title": title,

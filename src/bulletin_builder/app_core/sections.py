@@ -1,6 +1,10 @@
 import customtkinter as ctk
 import tkinter as tk
+<<<<<<< HEAD
 from bulletin_builder.ui.base_section import SectionRegistry
+=======
+from ..ui.base_section import SectionRegistry
+>>>>>>> origin/harden/email-sanitize-and-ci
 
 class AddSectionDialog(ctk.CTkToplevel):
     """Modal dialog to capture title and type for a new section."""
@@ -35,7 +39,7 @@ class AddSectionDialog(ctk.CTkToplevel):
         title = self.title_entry.get().strip()
         sec_type = self.type_menu.get()
         if not title:
-            tk.messagebox.showwarning("Input Error", "Please enter a title.", parent=self)
+            # tk.messagebox.showwarning("Input Error", "Please enter a title.", parent=self)
             return
         self.result = (title, sec_type)
         self.destroy()
@@ -82,6 +86,7 @@ def init(app):
             return
         idx = sel[0]
         section = app.sections_data[idx]
+<<<<<<< HEAD
         print(f"[DEBUG] on_section_select: idx={idx}, section type={section.get('type')}, title={section.get('title')}")
         try:
             FrameCls = SectionRegistry.get_frame(section['type'])
@@ -94,6 +99,17 @@ def init(app):
             print(f"[DEBUG] Editor frame replaced for section {idx}")
         except Exception as e:
             print(f"[ERROR] Could not build/replace editor frame: {e}")
+=======
+        app.clear_editor_panel()
+        FrameCls = SectionRegistry.get_frame(section['type'])
+        # AnnouncementsFrame may require extra callbacks
+        params = [app.right_panel, section, app.refresh_listbox_titles, app.save_component]
+        if section['type'] == 'announcements':
+            params.append(app.ai_callback)
+        frame = FrameCls(*params)
+        frame.pack(fill='both', expand=True)
+        app.current_editor_frame = frame
+>>>>>>> origin/harden/email-sanitize-and-ci
         app.active_editor_index = idx
 
     # --- Update Data ---
