@@ -40,7 +40,8 @@ def sanitize_email_html(html: str) -> str:
     html = re.sub(r'<style\b[^>]*>.*?</style>\s*', '', html, flags=re.I|re.S)
 
     # 0b) Remove any on* event handlers (email safety)
-    html = re.sub(r'\s+on[a-z]+\s*=\s*(["\']).*?\1', '', html, flags=re.I|re.S)
+    # Remove attributes such as onerror="..." or onclick='...'
+    html = re.sub(r'''(?is)\s+on[a-z]+\s*=\s*(?:"[^"]*"|'[^']*')''', '', html)
 
     # 1) Ensure a/img/table/td have a style attribute when missing (NOTE THE LEADING SPACE)
     html = re.sub(r'(<a\b)(?![^>]*style=)',   r'\1 style="margin:0; padding:0;"', html, flags=re.I)

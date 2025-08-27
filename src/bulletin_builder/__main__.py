@@ -35,18 +35,6 @@ class BulletinBuilderApp(ctk.CTk):
         """Optional: load some sections for testing; no-op by default."""
         pass
 
-def main():
-    parser = argparse.ArgumentParser(description="Bulletin Builder CLI")
-    parser.add_argument("--gui", action="store_true", help="Launch the WYSIWYG editor")
-    args = parser.parse_args()
-
-    if args.gui:
-        print("📰 Bulletin Builder CLI is running!")
-        launch_gui()
-    else:
-        print("📰 CLI mode coming soon! Use '--gui' to launch the editor.")
-
-
 if __name__ == '__main__':
     # Ensure required directories exist
     for d in [

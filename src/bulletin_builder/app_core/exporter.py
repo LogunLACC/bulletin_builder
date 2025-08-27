@@ -89,25 +89,6 @@ def init(app):
     app.on_export_pdf_clicked = on_export_pdf_clicked
 
     # --- Copy for Email (threaded) ---
-    def on_copy_for_email_clicked():
-        app.export_button.configure(state="disabled")
-        app.email_button.configure(state="disabled")
-        app._show_progress("Preparing email HTML…")
-        future = app._thread_executor.submit(_do_copy_for_email)
-        future.add_done_callback(_on_copy_for_email_done)
-
-    def _do_copy_for_email():
-        settings = app.settings_frame.dump()
-        html = app.renderer.render_html(app.sections_data, settings)
-        html = transform(html)
-        # Upgrade HTTP URLs to HTTPS to prevent mixed content
-        from .url_upgrade import upgrade_http_to_https
-        html = upgrade_http_to_https(html)
-        # Apply LACC email sanitization rules for email output
-        from .sanitize import sanitize_email_html
-        html = sanitize_email_html(html)
-        return html
-
     def _on_copy_for_email_done(fut):
         try:
             content = fut.result()
@@ -118,6 +99,26 @@ def init(app):
             app.after(0, app._hide_progress)
             app.after(0, lambda: app.export_button.configure(state="normal"))
             app.after(0, lambda: app.email_button.configure(state="normal"))
+
+    def on_copy_for_email_clicked():
+        app.export_button.configure(state="disabled")
+        app.email_button.configure(state="disabled")
+        app._show_progress("Preparing email HTML…")
+        future = app._thread_executor.submit(_do_copy_for_email)
+        future.add_done_callback(_on_copy_for_email_done)
+
+    def _do_copy_for_email():
+        settings = app.settings_frame.dump()
+        html = app.renderer.render_html(app.sections_data, settings)
+        # Apply premailer transforms (inlining) before URL upgrades
+        html = transform(html)
+        # Upgrade HTTP URLs to HTTPS and convert AVIF->JPG for email
+        from .url_upgrade import upgrade_http_to_https
+        html = upgrade_http_to_https(html, convert_avif=True)
+        # Apply LACC email sanitization rules for email output
+        from .sanitize import sanitize_email_html
+        html = sanitize_email_html(html)
+        return html
 
     app.on_copy_for_email_clicked = on_copy_for_email_clicked
 
@@ -132,13 +133,12 @@ def init(app):
     def _do_export_html_text():
         settings = app.settings_frame.dump()
         html = app.renderer.render_html(app.sections_data, settings)
-        html = transform(html)
+        # Note: Premailer transform is NOT applied here - this is for web/HTML output, not email
         # Upgrade HTTP URLs to HTTPS to prevent mixed content
         from .url_upgrade import upgrade_http_to_https
-        html = upgrade_http_to_https(html)
-        # Apply LACC email sanitization rules for email output
-        from .sanitize import sanitize_email_html
-        html = sanitize_email_html(html)
+        # For web export we do not convert AVIF to JPG — preserve original formats
+        html = upgrade_http_to_https(html, convert_avif=False)
+        # Note: Sanitizer is NOT applied here - this is for web/HTML output, not email
         path = filedialog.asksaveasfilename(
             defaultextension=".html",
             filetypes=[("HTML Documents", "*.html")],
@@ -248,6 +248,12 @@ def init(app):
         settings = app.settings_frame.dump()
         html = app.renderer.render_html(app.sections_data, settings)
         html = transform(html)
+        # Upgrade HTTP URLs to HTTPS to prevent mixed content
+        from .url_upgrade import upgrade_http_to_https
+        html = upgrade_http_to_https(html)
+        # Convert AVIF images to JPG for email compatibility
+        from .url_upgrade import avif_to_jpg_email_only
+        html = avif_to_jpg_email_only(html)
         # Apply LACC email sanitization rules for email output
         from .sanitize import sanitize_email_html
         html = sanitize_email_html(html)

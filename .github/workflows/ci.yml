@@ -1,0 +1,20 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [ main, harden/**, fix/**, feat/** ]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: pip install -e . || true
+      - run: pip install -r requirements.txt || true
+      - run: pip install pytest
+      - name: Run pytest
+        env: { PYTHONPATH: src }
+        run: pytest -q
+      - name: Email guard (changed files)
+        run: python tools/email_guard.py --changed-only
