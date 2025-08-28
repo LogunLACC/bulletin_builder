@@ -1,0 +1,4 @@
+config.ini
+src/config.ini
+.env
+user_drafts/*.json
