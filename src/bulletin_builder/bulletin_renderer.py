@@ -1,15 +1,17 @@
-<<<<<<< HEAD
+"""BulletinRenderer: Jinja-backed renderer used by preview and exports.
 
-=======
->>>>>>> origin/harden/email-sanitize-and-ci
+This file provides a stable renderer used by the GUI and headless exports.
+It intentionally fails softly and returns readable HTML errors when templates
+or data are invalid so the UI can continue running.
+"""
+
 import os
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markdown import markdown
 
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict
 from collections import OrderedDict
-<<<<<<< HEAD
 from datetime import datetime, date
 
 
@@ -36,24 +38,6 @@ class BulletinRenderer:
         # Optional legacy cache kept for compatibility
         self._template_cache = getattr(self, "_template_cache", {})
         # Jinja environment used by preview/export
-=======
-
-
-class BulletinRenderer:
-    def __init__(self, templates_dir, template_name: str = "main_layout.html"):
-        """
-        Initializes the renderer.
-        Args:
-            templates_dir (str or Path): The path to the main templates directory.
-        """
-        self.templates_dir = Path(templates_dir)
-        self.template_name = template_name
-        if not self.templates_dir.is_dir():
-            raise FileNotFoundError(
-                f"Templates directory not found at: {self.templates_dir}"
-            )
-
->>>>>>> origin/harden/email-sanitize-and-ci
         self.env = Environment(
             loader=FileSystemLoader(str(self.templates_dir)),
             autoescape=select_autoescape(["html", "xml"]),
@@ -77,10 +61,10 @@ class BulletinRenderer:
                 # Fail soft: return a safe string instead of crashing the preview
                 print(f"[WARN] markdown filter failed: {e!r}")
                 return str(value or "")
+
         self.env.filters["markdown"] = _md
         self.env.filters["group_events"] = self._group_events
         self.env.filters["group_events_by_tag"] = self._group_events_by_tag
-
 
     def _get_template(self, name: str):
         # Prefer Jinja environment
@@ -100,10 +84,6 @@ class BulletinRenderer:
             # Bubble a readable error up to the UI while keeping logs actionable
             print(f"[ERROR] Render failed in template '{template_name}': {e!r}")
             raise
-
-        # Register event grouping filters
-        self.env.filters["group_events"] = self._group_events
-        self.env.filters["group_events_by_tag"] = self._group_events_by_tag
 
     # --- Event Grouping Logic -------------------------------------------------
     def _parse_date(self, value: str, default_year: int) -> date | None:
@@ -178,8 +158,6 @@ class BulletinRenderer:
     def set_template(self, name: str):
         """Change the layout template used for rendering."""
         self.template_name = name
-<<<<<<< HEAD
-=======
 
     def render_html(
         self,
@@ -190,7 +168,7 @@ class BulletinRenderer:
         """
         Renders the final HTML for the bulletin, injecting theme styles.
         """
-        from bulletin_builder.settings import Settings  # ✅ Import your settings class
+        from bulletin_builder.settings import Settings  # type: ignore
 
         if settings is None:
             settings = Settings()
@@ -209,7 +187,7 @@ class BulletinRenderer:
 
         # --- Theme Loading Logic ---
         theme_styles = ""
-        theme_filename = settings.theme_css
+        theme_filename = getattr(settings, 'theme_css', None)
         if theme_filename:
             theme_path = self.templates_dir / "themes" / theme_filename
             if theme_path.is_file():
@@ -227,9 +205,8 @@ class BulletinRenderer:
             html_output = template.render(
                 sections=sections_data, settings=settings, theme_styles=theme_styles
             )
-            
+
             return html_output
         except Exception as e:
             print(f"Error rendering template: {e}")
             return f"<html><body><h1>Template Render Error</h1><p>{e}</p></body></html>"
->>>>>>> origin/harden/email-sanitize-and-ci
