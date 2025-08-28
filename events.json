@@ -1,119 +1,794 @@
 [
-    {
-        "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czMvYmFubmVycy9mN2M0OTc0OTc4M2Q0YWNiZDNhNTBkZjI5MzIyNDM3ZDM4ZDk5MGM0M2JjNTQ3ZThmZjJkNTdmOWMwZmRlMWM1LXJpbWctdzg1MS1oMzE1LWRjZmZmZmZmLWdtaXI_dj0xNzUzOTEyOTcx.avif",
-        "title": "Sierradipity Arts Fair",
-        "date": "Fri, 22 Aug 2025",
-        "location_t": "Plumas County Fairgrounds",
-        "url": "https://allevents.in/quincy/sierradipity-arts-fair/200028267561838",
-        "source": "AllEvents \u2013 Plumas County Fairgrounds",
-        "location": "Plumas County Fairgrounds"
-    },
-    {
-        "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEwL2Jhbm5lcnMvOTcxMzNkMDJjMDc4ZWRmNjA3OGFkNTU5MThlN2FhYWYyM2M3MDU0ZDk3ZTE4YTVkNzQ4NGMwYjllNmM2OTVmNS1yaW1nLXc4NTEtaDMxNS1kY2ZmYjU0Mi1nbWlyP3Y9MTc1NDMwODEyMA.avif",
-        "title": "Music under the Stars - The Shadows Band",
-        "date": "Sat, 23 Aug 2025",
-        "location_t": "Lake Almanor Country Club Rec 1",
-        "url": "https://allevents.in/chester/music-under-the-stars-the-shadows-band/200028492762801",
-        "source": "AllEvents \u2013 Lake Almanor Country Club Rec 1",
-        "location": "Lake Almanor Country Club Rec 1"
-    },
-    {
-        "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy9jZjMxMTBkMDlmMjFjZTQxYTFkN2U2YjMwZDFmODRhZmYwNmViY2E2NzM4MTc3MjM5Nzc1NzgzNTZjNjA2NDRhLXJpbWctdzEwMjQtaDE1MzYtZGNmZWRlOTYtZ21pcj92PTE3NTMyODUzOTc.avif",
-        "title": "Almanor Cardboard Regatta",
-        "date": "Sat, 30 Aug 2025",
-        "location_t": "Main Street, Chester, CA",
-        "url": "https://allevents.in/chester/almanor-cardboard-regatta/200028278299230",
-        "source": "AllEvents \u2013 Main Street, Chester, CA",
-        "location": "Main Street, Chester, CA"
-    },
-    {
-        "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czkvYmFubmVycy8xOTllMDdhMWFjMGVmN2Y3MTJkNDBjZGRiMzgzM2I3OGFkMDJhYjI3ZjRjODcxYjY5Nzc0YmMzODMwNGEzOWJiLXJpbWctdzEyMDAtaDE1NTMtZGNmZmZmZmYtZ21pcj92PTE3NTQzMDIxNTk.avif",
-        "title": "Fall Soccer Sign up Deadline Aug 31",
-        "date": "Sun, 31 Aug 2025",
-        "location_t": "101 Meadowbrook Loop, Chester, CA, United States, California 96020",
-        "url": "https://allevents.in/chester/fall-soccer-sign-up-deadline-aug-31/200028492409538",
-        "source": "AllEvents \u2013 101 Meadowbrook Loop, Chester, CA, United States, California 96020",
-        "location": "101 Meadowbrook Loop, Chester, CA, United States, California 96020"
-    },
-    {
-        "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy9kZmJlM2I1MmNjOGRhZjQ2MTg3NjMyMjFmOTZhMWVjNGEyOWMwMjA3ZTRkOTkwYzBlNmNjMGE0M2E4MWQxMDEyLXJpbWctdzg1MS1oMzE1LWRjZDhhODYzLWdtaXI_dj0xNzU0MzA4MTIy.avif",
-        "title": "Music under the Stars - Township",
-        "date": "Sun, 31 Aug 2025",
-        "location_t": "Lake Almanor Country Club Rec 1",
-        "url": "https://allevents.in/chester/music-under-the-stars-township/200028492763202",
-        "source": "AllEvents \u2013 Lake Almanor Country Club Rec 1",
-        "location": "Lake Almanor Country Club Rec 1"
-    },
-    {
-        "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEvYmFubmVycy9iZDM3Y2E5Y2FjZmMxODgzYTUyYWM1ZjYxZTY3MzhhMTU3OTM1ZDM3NWY0ZjI1NGIwMDFkZGUzZGJlYTJmMzg0LXJpbWctdzEwMDAtaDU4My1kY2ZmZmZmZi1nbWlyP3Y9MTc1NDE1MTA3Mw.avif",
-        "title": "37th annual Street Rod Extravaganza",
-        "date": "Sat, 06 Sep 2025",
-        "location_t": "Chester Park",
-        "url": "https://allevents.in/chester/37th-annual-street-rod-extravaganza/200027700540823",
-        "source": "AllEvents \u2013 Chester Park",
-        "location": "Chester Park"
-    },
-    {
-        "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czQvYmFubmVycy9iNjU0NWJhMWEzY2EyYzQzYmM4ZjQxMzAxY2I4ZWE0MDE0ODQ5Y2QwYzQ3YWVhM2U1MDI4MmM2OGUwMTBiYjVkLXJpbWctdzEyMDAtaDEwMzEtZGM3OThkOGYtZ21pcj92PTE3NTQxOTU2NjU.avif",
-        "title": "Lake Almanor \u2018Music Under The Stars\u2019",
-        "date": "Sat, 06 Sep 2025",
-        "location_t": "Lake Almanor Country Club, California",
-        "url": "https://allevents.in/chester/lake-almanor-\u2018music-under-the-stars\u2019/200028321490357",
-        "source": "AllEvents \u2013 Lake Almanor Country Club, California",
-        "location": "Lake Almanor Country Club, California"
-    },
-    {
-        "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czkvYmFubmVycy9lNjI4ZjdkMzdmMDNlM2Q4MWZjNmZhMjZjODFjNzMwNGI1NjRmNGYxMDkxYjBhNWQ0YmJmNWQ2MmFhZDdmYzFmLXJpbWctdzg1MS1oMzE1LWRjZmZiNTQyLWdtaXI_dj0xNzU0MzA4MTIz.avif",
-        "title": "Music under the Stars - Soul Posse",
-        "date": "Sat, 06 Sep 2025",
-        "location_t": "Lake Almanor Country Club Rec 1",
-        "url": "https://allevents.in/chester/music-under-the-stars-soul-posse/200028321491001",
-        "source": "AllEvents \u2013 Lake Almanor Country Club Rec 1",
-        "location": "Lake Almanor Country Club Rec 1"
-    },
-    {
-        "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy85MjMxMDAxMGYzNDc2NWQ5NTQ4MWQwOTU2ODFmZTU5ZmFiZTRkMzEwOWEzYTFkNGI1ZDExZjExZTVkNzk2YTc4LXJpbWctdzEyMDAtaDYyOC1kYzAzMDMwMy1nbWlyP3Y9MTc1NDI0Mzc4NQ.avif",
-        "title": "RMEF Feather River Banquet \u2013 Quincy, CA",
-        "date": "Sat, 06 Sep 2025",
-        "location_t": "Plumas County Fairgrounds",
-        "url": "https://allevents.in/quincy/rmef-feather-river-banquet-quincy-ca/200028321690331",
-        "source": "AllEvents \u2013 Plumas County Fairgrounds",
-        "location": "Plumas County Fairgrounds"
-    },
-    {
-        "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czMvYmFubmVycy9jM2MxZGY5NmRkY2IzZmI1NjNjYmY1OWIyOWIyMWZiZTU3MDBlYWQwZmVlZWE3NjFiNmViYmU3ZDJjODBjY2EwLXJpbWctdzg1MS1oMzE1LWRjYzU5OTU1LWdtaXI_dj0xNzU0MzA4MTIz.avif",
-        "title": "Music under the Stars - Susanville Rock",
-        "date": "Sat, 13 Sep 2025",
-        "location_t": "Lake Almanor Country Club Rec 1",
-        "url": "https://allevents.in/chester/music-under-the-stars-susanville-rock/200028492762701",
-        "source": "AllEvents \u2013 Lake Almanor Country Club Rec 1",
-        "location": "Lake Almanor Country Club Rec 1"
-    },
-    {
-        "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czMvYmFubmVycy83M2Y0ZTk5MWE4ODVhYmIwMGU0YTU2ZmNjNjBlYWYzY2NmNWM5M2YyODhjYjhhZWY1YTA1ZTY2YzRkY2U4NTFjLXJpbWctdzExNTktaDIwNDgtZGM2NWEyZmUtZ21pcj92PTE3NTM5MTU2NjY.avif",
-        "title": "September Saturday Night",
-        "date": "Sat, 20 Sep 2025",
-        "location_t": "204 Fairground Rd. , Quincy, CA, United States, California 95971",
-        "url": "https://allevents.in/quincy/september-saturday-night/200028383803339",
-        "source": "AllEvents \u2013 204 Fairground Rd. , Quincy, CA, United States, California 95971",
-        "location": "204 Fairground Rd. , Quincy, CA, United States, California 95971"
-    },
-    {
-        "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czUvYmFubmVycy80NDM5MzRjMTU2MGZkNDcxMDUzYWQ5MGQyODQzNGYxNTA0YmI4ZmUzNDMxZmNiZDZlMzZiZDhiZGIxZDhlYzZjLXJpbWctdzgwMC1oMTAzNS1kY2Y0ZWVlNi1nbWlyP3Y9MTc1Mzc0NTE0MA.avif",
-        "title": "Lake Almanor Ducks Unlimited Annual Banquet 2025",
-        "date": "Sat, 27 Sep 2025",
-        "location_t": "Almanor Recreation and Park District",
-        "url": "https://allevents.in/chester/lake-almanor-ducks-unlimited-annual-banquet-2025/200028581090441",
-        "source": "AllEvents \u2013 Almanor Recreation and Park District",
-        "location": "Almanor Recreation and Park District"
-    },
-    {
-        "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy81NTZhMWE0ZWNhMmEyZGQwMTljZDM2ZDljYjkyOGY2MDhkMzQyMjkyNDc0Mjg2MGNmMTJiMDE2YTM2NDZkYzlkLXJpbWctdzEyMDAtaDY3Ni1kYzJjMWExMy1nbWlyP3Y9MTc1NDM1OTcyMA.avif",
-        "title": "AUDITIONS \u2b50\ufe0fLCBOB 2026 Concert Series\u2b50\ufe0f",
-        "date": "Sat, 25 Oct 2025",
-        "location_t": "Veterans Memorial Hall",
-        "url": "https://allevents.in/susanville/auditions-\ufe0flcbob-2026-concert-series\ufe0f/200028548646548",
-        "source": "AllEvents \u2013 Veterans Memorial Hall",
-        "location": "Veterans Memorial Hall"
-    }
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEvYmFubmVycy9iZDM3Y2E5Y2FjZmMxODgzYTUyYWM1ZjYxZTY3MzhhMTU3OTM1ZDM3NWY0ZjI1NGIwMDFkZGUzZGJlYTJmMzg0LXJpbWctdzEwMDAtaDU4My1kY2ZmZmZmZi1nbWlyP3Y9MTc1NDE1MTA3Mw.avif",
+    "title": "37th annual Street Rod Extravaganza",
+    "date": "Sat, 06 Sep 2025",
+    "location_t": "Chester Park",
+    "url": "https://allevents.in/chester/37th-annual-street-rod-extravaganza/200027700540823",
+    "source": "AllEvents \u2013 Chester Park",
+    "location": "Chester Park"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czQvYmFubmVycy9iNjU0NWJhMWEzY2EyYzQzYmM4ZjQxMzAxY2I4ZWE0MDE0ODQ5Y2QwYzQ3YWVhM2U1MDI4MmM2OGUwMTBiYjVkLXJpbWctdzEyMDAtaDEwMzEtZGM3OThkOGYtZ21pcj92PTE3NTQxOTU2NjU.avif",
+    "title": "Lake Almanor \u2018Music Under The Stars\u2019",
+    "date": "Sat, 06 Sep 2025",
+    "location_t": "Lake Almanor Country Club, California",
+    "url": "https://allevents.in/chester/lake-almanor-\u2018music-under-the-stars\u2019/200028321490357",
+    "source": "AllEvents \u2013 Lake Almanor Country Club, California",
+    "location": "Lake Almanor Country Club, California"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy9jZjMxMTBkMDlmMjFjZTQxYTFkN2U2YjMwZDFmODRhZmYwNmViY2E2NzM4MTc3MjM5Nzc1NzgzNTZjNjA2NDRhLXJpbWctdzEwMjQtaDE1MzYtZGNmZWRlOTYtZ21pcj92PTE3NTMyODUzOTc.avif",
+    "title": "Almanor Cardboard Regatta",
+    "date": "Sat, 30 Aug 2025",
+    "location_t": "Main Street, Chester, CA",
+    "url": "https://allevents.in/chester/almanor-cardboard-regatta/200028278299230",
+    "source": "AllEvents \u2013 Main Street, Chester, CA",
+    "location": "Main Street, Chester, CA"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEwL2Jhbm5lcnMvOTcxMzNkMDJjMDc4ZWRmNjA3OGFkNTU5MThlN2FhYWYyM2M3MDU0ZDk3ZTE4YTVkNzQ4NGMwYjllNmM2OTVmNS1yaW1nLXc4NTEtaDMxNS1kY2ZmYjU0Mi1nbWlyP3Y9MTc1NDMwODEyMA.avif",
+    "title": "Music under the Stars - The Shadows Band",
+    "date": "Sat, 23 Aug 2025",
+    "location_t": "Lake Almanor Country Club Rec 1",
+    "url": "https://allevents.in/chester/music-under-the-stars-the-shadows-band/200028492762801",
+    "source": "AllEvents \u2013 Lake Almanor Country Club Rec 1",
+    "location": "Lake Almanor Country Club Rec 1"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czYvYmFubmVycy83NjU5OTY4MzZjMjZhNWUyNWZlZGE1NGMxMGFhYWI3NTJmMzhmNmY1MTRkNmM3MjYyODYwOTZhOGQ1MzhlNWI0LXJpbWctdzEyMDAtaDYzMC1kYzAxMDEwMS1nbWlyP3Y9MTc1NDE5MDYzOQ.avif",
+    "title": "Denim & Diamonds Chester Rotary Playground Fundraiser",
+    "date": "Sat, 09 Aug 2025",
+    "location_t": "Lake Almanor",
+    "url": "https://allevents.in/chester/denim-and-diamonds-chester-rotary-playground-fundraiser/200028194678640",
+    "source": "AllEvents \u2013 Lake Almanor",
+    "location": "Lake Almanor"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy8xODZjYjY2YTY2ZjBmYjQwMjZiZjUzN2EyMTRlY2ZmMDg5NmE5YmZlODQ3N2VjZjg5ZTNhYjFkMDFlMDkwZDJmLXJpbWctdzEyMDAtaDY3NS1kYzFhMWExYi1nbWlyLmpwZz92PTE3NTMxNjYzNjA.avif",
+    "title": "Mt Lassen Theatre Presents \"The King of Kings\"",
+    "date": "Fri, 08 Aug 2025",
+    "location_t": "Mt. Lassen Theatre",
+    "url": "https://allevents.in/chester/mt-lassen-theatre-presents-the-king-of-kings/100001485359433049",
+    "source": "AllEvents \u2013 Mt. Lassen Theatre",
+    "location": "Mt. Lassen Theatre"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czYvYmFubmVycy9jYWE5OTU5ZWRiOTZjYzJmZmU3ODlmMjg3MGE4NTdmNTU5MDNmMzkwYjY3ZThjZTQ5YjY1YjgyODA2OGE1OGNiLXJpbWctdzEwODAtaDEzNTEtZGNhNTQzMzktZ21pcj92PTE3NTQxNzcxMzc.avif",
+    "title": "CJSHS Basketball Fundraiser",
+    "date": "Tue, 05 Aug 2025",
+    "location_t": "197 Main St, Chester, CA",
+    "url": "https://allevents.in/chester/cjshs-basketball-fundraiser/200028566139525",
+    "source": "AllEvents \u2013 197 Main St, Chester, CA",
+    "location": "197 Main St, Chester, CA"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czkvYmFubmVycy9lNjI4ZjdkMzdmMDNlM2Q4MWZjNmZhMjZjODFjNzMwNGI1NjRmNGYxMDkxYjBhNWQ0YmJmNWQ2MmFhZDdmYzFmLXJpbWctdzg1MS1oMzE1LWRjZmZiNTQyLWdtaXI_dj0xNzU0MzA4MTIz.avif",
+    "title": "Music under the Stars - Soul Posse",
+    "date": "Sat, 06 Sep 2025",
+    "location_t": "Lake Almanor Country Club Rec 1",
+    "url": "https://allevents.in/chester/music-under-the-stars-soul-posse/200028321491001",
+    "source": "AllEvents \u2013 Lake Almanor Country Club Rec 1",
+    "location": "Lake Almanor Country Club Rec 1"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czMvYmFubmVycy9jM2MxZGY5NmRkY2IzZmI1NjNjYmY1OWIyOWIyMWZiZTU3MDBlYWQwZmVlZWE3NjFiNmViYmU3ZDJjODBjY2EwLXJpbWctdzg1MS1oMzE1LWRjYzU5OTU1LWdtaXI_dj0xNzU0MzA4MTIz.avif",
+    "title": "Music under the Stars - Susanville Rock",
+    "date": "Sat, 13 Sep 2025",
+    "location_t": "Lake Almanor Country Club Rec 1",
+    "url": "https://allevents.in/chester/music-under-the-stars-susanville-rock/200028492762701",
+    "source": "AllEvents \u2013 Lake Almanor Country Club Rec 1",
+    "location": "Lake Almanor Country Club Rec 1"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czkvYmFubmVycy8xOTllMDdhMWFjMGVmN2Y3MTJkNDBjZGRiMzgzM2I3OGFkMDJhYjI3ZjRjODcxYjY5Nzc0YmMzODMwNGEzOWJiLXJpbWctdzEyMDAtaDE1NTMtZGNmZmZmZmYtZ21pcj92PTE3NTQzMDIxNTk.avif",
+    "title": "Fall Soccer Sign up Deadline Aug 31",
+    "date": "Sun, 31 Aug 2025",
+    "location_t": "101 Meadowbrook Loop, Chester, CA, United States, California 96020",
+    "url": "https://allevents.in/chester/fall-soccer-sign-up-deadline-aug-31/200028492409538",
+    "source": "AllEvents \u2013 101 Meadowbrook Loop, Chester, CA, United States, California 96020",
+    "location": "101 Meadowbrook Loop, Chester, CA, United States, California 96020"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy9hNmEzOWRlODViMjYxZmVkMjQ0MDMzMzc4NWE0NjJlOWJkZjBmMDk3OTliMTgxZDMzMTJmNzBhODU4ZWIyYTljLXJpbWctdzEyMDAtaDkyOC1kY2ZmZmZmZi1nbWlyP3Y9MTc1NDMwMjE1Nw.avif",
+    "title": "Chester Main Street Market",
+    "date": "Fri, 08 Aug 2025",
+    "location_t": "Main St, Chester, CA 96020, United States",
+    "url": "https://allevents.in/chester/chester-main-street-market/200028492409639",
+    "source": "AllEvents \u2013 Main St, Chester, CA 96020, United States",
+    "location": "Main St, Chester, CA 96020, United States"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy9kZmJlM2I1MmNjOGRhZjQ2MTg3NjMyMjFmOTZhMWVjNGEyOWMwMjA3ZTRkOTkwYzBlNmNjMGE0M2E4MWQxMDEyLXJpbWctdzg1MS1oMzE1LWRjZDhhODYzLWdtaXI_dj0xNzU0MzA4MTIy.avif",
+    "title": "Music under the Stars - Township",
+    "date": "Sun, 31 Aug 2025",
+    "location_t": "Lake Almanor Country Club Rec 1",
+    "url": "https://allevents.in/chester/music-under-the-stars-township/200028492763202",
+    "source": "AllEvents \u2013 Lake Almanor Country Club Rec 1",
+    "location": "Lake Almanor Country Club Rec 1"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czUvYmFubmVycy80NDM5MzRjMTU2MGZkNDcxMDUzYWQ5MGQyODQzNGYxNTA0YmI4ZmUzNDMxZmNiZDZlMzZiZDhiZGIxZDhlYzZjLXJpbWctdzgwMC1oMTAzNS1kY2Y0ZWVlNi1nbWlyP3Y9MTc1Mzc0NTE0MA.avif",
+    "title": "Lake Almanor Ducks Unlimited Annual Banquet 2025",
+    "date": "Sat, 27 Sep 2025",
+    "location_t": "Almanor Recreation and Park District",
+    "url": "https://allevents.in/chester/lake-almanor-ducks-unlimited-annual-banquet-2025/200028581090441",
+    "source": "AllEvents \u2013 Almanor Recreation and Park District",
+    "location": "Almanor Recreation and Park District"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy8zMDc0MWU2Y2Y0NjIzNzJiODNlZWViOTZmOGRiNTI1MzYyMmNjMWQ2NzVkY2EwNGU2ODljNDk3Y2RlMDRjMGQ3LXJpbWctdzEyMDAtaDYyOC1kYzJmMmMyZC1nbWlyP3Y9MTc1NDM1MzMxNw.avif",
+    "title": "Live Music with High Desert Habit",
+    "date": "Fri, 08 Aug 2025",
+    "location_t": "Bottle & Brush Art Bar",
+    "url": "https://allevents.in/susanville/live-music-with-high-desert-habit/200028575643810",
+    "source": "AllEvents \u2013 Bottle & Brush Art Bar",
+    "location": "Bottle & Brush Art Bar"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czQvYmFubmVycy8xNGVmZmZjMjAxNDVkM2U2YjJmMTAyOGE2OGRmYTBlZTZlMjUyYzlhNmE5MWQ0YjI0YTU1M2I3YTY1OTdmZGUwLXJpbWctdzkzNi1oOTM2LWRjZjRmNGY0LWdtaXI_dj0xNzUzNzk3NTc4.avif",
+    "title": "desensitization and groundwork clinic",
+    "date": "Sat, 09 Aug 2025",
+    "location_t": "Susanville, Susanville, CA",
+    "url": "https://allevents.in/susanville/desensitization-and-groundwork-clinic/200028287842810",
+    "source": "AllEvents \u2013 Susanville, Susanville, CA",
+    "location": "Susanville, Susanville, CA"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy8wNDhiYmQxNDQ3MDg5YjMxNGNmZDZiYzMzZmM4N2NmMjQ1NjVjMTFhZTgzYWMyNTkwNzQ1MjJlOTYwOGRlMmRjLXJpbWctdzk0MC1oNDcwLWRjOGY2MDQ4LWdtaXIuanBnP3Y9MTc1MzE2OTUwNw.avif",
+    "title": "Back to School Bash",
+    "date": "Wed, 06 Aug 2025",
+    "location_t": "Lassen County Fairgrounds - Jensen Hall",
+    "url": "https://allevents.in/susanville/back-to-school-bash/100001450672383149",
+    "source": "AllEvents \u2013 Lassen County Fairgrounds - Jensen Hall",
+    "location": "Lassen County Fairgrounds - Jensen Hall"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czIvYmFubmVycy80NDczM2UyYWM0MWMwOGZhYWU5NWVjNDcxZjBhOTE2Y2MwZTMzYjg5ODkwMGZmMzMwZGMzYWM3ZmI3NmY5ZWNkLXJpbWctdzEyMDAtaDY3NS1kYzc3NDRlZS1nbWlyP3Y9MTc1NDM1OTcyMQ.avif",
+    "title": "Trivia Night",
+    "date": "Thu, 14 Aug 2025",
+    "location_t": "Bottle & Brush Art Bar",
+    "url": "https://allevents.in/susanville/trivia-night/200028617794949",
+    "source": "AllEvents \u2013 Bottle & Brush Art Bar",
+    "location": "Bottle & Brush Art Bar"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy85NGZiYTgxNjQ1MTBhNGVjN2Y4ODQ0ZTg4YTNmY2U1MzVmYjIyMDhiYjFkMTM2OTZhYjljMDk5OGE3OTdkN2VjLXJpbWctdzEyMDAtaDY3NS1kY2ZmZmZmZi1nbWlyP3Y9MTc1NDM1MzMxNg.avif",
+    "title": "Line Dancing",
+    "date": "Thu, 07 Aug 2025",
+    "location_t": "Bottle & Brush Art Bar",
+    "url": "https://allevents.in/susanville/line-dancing/200028617611858",
+    "source": "AllEvents \u2013 Bottle & Brush Art Bar",
+    "location": "Bottle & Brush Art Bar"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czkvYmFubmVycy9kOWIzZmZhMzExMGY2YjdiYWRjYjRiYjMwNDEwYzdiYmUwYTM2Y2EzM2FkOWM2M2MzNmU2OWVhNGEwNWI4NTc2LXJpbWctdzEyMDAtaDYyOC1kYzE3YTNhMi1nbWlyP3Y9MTc1NDM1MzMxNw.avif",
+    "title": "Wild West",
+    "date": "Sat, 09 Aug 2025",
+    "location_t": "Bottle & Brush Art Bar",
+    "url": "https://allevents.in/susanville/wild-west/200028617611958",
+    "source": "AllEvents \u2013 Bottle & Brush Art Bar",
+    "location": "Bottle & Brush Art Bar"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy80MzllNzRhYTRkM2E5MWQxODk4N2IyMDRmOWYxYWVhZGFhZDBkMGQxYzVkZWM2YTJhNGViYTAxNWFmNWVkZGZmLXJpbWctdzk0MC1oNzg4LWRjMTcxNjE4LWdtaXIuanBnP3Y9MTc1MzY4Njg0NQ.avif",
+    "title": "Celebrating 100 Years: Concert at Lassen Community College",
+    "date": "Sat, 16 Aug 2025",
+    "location_t": "Lassen Community College",
+    "url": "https://allevents.in/susanville/celebrating-100-years-concert-at-lassen-community-college/100001527231172549",
+    "source": "AllEvents \u2013 Lassen Community College",
+    "location": "Lassen Community College"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy8wZThkNjM2YjNlN2E4ZDA5ZDQ0ODNkZTYwNTk2N2FiZGJhMjI4OTA1ZmZmMTY1ZTBmZDY0NjFkZTlhMGJmNDE3LXJpbWctdzExNDYtaDYwMC1kYzExMzAxMS1nbWlyP3Y9MTc1Mzc5NzU4MQ.avif",
+    "title": "LYS equipment exchange",
+    "date": "Wed, 06 Aug 2025",
+    "location_t": "Susanville Ranch Park",
+    "url": "https://allevents.in/susanville/lys-equipment-exchange/200028499405929",
+    "source": "AllEvents \u2013 Susanville Ranch Park",
+    "location": "Susanville Ranch Park"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy81NTZhMWE0ZWNhMmEyZGQwMTljZDM2ZDljYjkyOGY2MDhkMzQyMjkyNDc0Mjg2MGNmMTJiMDE2YTM2NDZkYzlkLXJpbWctdzEyMDAtaDY3Ni1kYzJjMWExMy1nbWlyP3Y9MTc1NDM1OTcyMA.avif",
+    "title": "AUDITIONS \u2b50\ufe0fLCBOB 2026 Concert Series\u2b50\ufe0f",
+    "date": "Sat, 25 Oct 2025",
+    "location_t": "Veterans Memorial Hall",
+    "url": "https://allevents.in/susanville/auditions-\ufe0flcbob-2026-concert-series\ufe0f/200028548646548",
+    "source": "AllEvents \u2013 Veterans Memorial Hall",
+    "location": "Veterans Memorial Hall"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEvYmFubmVycy81YzI1YzJjNWI3ZTAwZDhiNGY4MWIwZTI1N2E2NTM2MDVlNDY0ZmFiZjZkN2E0OWNjZWExNmMyM2FkODQ1NzU4LXJpbWctdzEyMDAtaDE1NTMtZGMxYTFhMWEtZ21pcj92PTE3NTQzNTcwMjM.avif",
+    "title": "Reverend Beat Man ft. Church Ladies",
+    "date": "Sun, 10 Aug 2025",
+    "location_t": "60 Main Street, Quincy, CA",
+    "url": "https://allevents.in/quincy/reverend-beat-man-ft-church-ladies/200028617735946",
+    "source": "AllEvents \u2013 60 Main Street, Quincy, CA",
+    "location": "60 Main Street, Quincy, CA"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czUvYmFubmVycy8yNTYwOWRjZTljYWEyZDRiZDU1NTg2ODA5YWQ1NjVhMTAzYjIyZGI0ZDNkNWY2NzdkOWE5OTQ3MWVmZDAxYmNkLXJpbWctdzEyMDAtaDE2MDAtZGNmZmZmZmYtZ21pcj92PTE3NTM5OTQ4MzI.avif",
+    "title": "OUTDOOR MOVIE NIGHT",
+    "date": "Fri, 08 Aug 2025",
+    "location_t": "1735 E Main Street, Quincy, CA, United States, California 95971",
+    "url": "https://allevents.in/quincy/outdoor-movie-night/200028512798925",
+    "source": "AllEvents \u2013 1735 E Main Street, Quincy, CA, United States, California 95971",
+    "location": "1735 E Main Street, Quincy, CA, United States, California 95971"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czMvYmFubmVycy83M2Y0ZTk5MWE4ODVhYmIwMGU0YTU2ZmNjNjBlYWYzY2NmNWM5M2YyODhjYjhhZWY1YTA1ZTY2YzRkY2U4NTFjLXJpbWctdzExNTktaDIwNDgtZGM2NWEyZmUtZ21pcj92PTE3NTM5MTU2NjY.avif",
+    "title": "September Saturday Night",
+    "date": "Sat, 20 Sep 2025",
+    "location_t": "204 Fairground Rd. , Quincy, CA, United States, California 95971",
+    "url": "https://allevents.in/quincy/september-saturday-night/200028383803339",
+    "source": "AllEvents \u2013 204 Fairground Rd. , Quincy, CA, United States, California 95971",
+    "location": "204 Fairground Rd. , Quincy, CA, United States, California 95971"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy80NzUwYzY4OWFiMGU3NjlkMTI3MDhlODQwMGUwN2Q4NjVjZDdmZjNlMGFmMTNjMjBjMzdlZGM3ZjIwOGViMDE1LXJpbWctdzEyMDAtaDE1NTMtZGNmZmZmZmYtZ21pci5qcGc_dj0xNzUxNjA3Nzk4.avif",
+    "title": "Mental Health First Aid - Adult",
+    "date": "Thu, 07 Aug 2025",
+    "location_t": "Christian Life Fellowship",
+    "url": "https://allevents.in/quincy/mental-health-first-aid-adult/100001448230258689",
+    "source": "AllEvents \u2013 Christian Life Fellowship",
+    "location": "Christian Life Fellowship"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czIvYmFubmVycy9mNzE5NmQ2NDFiNDUyN2YwOTkwYjNkYjRhZGZjNjMxZjVlNzc5ZmQ3MTA5MzIwNTZlYTQ5NTc3NTM3NjdjZTMyLXJpbWctdzk2OC1oMTE5OC1kYzJlMmEzMS1nbWlyP3Y9MTc1NDAyMTYzMg.avif",
+    "title": "Frequincy Presents: JELLY BREAD!!",
+    "date": "Fri, 08 Aug 2025",
+    "location_t": "438 main st quincy ca 95971",
+    "url": "https://allevents.in/quincy/frequincy-presents-jelly-bread/200028599530253",
+    "source": "AllEvents \u2013 438 main st quincy ca 95971",
+    "location": "438 main st quincy ca 95971"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czIvYmFubmVycy85MmFjMTNhNzZlMzY3MTVjZmI1MWNlNjU2YjdiYTIwZDkyNGI0ZTU1ZDk2MzIxZjQ1YTc1YzM3NWE3NzczMmUxLXJpbWctdzEwMjQtaDE1MzYtZGNmOGJhMDUtZ21pcj92PTE3NTQzMzE3ODA.avif",
+    "title": "TRIPLE TOSS - Corn Hole, Horse Shoes, and Bowling Tournament",
+    "date": "Sat, 09 Aug 2025",
+    "location_t": "1735 E Main Street, Quincy, CA, United States, California 95971",
+    "url": "https://allevents.in/quincy/triple-toss-corn-hole-horse-shoes-and-bowling-tournament/200028535617445",
+    "source": "AllEvents \u2013 1735 E Main Street, Quincy, CA, United States, California 95971",
+    "location": "1735 E Main Street, Quincy, CA, United States, California 95971"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy85MjMxMDAxMGYzNDc2NWQ5NTQ4MWQwOTU2ODFmZTU5ZmFiZTRkMzEwOWEzYTFkNGI1ZDExZjExZTVkNzk2YTc4LXJpbWctdzEyMDAtaDYyOC1kYzAzMDMwMy1nbWlyP3Y9MTc1NDI0Mzc4NQ.avif",
+    "title": "RMEF Feather River Banquet \u2013 Quincy, CA",
+    "date": "Sat, 06 Sep 2025",
+    "location_t": "Plumas County Fairgrounds",
+    "url": "https://allevents.in/quincy/rmef-feather-river-banquet-quincy-ca/200028321690331",
+    "source": "AllEvents \u2013 Plumas County Fairgrounds",
+    "location": "Plumas County Fairgrounds"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy9mZWFmMWRiMjc1NGM4OWYzNWRlNzFmMmRlNzkwMjZhNjI0MTI3MDU2MTJkNzZmNzA2NWQ2MmY5MGE4ODJiOTNmLXJpbWctdzEyMDAtaDgwMC1kYzFjMWQxYi1nbWlyLmpwZz92PTE3NTMxNjcyMzM.avif",
+    "title": "8/16/2025 Plumas Renewal CCW Course",
+    "date": "Sat, 16 Aug 2025",
+    "location_t": "Quincy Elks Lodge",
+    "url": "https://allevents.in/quincy/8-16-2025-plumas-renewal-ccw-course/100001479189769419",
+    "source": "AllEvents \u2013 Quincy Elks Lodge",
+    "location": "Quincy Elks Lodge"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czYvYmFubmVycy8wMjk5MzdiMTY4NGViMTkyYmMzOThhZjA0MTJiNmQ1NjU4YWU3OTU4YzE0NTM4ZDRkZThmNTY4OTcyOGFkYzhmLXJpbWctdzEyMDAtaDE2ODEtZGNmZmZmZmYtZ21pcj92PTE3NTQwMjE2Mjc.avif",
+    "title": "Plumas Disc Golf's Summer Putting League",
+    "date": "Thu, 07 Aug 2025",
+    "location_t": "Rich Bar Taproom",
+    "url": "https://allevents.in/quincy/plumas-disc-golfs-summer-putting-league/200028599530048",
+    "source": "AllEvents \u2013 Rich Bar Taproom",
+    "location": "Rich Bar Taproom"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czMvYmFubmVycy9mN2M0OTc0OTc4M2Q0YWNiZDNhNTBkZjI5MzIyNDM3ZDM4ZDk5MGM0M2JjNTQ3ZThmZjJkNTdmOWMwZmRlMWM1LXJpbWctdzg1MS1oMzE1LWRjZmZmZmZmLWdtaXI_dj0xNzUzOTEyOTcx.avif",
+    "title": "Sierradipity Arts Fair",
+    "date": "Fri, 22 Aug 2025",
+    "location_t": "Plumas County Fairgrounds",
+    "url": "https://allevents.in/quincy/sierradipity-arts-fair/200028267561838",
+    "source": "AllEvents \u2013 Plumas County Fairgrounds",
+    "location": "Plumas County Fairgrounds"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czIvYmFubmVycy8zNDEzYjYwMmNkY2EyYzE4ZmM5MzFkZTQwYzRhN2YwMWEwZTliYWIzYTdlZGM3OTVkMTQzODVjNjZkZTJkNDAzLXJpbWctdzEyMDAtaDE2MDAtZGM5MTY1NDUtZ21pcj92PTE3NTQwMjE2Mjc.avif",
+    "title": "Thirsty Thursday",
+    "date": "Thu, 07 Aug 2025",
+    "location_t": "La Caba\u00f1a",
+    "url": "https://allevents.in/quincy/thirsty-thursday/200028599530149",
+    "source": "AllEvents \u2013 La Caba\u00f1a",
+    "location": "La Caba\u00f1a"
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEvYmFubmVycy9iZDM3Y2E5Y2FjZmMxODgzYTUyYWM1ZjYxZTY3MzhhMTU3OTM1ZDM3NWY0ZjI1NGIwMDFkZGUzZGJlYTJmMzg0LXJpbWctdzEwMDAtaDU4My1kY2ZmZmZmZi1nbWlyP3Y9MTc1NjAwMTc2NA.avif",
+    "title": "37th annual Street Rod Extravaganza",
+    "date": "Sat, 06 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/chester/37th-annual-street-rod-extravaganza/200027700540823",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czQvYmFubmVycy9iNjU0NWJhMWEzY2EyYzQzYmM4ZjQxMzAxY2I4ZWE0MDE0ODQ5Y2QwYzQ3YWVhM2U1MDI4MmM2OGUwMTBiYjVkLXJpbWctdzEyMDAtaDEwMzEtZGM3OThkOGYtZ21pcj92PTE3NTYxMTA5MDg.avif",
+    "title": "Private Event Lake Almanor \u2018Music Under The Stars\u2019",
+    "date": "Sat, 06 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/chester/private-event-lake-almanor-\u2018music-under-the-stars\u2019/200028321490357",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEwL2Jhbm5lcnMvOTcxMzNkMDJjMDc4ZWRmNjA3OGFkNTU5MThlN2FhYWYyM2M3MDU0ZDk3ZTE4YTVkNzQ4NGMwYjllNmM2OTVmNS1yaW1nLXc4NTEtaDMxNS1kY2ZmYjU0Mi1nbWlyP3Y9MTc1NDMwODEyMA.avif",
+    "title": "Music under the Stars - The Shadows Band",
+    "date": "Sat, 23 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/chester/music-under-the-stars-the-shadows-band/200028492762801",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy9jZjMxMTBkMDlmMjFjZTQxYTFkN2U2YjMwZDFmODRhZmYwNmViY2E2NzM4MTc3MjM5Nzc1NzgzNTZjNjA2NDRhLXJpbWctdzEwMjQtaDE1MzYtZGNmZWRlOTYtZ21pcj92PTE3NTMyODUzOTc.avif",
+    "title": "Almanor Cardboard Regatta",
+    "date": "Sat, 30 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/chester/almanor-cardboard-regatta/200028278299230",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy9kZmJlM2I1MmNjOGRhZjQ2MTg3NjMyMjFmOTZhMWVjNGEyOWMwMjA3ZTRkOTkwYzBlNmNjMGE0M2E4MWQxMDEyLXJpbWctdzg1MS1oMzE1LWRjZDhhODYzLWdtaXI_dj0xNzU0MzA4MTIy.avif",
+    "title": "Music under the Stars - Township",
+    "date": "Sun, 31 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/chester/music-under-the-stars-township/200028492763202",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czMvYmFubmVycy9jM2MxZGY5NmRkY2IzZmI1NjNjYmY1OWIyOWIyMWZiZTU3MDBlYWQwZmVlZWE3NjFiNmViYmU3ZDJjODBjY2EwLXJpbWctdzg1MS1oMzE1LWRjYzU5OTU1LWdtaXI_dj0xNzU0MzA4MTIz.avif",
+    "title": "Music under the Stars - Susanville Rock",
+    "date": "Sat, 13 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/chester/music-under-the-stars-susanville-rock/200028492762701",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEvYmFubmVycy8wYTk1YjU4YmIxOWVjNDg5MTAzZjQ1ZDQ5NWE4MDY4MTVlNmUyMTg1MDdhNTQ0NmQyYTdlYzdjMTZiMjg3M2M0LXJpbWctdzEyMDAtaDE1NTMtZGNmZmZmZmYtZ21pcj92PTE3NTUyNDM5ODk.avif",
+    "title": "Chamber Town Hall (4th Mondays)",
+    "date": "Mon, 25 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/chester/chamber-town-hall-4th-mondays/200028681866533",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czkvYmFubmVycy9lNjI4ZjdkMzdmMDNlM2Q4MWZjNmZhMjZjODFjNzMwNGI1NjRmNGYxMDkxYjBhNWQ0YmJmNWQ2MmFhZDdmYzFmLXJpbWctdzg1MS1oMzE1LWRjZmZiNTQyLWdtaXI_dj0xNzU0MzA4MTIz.avif",
+    "title": "Music under the Stars - Soul Posse",
+    "date": "Sat, 06 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/chester/music-under-the-stars-soul-posse/200028321491001",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy8zZDYyNjM3ZTVlZWY4YTYyMzQ2NjNkMDc5ZWRjZDVhZGEyNDA2ZGJhMzY4YTUwMDg3ZDA0ODgzNzlhMzA5NjJkLXJpbWctdzEwODAtaDEzNTAtZGMyZjdlYzAtZ21pci5qcGc_dj0xNzU0NjM2NjA1.avif",
+    "title": "Fish Fry at Elks Lodge",
+    "date": "Fri, 29 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/chester/fish-fry-at-elks-lodge/100001560733930199",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czUvYmFubmVycy85OWJhODBjOTFjNjJhMTFiNjMwOGQwMmRkZjBkYjRhNTIzNDdjYTdjODYxMzAzNzY5MWIxOGExYWJlODBkNjU0LXJpbWctdzEyMDAtaDYwMC1kYzYzNzg0Mi1nbWlyP3Y9MTc1NTEzMTI1Mg.avif",
+    "title": "PV Baseball Golf Tournament",
+    "date": "Sat, 04 Oct 2025",
+    "location_t": null,
+    "url": "https://allevents.in/chester/pv-baseball-golf-tournament/200028670678532",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy80Y2QzZTBjODI0MWQwNDM1YmFkM2IyM2E2YjkzMmU2YjM2YjQ0NTE2MjIxNTQzYmMxOWVlMTQ2ZjU2MDJiNTc1LXJpbWctdzg1OS1oNjIwLWRjZjZmNmYzLWdtaXIuanBnP3Y9MTc1NTE2MDQ0MA.avif",
+    "title": "Chester Blood Drive",
+    "date": "Wed, 27 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/chester/chester-blood-drive/100001567695763229",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czUvYmFubmVycy80NDM5MzRjMTU2MGZkNDcxMDUzYWQ5MGQyODQzNGYxNTA0YmI4ZmUzNDMxZmNiZDZlMzZiZDhiZGIxZDhlYzZjLXJpbWctdzgwMC1oMTAzNS1kY2Y0ZWVlNi1nbWlyP3Y9MTc1NjM2NzUyMQ.avif",
+    "title": "Lake Almanor Ducks Unlimited Annual Banquet 2025",
+    "date": "Sat, 27 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/chester/lake-almanor-ducks-unlimited-annual-banquet-2025/200028581090441",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czkvYmFubmVycy9iZmY5NTgwMzMxYWM4YjNjNjZkODE1MzViMTk5MDU5ZjAwMWZiY2ZlMjY5M2NlNzI3YTZiNjcxYjI4NDZlYTM4LXJpbWctdzEwMjQtaDY4My1kYzAyMDEwNC1nbWlyP3Y9MTc1NjM0MzI4OA.avif",
+    "title": "Susanville Showdown",
+    "date": "Sat, 13 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/susanville/susanville-showdown/200028657153840",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czUvYmFubmVycy9iYjk5YmFlMTliODgzZGQ5YmM2YzY4MzNjODhmMWFiZWIyMDBkMTgwNjg0NDk1YjM5ZWU2MGU5MTBmNWU3NTcwLXJpbWctdzEyMDAtaDYyOC1kYzhkNzg2MS1nbWlyP3Y9MTc1NTY3NjgwOQ.avif",
+    "title": "Quarterly Wine Tasting Event",
+    "date": "Sat, 23 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/susanville/quarterly-wine-tasting-event/200028664947554",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czUvYmFubmVycy84ZWU3M2FjM2I3MmQ0Y2EwZDU1MWFjMjJlM2IwZGJkYWQ3ZDE4ZTBiYjcxY2Q2YWMzODMzZjI4OGQ4NTlhZjZlLXJpbWctdzEyMDAtaDY3NS1kYzE3MDIyZS1nbWlyP3Y9MTc1NDk2NTc0Mw.avif",
+    "title": "Music Bingo!",
+    "date": "Wed, 20 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/susanville/music-bingo/200028657410705",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy80MzllNzRhYTRkM2E5MWQxODk4N2IyMDRmOWYxYWVhZGFhZDBkMGQxYzVkZWM2YTJhNGViYTAxNWFmNWVkZGZmLXJpbWctdzk0MC1oNzg4LWRjMTcxNjE4LWdtaXIuanBnP3Y9MTc1MzY4Njg0NQ.avif",
+    "title": "Celebrating 100 Years: Concert at Lassen Community College",
+    "date": "Sat, 16 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/susanville/celebrating-100-years-concert-at-lassen-community-college/100001527231172549",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy9kNGE4YTA0M2RhZGQ2ZDUwNzFkZDE5NGFkY2NlZjAzYjk2NzJjYTQ5MGVlMDhjZWQxMWFjZTYyNzYwMjk4ODE5LXJpbWctdzEyMDAtaDE4NTUtZGMxMjE5MWItZ21pcj92PTE3NTYxMTM3OTI.avif",
+    "title": "Rocking in the Mountains",
+    "date": "Sat, 27 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/susanville/rocking-in-the-mountains/200028645268426",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEvYmFubmVycy84YTRmYjllYjc2MGNhNzY5NzQ5OTM5ODZiNTZlNWZjNDdkMjZhY2RjYTczMzYxMGNlOTNjYWI1OWU5M2Y2ZDMxLXJpbWctdzEwMjQtaDY4OC1kYzQ5NDM0YS1nbWlyP3Y9MTc1NTE4NDk5Mg.avif",
+    "title": "Storage Unit Sale",
+    "date": "Sat, 16 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/susanville/storage-unit-sale/200028677099412",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy85NGZiYTgxNjQ1MTBhNGVjN2Y4ODQ0ZTg4YTNmY2U1MzVmYjIyMDhiYjFkMTM2OTZhYjljMDk5OGE3OTdkN2VjLXJpbWctdzEyMDAtaDY3NS1kY2ZmZmZmZi1nbWlyP3Y9MTc1NTY0NzQzNA.avif",
+    "title": "Line Dancing",
+    "date": "Thu, 21 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/susanville/line-dancing/200028617611858",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEwL2Jhbm5lcnMvZjIzYjhhMzg4MGJkNzczNDQ5YTIxNDRiOWRmNTQ3NzI1YjI3NTAyZjMxMDYyYTAxODMwZTc5ZjE3Mzc5Yzc1MC1yaW1nLXcxMjAwLWg2NzUtZGM3NzQ0ZWUtZ21pcj92PTE3NTU3NjUxMjg.avif",
+    "title": "Trivia Night",
+    "date": "Thu, 28 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/susanville/trivia-night/200028617795500",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czkvYmFubmVycy8zYjZiMDZlZjMzYmI2ZTU1ZWJhMmRkZGU5NDQxNGMzN2E4YjkwYWVjMzdiNTc0ZmE2ZDQxZTA3MGNkMWI2YjVmLXJpbWctdzEwODAtaDEwODAtZGMxNzE3MTYtZ21pcj92PTE3NTU1NjUxMTE.avif",
+    "title": "Celebration of Life for Brian Walters",
+    "date": "Sat, 30 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/susanville/celebration-of-life-for-brian-walters/200028633857442",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy81NTZhMWE0ZWNhMmEyZGQwMTljZDM2ZDljYjkyOGY2MDhkMzQyMjkyNDc0Mjg2MGNmMTJiMDE2YTM2NDZkYzlkLXJpbWctdzEyMDAtaDY3Ni1kYzJjMWExMy1nbWlyP3Y9MTc1NTc2NTEyNA.avif",
+    "title": "AUDITIONS \u2b50\ufe0fLCBOB 2026 Concert Series\u2b50\ufe0f",
+    "date": "Sat, 25 Oct 2025",
+    "location_t": null,
+    "url": "https://allevents.in/susanville/auditions-\ufe0flcbob-2026-concert-series\ufe0f/200028548646548",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czkvYmFubmVycy83ODM1YjUwMjU3ZTQyNzAwMGNlNjVhNzdmMzBiMDM1NTRhNjY5YTU2ZDQ0ODFkMTcwMjEzOTJkMmVjNWVjZGNiLXJpbWctdzEyMDAtaDE1NTItZGM3YTRlMjEtZ21pcj92PTE3NTUxODE5Nzc.avif",
+    "title": "Ebony Not Quite Ivory",
+    "date": "Fri, 15 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/ebony-not-quite-ivory/200028677026057",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czMvYmFubmVycy9iNGI1ODE3ZTgxMTE5OTkyNDUzYjE1MTE3NTA1ODAxYjY4YzJhN2NhYmE5OWJiN2IyN2YxMzcyMmM5ODMxZmM2LXJpbWctdzEyMDAtaDE1NTItZGMyYTJhMmEtZ21pcj92PTE3NTU5Mjc0MzQ.avif",
+    "title": "Ginger Molasses at Rich Bar Tap!",
+    "date": "Fri, 12 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/ginger-molasses-at-rich-bar-tap/200028685198233",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czQvYmFubmVycy9jODNiYmFkNzQzODIwMzhmMTkzOTA0NTJkMDhhMmU0YzdiNjMyNzA0ZTlhNWU4OGIwMGU5Yzc0YzM5ZjViZWZhLXJpbWctdzEyMDAtaDE1NTItZGNmZmZmZmYtZ21pcj92PTE3NTU5MDk3Mzc.avif",
+    "title": "Steel Sparrows at Rich Bar!",
+    "date": "Sat, 06 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/steel-sparrows-at-rich-bar/200028685198334",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy85MjMxMDAxMGYzNDc2NWQ5NTQ4MWQwOTU2ODFmZTU5ZmFiZTRkMzEwOWEzYTFkNGI1ZDExZjExZTVkNzk2YTc4LXJpbWctdzEyMDAtaDYyOC1kYzAzMDMwMy1nbWlyP3Y9MTc1NjI1NzE4NQ.avif",
+    "title": "RMEF Feather River Banquet \u2013 Quincy, CA",
+    "date": "Sat, 06 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/rmef-feather-river-banquet-quincy-ca/200028321690331",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEvYmFubmVycy8wNzkyMTIwMzgxNDQyNmI4NWQwMjU1M2U5N2YzMzY4MGY2ZmUxY2ZhMGQ2MDJjY2RmZDI5NDcxNjg5NzdjNjQ0LXJpbWctdzEyMDAtaDE2ODEtZGNmZmZmZmYtZ21pcj92PTE3NTUyOTY3MzQ.avif",
+    "title": "Plumas Disc Golf's Summer Putting League",
+    "date": "Thu, 21 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/plumas-disc-golfs-summer-putting-league/200028685198535",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czQvYmFubmVycy8wZWVmMWRjNmM4YTM3OTc5Yjg2MTE0MTIzNjc2YjFiZDliZGNlMzY0Yzg2YjYzZWQ2MTliOTdiMzk5ZjJhYWU2LXJpbWctdzEyMDAtaDE1NTItZGM5NGE3YzgtZ21pcj92PTE3NTU5MDMwMzA.avif",
+    "title": "Hip Shakers",
+    "date": "Fri, 29 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/hip-shakers/200028685198132",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy9mNTUxNThkMGI4YjBiM2NjNzgzNTBiMjczZDJhMjBkYjMyYzZlYzEyMDAxYmM4ZWVlMzE2MTEzMmI2YjAzOGE0LXJpbWctdzEyMDAtaDExNzItZGMxNzA1MDMtZ21pcj92PTE3NTYzNzQ2NjA.avif",
+    "title": "FreQuincy Presents: THE DANNY HORTON TRIO!",
+    "date": "Sat, 30 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/frequincy-presents-the-danny-horton-trio/200028664789630",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czMvYmFubmVycy9mZTU2OTM0YjRhM2MzMDczNDM3YzUyMjczNWNhMjY3NWE3MmQ2NWIzNTM2ZDI1YzViMWI2Y2JiY2Y3MmI4YTg0LXJpbWctdzEyMDAtaDE1NTItZGNkNGE0N2MtZ21pcj92PTE3NTU2MTYyNzg.avif",
+    "title": "FreQuincy Presents: OBJECT HEAVY at SIERRADIPITY ARTS FAIRE!",
+    "date": "Fri, 22 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/frequincy-presents-object-heavy-at-sierradipity-arts-faire/200028657073749",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy9hYWRjNzcwMGFkZGQxZDVmMzVlNzc3YzYwMjEzYTEyYTMxNzE5ZjRlMzMyYTA3NzBkMTBiZTAwZTBlMWE5NGY3LXJpbWctdzEyMDAtaDE2MDAtZGM5MTY1NDUtZ21pcj92PTE3NTUyOTY3MzI.avif",
+    "title": "Thirsty Thursday",
+    "date": "Thu, 21 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/thirsty-thursday/200028685198435",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy8wNTA1MmQyNDA3OGNjZDA3Y2Y1ZGM3YWI5NDE0ZjhiYmRhNjM5YTZhN2FhYWNlMGNjMzM1ODRhOTZlNTM4NTc3LXJpbWctdzEyMDAtaDE1NTMtZGM3MTdjNjQtZ21pcj92PTE3NTUyMDk3NzY.avif",
+    "title": "Paint N' Sip",
+    "date": "Sat, 16 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/paint-n-sip/200028633743751",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEvYmFubmVycy9hZmYxODYxODMxNmE4YjYyMjEyYzYzN2JlZmFlY2Q5ZjA3OWRlYmZiNGE1ZWYwZTEwY2E4ZWJkNjZmYTk3MGNiLXJpbWctdzEyMDAtaDYyOC1kYzVlYzBkNi1nbWlyP3Y9MTc1NTE4MTk3NA.avif",
+    "title": "18th anual Wild & Scenic",
+    "date": "Wed, 10 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/18th-anual-wild-and-scenic/200028677025955",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czMvYmFubmVycy9mN2M0OTc0OTc4M2Q0YWNiZDNhNTBkZjI5MzIyNDM3ZDM4ZDk5MGM0M2JjNTQ3ZThmZjJkNTdmOWMwZmRlMWM1LXJpbWctdzg1MS1oMzE1LWRjZmZmZmZmLWdtaXI_dj0xNzU1NzkzNDEz.avif",
+    "title": "Sierradipity Arts Fair",
+    "date": "Fri, 22 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/sierradipity-arts-fair/200028267561838",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy9mZWFmMWRiMjc1NGM4OWYzNWRlNzFmMmRlNzkwMjZhNjI0MTI3MDU2MTJkNzZmNzA2NWQ2MmY5MGE4ODJiOTNmLXJpbWctdzEyMDAtaDgwMC1kYzFjMWQxYi1nbWlyLmpwZz92PTE3NTMxNjcyMzM.avif",
+    "title": "8/16/2025 Plumas Renewal CCW Course",
+    "date": "Sat, 16 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/8-16-2025-plumas-renewal-ccw-course/100001479189769419",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEvYmFubmVycy85NjRhNmY2OTg2MzhlMDg5Y2Y3MzU0ZmU1ZDgyMTQ3YzcwZDY5MGIxZGE3MzdhNTk0NjU3OWQ5OGFmYzg5Nzk3LXJpbWctdzEyMDAtaDkyOC1kY2ZmZmZmZi1nbWlyP3Y9MTc1NjA1NTkzNQ.avif",
+    "title": "Chester Main Street Market",
+    "date": "Fri, 12 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/chester/chester-main-street-market/200028648181800",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czkvYmFubmVycy8xOTllMDdhMWFjMGVmN2Y3MTJkNDBjZGRiMzgzM2I3OGFkMDJhYjI3ZjRjODcxYjY5Nzc0YmMzODMwNGEzOWJiLXJpbWctdzEyMDAtaDE1NTMtZGNmZmZmZmYtZ21pcj92PTE3NTU3MDYxMTY.avif",
+    "title": "Fall Soccer Sign up Deadline Aug 22",
+    "date": "Fri, 22 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/chester/fall-soccer-sign-up-deadline-aug-22/200028492409538",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy8yMjI1MWI1NjI4ODUyNTkxMTI1MzM0Mjg4MmFjODgxODc5ODU1YzdmNTA0NmIwMWU2YmY4OTk4M2Y5MzA2ZDZhLXJpbWctdzEyMDAtaDE1NTMtZGNmM2YzZjItZ21pci5qcGc_dj0xNzU1MTU3Mzcx.avif",
+    "title": "Pre school registration",
+    "date": "Tue, 02 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/chester/pre-school-registration/100001571755285369",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czQvYmFubmVycy8yOTNiZTgwNjBkMDA2ZTdiZWFmYjk4OTI3NTlhYWM0ZTg4YjI2MWM5MTk0NjJkNmEzNzM3ZTExOTE5Mzc0YTFkLXJpbWctdzEyMDAtaDYyOC1kY2E4NjVkYi1nbWlyP3Y9MTc1NTY0NzQzNQ.avif",
+    "title": "Fireflies",
+    "date": "Fri, 22 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/susanville/fireflies/200028706049536",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy8yZDE0YzE0NTg5N2VlZmEzNWM4N2MzMzVmZWEyYzAxMTU1NTJlMWE5OWI4YTgwODAxM2Y4YzI5MzMxMDVjODE1LXJpbWctdzEyMDAtaDE2MDAtZGMxNDMwM2EtZ21pcj92PTE3NTU1MzI1Nzg.avif",
+    "title": "lassen axe grand opening!",
+    "date": "Sat, 23 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/susanville/lassen-axe-grand-opening/200028698023519",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czQvYmFubmVycy85MmJlY2ViNjNmYWJlZjA3MTNlMGM1MjFmM2Y1MWZiZTAxNTRhOGE4NGUwODFlOTZhMmI0ZWI1NmQ5NGU2NTBmLXJpbWctdzU2NS1oNzE4LWRjZDM2MDM0LWdtaXI_dj0xNzU1NTMyNTk0.avif",
+    "title": "Summer Porches Boutique Mixer",
+    "date": "Thu, 21 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/susanville/summer-porches-boutique-mixer/200028698024334",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czkvYmFubmVycy81ODkxNWQ5NGU4Mzk0NDI3YzBlYjUyZTZkYTg4MjAyYTE3MTg1YTJjYzM3MGEzNWRlZGE5ZDgxNmMyODZlMDU5LXJpbWctdzk0MC1oNzg4LWRjZmZlMmRmLWdtaXI_dj0xNzU1Mjk5NjE4.avif",
+    "title": "Blue Ox Afternoon Tea",
+    "date": "Sun, 24 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/susanville/blue-ox-afternoon-tea/200028685285439",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czIvYmFubmVycy8zZTMzYjRlMTNiNWJmMTY3Zjk0MzEwOThhYWY1NWQ0MTk2ZDBiNzk1MzU3NzIwOWMwZGM4NTM3MDkyZTg1ZmIyLXJpbWctdzEyMDAtaDYyOC1kYzAyMDQwNi1nbWlyP3Y9MTc1NTY0NDU4Ng.avif",
+    "title": "Fire Dancing at Sierradipity Arts Fair 2025",
+    "date": "Sat, 23 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/fire-dancing-at-sierradipity-arts-fair-2025/200028705951808",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy81YjE1NTU5ZGYwYzhiYTY3OWYwZDZiNzdhN2U0MzM2ZDUyMmUxMTA2ZWQwOTRjNWJjYjVkYzE1YzFmM2FiODhkLXJpbWctdzEyMDAtaDkwMC1kYzJlMmYzMS1nbWlyP3Y9MTc1NjIyNjI4Mw.avif",
+    "title": "Rubicon Gold @ Plumas Homegrown Americana Fest",
+    "date": "Sat, 30 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/rubicon-gold-plumas-homegrown-americana-fest/200028287534351",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEvYmFubmVycy85M2MzZWFjMDFiN2IxYzVmMGVmMzJmNGJkN2Y3N2FhY2ZjNTRhNjI2MDJmZmY2MzBmM2Q0OWFjYWViODFkNzY3LXJpbWctdzc3My1oOTk3LWRjMDMwMzQ0LWdtaXI_dj0xNzU1NzU4MjE3.avif",
+    "title": "BINGO",
+    "date": "Thu, 21 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/bingo/200028713787800",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czMvYmFubmVycy9lZDIyYTEwOWU3N2M4ZDRlZjFkOTM5ZWM3Yzk1MjAwMDkwNGVmNjQwNTQ2MmIxMWRmNGRjZjc0ZTM2MDYzNjk5LXJpbWctdzExNzktaDExMzctZGMxNTE0MTktZ21pcj92PTE3NTYyMjYyODA.avif",
+    "title": "Plumas County Americana Festival opens with Wheatstone Bridge",
+    "date": "Sat, 30 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/plumas-county-americana-festival-opens-with-wheatstone-bridge/200028325436213",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czMvYmFubmVycy83M2Y0ZTk5MWE4ODVhYmIwMGU0YTU2ZmNjNjBlYWYzY2NmNWM5M2YyODhjYjhhZWY1YTA1ZTY2YzRkY2U4NTFjLXJpbWctdzExNTktaDIwNDgtZGM2NWEyZmUtZ21pcj92PTE3NTQ1OTEzNjI.avif",
+    "title": "September Saturday Night",
+    "date": "Sat, 20 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/september-saturday-night/200028383803339",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czIvYmFubmVycy9hZDk2Y2NjYzIxMTE2YjllZTgwYzkzM2YwNTUzMWZjYTZhOGE2MmE5NmQ0YmFjMzc5NTk0NjE4NzFiYmFjNDQ3LXJpbWctdzEyMDAtaDE1NTMtZGNmZmZmZmYtZ21pcj92PTE3NTYyODgxOTM.avif",
+    "title": "Chamber Town Hall (4th Mondays)",
+    "date": "Mon, 22 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/chester/chamber-town-hall-4th-mondays/200028746693255",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czYvYmFubmVycy85YzY1YzVhN2Y2NDQ0ZGRjMTk0OGM4NTFlNWVlN2YzMzJjYmNmODU2YTI1ZjFlMDE1MjhlNGI2YmQxMGRlOGIzLXJpbWctdzgwMC1oMTAzNS1kY2Y0ZWVlNi1nbWlyP3Y9MTc1NjQwMTEzOQ.avif",
+    "title": "Lake Almanor Ducks Unlimited Banquet",
+    "date": "Sat, 27 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/chester/lake-almanor-ducks-unlimited-banquet/200028755023719",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czYvYmFubmVycy9jNTNmZGM4MzU3YjQ0ZDdhNTM3ZDIwNjA2NDFhODk4NDg3OWJmMjBiNmE5Y2U3ZjZmYzAzYjc3MzljZmFhZWE4LXJpbWctdzEwMDAtaDU4My1kY2ZmZmZmZi1nbWlyP3Y9MTc1NTgyNDQ1MQ.avif",
+    "title": "VENDOR Street Rod Extravaganza",
+    "date": "Sat, 06 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/chester/vendor-street-rod-extravaganza/200028717725851",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czIvYmFubmVycy84NjYzZWZiYTRmNTZjZDVlNTJiYTI2Y2E2OWNiYmEwY2UxMzhiYTc5YmI1YjY5NjE1Yjg1NjI3MTMzNDczNDVlLXJpbWctdzEyMDAtaDY3Ni1kYzAwMDAwMC1nbWlyP3Y9MTc1NjM0MzE1Ng.avif",
+    "title": "Annual Lassen High School Volleyball Camp",
+    "date": "Sat, 20 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/susanville/annual-lassen-high-school-volleyball-camp/200028751002658",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy84M2FhYTE0NGNlN2I4ZjA5NjYxZDI0NjJmODE5NDkyMGRkZWFkNjQ0ZmYyMjhjNzNjN2Q3NmJhMmJlMjNkZTVlLXJpbWctdzEyMDAtaDE1NTEtZGMwNzAwMzAtZ21pcj92PTE3NTU5Mjc0MzE.avif",
+    "title": "Dj Mcburger",
+    "date": "Sat, 30 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/dj-mcburger/200028724036120",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czEwL2Jhbm5lcnMvYmNmODMxMTRjYmU5YjdkOTE3MjBmMDdhZDM2MTNjYmVhZWRiODk3ZTk2MzQ1OTczNDkwMDI1ZjFkYTg0Y2ZhNS1yaW1nLXc5NDUtaDIwNDgtZGNmZWZlZmUtZ21pcj92PTE3NTYzNDAzMTA.avif",
+    "title": "Plumas County HOMEGROWN Americana Festival",
+    "date": "Sat, 30 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/plumas-county-homegrown-americana-festival/200028750833732",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy9lNTFiYzA3OGY4ODg5NDNmOTBiOTY0OGViNzVlMGEyM2YyMmMyMWFhNDZjMDdmNTdhMDAzYmNkYWFiN2UxMTU0LXJpbWctdzEyMDAtaDE1NTMtZGNhMTI1MjUtZ21pcj92PTE3NTYxMTM3OTg.avif",
+    "title": "Bowling for Babies!",
+    "date": "Sat, 27 Sep 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/bowling-for-babies/200028568630424",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  },
+  {
+    "image": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czQvYmFubmVycy8yZmQxZmVjMTM2NDdkMGE5OWYxN2ZkMTdmMDk1YmQ3MDhiZGE4Y2QxZDg2NThhMTQ1OTNmMmZmOTNhOWU5ZDFlLXJpbWctdzEyMDAtaDE2ODEtZGNmZmZmZmYtZ21pcj92PTE3NTU4ODAzNzk.avif",
+    "title": "Plumas Disc Golf's Summer Putting League",
+    "date": "Thu, 28 Aug 2025",
+    "location_t": null,
+    "url": "https://allevents.in/quincy/plumas-disc-golfs-summer-putting-league/200028721701300",
+    "source": "AllEvents \u2013 Unknown",
+    "location": null
+  }
 ]
