@@ -1,6 +1,5 @@
 from importlib import import_module
 
-<<<<<<< HEAD
 MODULES = [
     ("core_init", True),      # builds frames, status/progress, basic hooks
     ("handlers", False),
@@ -14,14 +13,26 @@ MODULES = [
     ("ui_setup", True),       # builds UI; attaches _build_menus and calls it
 ]
 
+
 def _import_flexible(name):
-    # Always use bulletin_builder.app_core.<name> for core modules
+    """Import a module from bulletin_builder.app_core by name.
+
+    This thin wrapper centralizes import errors so callers can decide whether
+    a missing module is fatal (required) or optional.
+    """
     try:
         return import_module(f"bulletin_builder.app_core.{name}")
-    except Exception as e:
-        raise e
+    except Exception:
+        # Don't mask the original exception; callers will handle required vs optional
+        raise
+
 
 def init_app(app):
+    """Initialize and attach core app modules.
+
+    Iterates MODULES and calls their `init(app)` functions when present.
+    Required modules raise a RuntimeError if initialization fails.
+    """
     for name, required in MODULES:
         try:
             mod = _import_flexible(name)
@@ -31,32 +42,5 @@ def init_app(app):
             msg = f"Error initializing module {name}: {e}"
             if required:
                 raise RuntimeError(msg)
+            # Non-fatal module; log and continue
             print(msg)
-=======
-
-def init_app(app):
-    """
-    Initialize core attributes and then discover all feature modules under app_core,
-    calling their `init(app)` functions to register functionality.
-    """
-    base_pkg = "bulletin_builder.app_core"  # Fixed base package name
-
-    # Initialize feature modules (core_init is called separately from main app)
-    for module in (
-        "handlers",
-        "drafts",
-        "sections",
-        "component_library",
-        "exporter",
-        "preview",
-        "suggestions",
-        "importer",
-        "ui_setup",
-    ):
-        try:
-            m = importlib.import_module(f"{base_pkg}.{module}")
-            if hasattr(m, "init"):
-                m.init(app)
-        except Exception as e:
-            print(f"Error initializing module app_core.{module}: {e}")
->>>>>>> origin/harden/email-sanitize-and-ci

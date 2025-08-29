@@ -1,10 +1,6 @@
 import customtkinter as ctk
 import tkinter as tk
-<<<<<<< HEAD
 from bulletin_builder.ui.base_section import SectionRegistry
-=======
-from ..ui.base_section import SectionRegistry
->>>>>>> origin/harden/email-sanitize-and-ci
 
 class AddSectionDialog(ctk.CTkToplevel):
     """Modal dialog to capture title and type for a new section."""
@@ -48,91 +44,77 @@ class AddSectionDialog(ctk.CTkToplevel):
         return self.result
 
 
-def init(app):
-    # --- Add Section ---
-    def add_section_dialog():
-        types = SectionRegistry.available_types()
-        dlg = AddSectionDialog(app, types)
-        result = dlg.get_input()
-        if result:
-            title, sec_type = result
-            app.sections_data.append({'title': title, 'type': sec_type, 'content': {}})
-            app.refresh_listbox_titles()
-            # Select the newly added section
-            idx = len(app.sections_data) - 1
-            app.section_listbox.selection_clear(0, tk.END)
-            app.section_listbox.selection_set(idx)
-            app.section_listbox.activate(idx)
-            app.section_listbox.see(idx)
-            # Trigger the selection event to show the editor
-            app.on_section_select()
-
-    # --- Remove Section ---
-    def remove_section():
-        sel = app.section_listbox.curselection()
-        if not sel:
-            return
-        idx = sel[0]
-        del app.sections_data[idx]
+def add_section_dialog(app):
+    types = SectionRegistry.available_types()
+    dlg = AddSectionDialog(app, types)
+    result = dlg.get_input()
+    if result:
+        title, sec_type = result
+        app.sections_data.append({'title': title, 'type': sec_type, 'content': {}})
         app.refresh_listbox_titles()
-        app.show_placeholder()
+        # Select the newly added section
+        idx = len(app.sections_data) - 1
+        app.section_listbox.selection_clear(0, tk.END)
+        app.section_listbox.selection_set(idx)
+        app.section_listbox.activate(idx)
+        app.section_listbox.see(idx)
+        # Trigger the selection event to show the editor
+        app.on_section_select()
 
-    # --- Section Selection ---
-    def on_section_select(event=None):
-        print("[DEBUG] on_section_select called")
-        sel = app.section_listbox.curselection()
-        if not sel:
-            print("[DEBUG] on_section_select: no selection")
-            return
-        idx = sel[0]
-        section = app.sections_data[idx]
-<<<<<<< HEAD
-        print(f"[DEBUG] on_section_select: idx={idx}, section type={section.get('type')}, title={section.get('title')}")
-        try:
-            FrameCls = SectionRegistry.get_frame(section['type'])
-            if section['type'] == 'announcements':
-                frame = FrameCls(app.editor_container, section=section, on_dirty=app.refresh_listbox_titles)
-            else:
-                frame = FrameCls(app.editor_container, section, app.refresh_listbox_titles, app.save_component)
-            # Do NOT call pack() or grid() on frame here; let replace_editor_frame handle it
-            app.replace_editor_frame(frame)
-            print(f"[DEBUG] Editor frame replaced for section {idx}")
-        except Exception as e:
-            print(f"[ERROR] Could not build/replace editor frame: {e}")
-=======
-        app.clear_editor_panel()
+def remove_section(app):
+    sel = app.section_listbox.curselection()
+    if not sel:
+        return
+    idx = sel[0]
+    del app.sections_data[idx]
+    app.refresh_listbox_titles()
+    app.show_placeholder()
+
+def init(app):
+    # Bind methods to the application instance only during initialization.
+    app.add_section_dialog = lambda: add_section_dialog(app)
+    app.remove_section = lambda: remove_section(app)
+    # Bind event handlers as closures that call the module-level helpers with app
+    app.on_section_select = lambda event=None: on_section_select(app, event)
+    app.update_section_data = lambda updated: update_section_data(app, updated)
+    app.refresh_listbox_titles = lambda event=None: refresh_listbox_titles(app, event)
+
+# The following functions are now defined and bound inside the init(app) function.
+
+# --- Section Selection ---
+def on_section_select(app, event=None):
+    print("[DEBUG] on_section_select called")
+    sel = app.section_listbox.curselection()
+    if not sel:
+        print("[DEBUG] on_section_select: no selection")
+        return
+    idx = sel[0]
+    section = app.sections_data[idx]
+    print(f"[DEBUG] on_section_select: idx={idx}, section type={section.get('type')}, title={section.get('title')}")
+    try:
         FrameCls = SectionRegistry.get_frame(section['type'])
-        # AnnouncementsFrame may require extra callbacks
-        params = [app.right_panel, section, app.refresh_listbox_titles, app.save_component]
         if section['type'] == 'announcements':
-            params.append(app.ai_callback)
-        frame = FrameCls(*params)
-        frame.pack(fill='both', expand=True)
-        app.current_editor_frame = frame
->>>>>>> origin/harden/email-sanitize-and-ci
-        app.active_editor_index = idx
+            frame = FrameCls(app.editor_container, section=section, on_dirty=app.refresh_listbox_titles)
+        else:
+            frame = FrameCls(app.editor_container, section, app.refresh_listbox_titles, app.save_component)
+        # Do NOT call pack() or grid() on frame here; let replace_editor_frame handle it
+        app.replace_editor_frame(frame)
+        print(f"[DEBUG] Editor frame replaced for section {idx}")
+    except Exception as e:
+        print(f"[ERROR] Could not build/replace editor frame: {e}")
+    app.active_editor_index = idx
 
-    # --- Update Data ---
-    def update_section_data(updated):
-        if app.active_editor_index is not None:
-            app.sections_data[app.active_editor_index].update(updated)
+# --- Update Section Data ---
+def update_section_data(app, updated):
+    if hasattr(app, 'active_editor_index') and app.active_editor_index is not None:
+        app.sections_data[app.active_editor_index].update(updated)
+        if hasattr(app, 'update_preview'):
             app.update_preview()
 
-    # --- Refresh Listbox Titles ---
-    def refresh_listbox_titles(event=None):
-        sel = app.section_listbox.curselection()
-        app.section_listbox.delete(0, tk.END)
-        for i, sec in enumerate(app.sections_data):
-            title = sec.get('title', 'Untitled')
-            app.section_listbox.insert(tk.END, f"{i+1}. {title}")
-        for idx in sel:
-            app.section_listbox.selection_set(idx)
-        if hasattr(app, 'compute_suggestions'):
-            app.compute_suggestions()
-
-    # Bind methods
-    app.add_section_dialog = add_section_dialog
-    app.remove_section = remove_section
-    app.on_section_select = on_section_select
-    app.update_section_data = update_section_data
-    app.refresh_listbox_titles = refresh_listbox_titles
+# --- Refresh Listbox Titles ---
+def refresh_listbox_titles(app, event=None):
+    sel = app.section_listbox.curselection()
+    app.section_listbox.delete(0, tk.END)
+    for i, sec in enumerate(app.sections_data):
+        title = sec.get('title', 'Untitled')
+        app.section_listbox.insert(tk.END, f"{i+1}. {title}")

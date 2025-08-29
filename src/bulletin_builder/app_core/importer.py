@@ -104,198 +104,126 @@ def init(app):
     """Attach CSV/JSON/Feed import handlers onto app."""
 
     # ---------- CSV FILE ----------
-    def import_csv_file():
-        path = filedialog.askopenfilename(
-            defaultextension=".csv",
-            filetypes=[("CSV Files", "*.csv")],
-            initialdir="./user_drafts",
-            title="Import Announcements CSV",
-        )
-        if not path:
-            return
-        try:
-            with open(path, "r", encoding="utf-8", newline="") as f:
-                text = f.read()
-            # Use robust parser
-            parsed = parse_announcements_csv(text)
-            announcements = parsed
-            _apply_announcements_to_app(app, announcements)
-            print("Imported Announcements:", announcements)
-            if hasattr(app, "refresh_listbox_titles"):
-                app.refresh_listbox_titles()
-            if hasattr(app, "show_placeholder"):
-                app.show_placeholder()
-            if hasattr(app, "update_preview"):
-                app.update_preview()
-            if hasattr(app, "show_status_message"):
-                app.show_status_message(f"Imported {len(announcements)} announcements")
-        except Exception as e:
-<<<<<<< HEAD
-            messagebox.showerror("Import Error", str(e))
-=======
-            # messagebox.showerror('Import Error', str(e))
->>>>>>> origin/harden/email-sanitize-and-ci
-            return
+def import_csv_file(app):
+    path = filedialog.askopenfilename(
+        defaultextension=".csv",
+        filetypes=[("CSV Files", "*.csv")],
+        initialdir="./user_drafts",
+        title="Import Announcements CSV",
+    )
+    if not path:
+        return
+    try:
+        with open(path, "r", encoding="utf-8", newline="") as f:
+            text = f.read()
+        # Use robust parser
+        parsed = parse_announcements_csv(text)
+        announcements = parsed
+        _apply_announcements_to_app(app, announcements)
+        print("Imported Announcements:", announcements)
+        if hasattr(app, "refresh_listbox_titles"):
+            app.refresh_listbox_titles()
+        if hasattr(app, "show_placeholder"):
+            app.show_placeholder()
+        if hasattr(app, "update_preview"):
+            app.update_preview()
+        if hasattr(app, "show_status_message"):
+            app.show_status_message(f"Imported {len(announcements)} announcements")
+    except Exception as e:
+        messagebox.showerror("Import Error", str(e))
+        return
 
     # ---------- GOOGLE SHEET (public CSV URL) ----------
-    def import_google_sheet():
-        url = simpledialog.askstring("Google Sheet URL", "Enter public CSV URL:")
-        if not url:
-            return
-<<<<<<< HEAD
-        url = url.strip().strip('"\'')
-        if hasattr(app, "_show_progress"):
-            app._show_progress("Fetching Google Sheet…")
-=======
+def import_google_sheet(app):
+    url = simpledialog.askstring("Google Sheet URL", "Enter public CSV URL:")
+    if not url:
+        return
+    url = url.strip().strip('"\'')
+    if hasattr(app, "_show_progress"):
+        app._show_progress("Fetching Google Sheet…")
+
+    def _worker():
         try:
-            with urllib.request.urlopen(url) as resp:
-                text = resp.read().decode('utf-8')
-            reader = csv.DictReader(io.StringIO(text))
-            rows = list(reader)
+            with urllib.request.urlopen(url, timeout=NET_TIMEOUT) as resp:
+                text = resp.read().decode("utf-8")
+            # Reuse the robust CSV parser so headers like 'Link Text' map correctly
+            parsed = parse_announcements_csv(text)
         except Exception as e:
-            # messagebox.showerror('Import Error', str(e))
+            err = e
+            app.after(0, lambda err=err: messagebox.showerror("Import Error", str(err)))
+            if hasattr(app, "_hide_progress"):
+                app.after(0, app._hide_progress)
             return
-        _rows_to_sections(rows)
->>>>>>> origin/harden/email-sanitize-and-ci
 
-        def _worker():
-            try:
-                with urllib.request.urlopen(url, timeout=NET_TIMEOUT) as resp:
-                    text = resp.read().decode("utf-8")
-                # Reuse the robust CSV parser so headers like 'Link Text' map correctly
-                parsed = parse_announcements_csv(text)
-            except Exception as e:
-                err = e
-                app.after(0, lambda err=err: messagebox.showerror("Import Error", str(err)))
-                if hasattr(app, "_hide_progress"):
-                    app.after(0, app._hide_progress)
-                return
+        def _apply():
+            _apply_announcements_to_app(app, parsed)
+            if hasattr(app, "_hide_progress"):
+                app._hide_progress()
 
-            def _apply():
-                _apply_announcements_to_app(app, parsed)
-                if hasattr(app, "_hide_progress"):
-                    app._hide_progress()
+        app.after(0, _apply)
 
-            app.after(0, _apply)
-
-        _submit(app, _worker)
+    _submit(app, _worker)
 
     # ---------- EVENTS FEED (JSON/CSV URL) ----------
-    def import_events_feed(url: str | None = None):
+def import_events_feed(app, url: str | None = None):
+    if not url:
+        url = simpledialog.askstring("Events Feed URL", "Enter events JSON/CSV URL:")
+    if not url:
+        return
+    # Sanitize URL: strip whitespace and quotes
+    url = url.strip().strip('"\'')
+    if hasattr(app, "_show_progress"):
+        app._show_progress("Fetching events…")
 
-        if not url:
-            url = simpledialog.askstring("Events Feed URL", "Enter events JSON/CSV URL:")
-        if not url:
-            return
-<<<<<<< HEAD
-        # Sanitize URL: strip whitespace and quotes
-        url = url.strip().strip('"\'')
-=======
+    def _worker():
         try:
-            raw_events = fetch_events(url)
+            raw_events = fetch_events(url)  # ensure internal timeouts inside fetch_events
         except Exception as e:
-            # messagebox.showerror('Import Error', str(e))
+            app.after(0, lambda e=e: messagebox.showerror("Import Error", str(e)))
+            if hasattr(app, "_hide_progress"):
+                app.after(0, app._hide_progress)
             return
->>>>>>> origin/harden/email-sanitize-and-ci
 
-        if hasattr(app, "_show_progress"):
-            app._show_progress("Fetching events…")
-
-        def _worker():
-            try:
-                raw_events = fetch_events(url)  # ensure internal timeouts inside fetch_events
-            except Exception as e:
-                app.after(0, lambda e=e: messagebox.showerror("Import Error", str(e)))
-                if hasattr(app, "_hide_progress"):
-                    app.after(0, app._hide_progress)
-                return
-
-            raw_events_local = expand_recurring_events(raw_events)
-
-<<<<<<< HEAD
-=======
-        events = events_to_blocks(raw_events)
+        raw_events_local = expand_recurring_events(raw_events)
+        events = events_to_blocks(raw_events_local)
         process_event_images(events)
         conflicts = detect_conflicts(events)
         if conflicts:
             msg_lines = ["Overlapping events detected:"]
             for a, b in conflicts:
                 msg_lines.append(
-                    f"- {a.get('description','')} ({a.get('date')} {a.get('time')}) \u2194 "
+                    f"- {a.get('description','')} ({a.get('date')} {a.get('time')}) ↔ "
                     f"{b.get('description','')} ({b.get('date')} {b.get('time')})"
                 )
-            # messagebox.showwarning('Event Conflicts', '\n'.join(msg_lines))
-        if not events:
-            # messagebox.showinfo('Import Events', 'No events found.')
-            return
-        app.sections_data.append({
-            'title': 'Community Events',
-            'type': 'community_events',
-            'content': events,
-            'layout_style': 'Card'
-        })
-        app.refresh_listbox_titles()
-        app.show_placeholder()
-        app.update_preview()
-        app.show_status_message(f"Imported {len(events)} events")
->>>>>>> origin/harden/email-sanitize-and-ci
+            messagebox.showwarning("Event Conflicts", "\n".join(msg_lines))
 
-            def _apply():
-                # (Optional) interactive filters by date/tags could go here
-                import datetime
-                today = datetime.date.today()
-                events = events_to_blocks(raw_events_local)
-                # Filter out past events
-                future_events = []
-                outdated_events = []
-                for ev in events:
-                    date_str = ev.get("date")
-                    try:
-                        ev_date = datetime.date.fromisoformat(date_str) if date_str else None
-                    except Exception:
-                        ev_date = None
-                    if ev_date and ev_date < today:
-                        outdated_events.append(ev)
-                    else:
-                        future_events.append(ev)
-                process_event_images(future_events)
-                conflicts = detect_conflicts(future_events)
-                if conflicts:
-                    msg_lines = ["Overlapping events detected:"]
-                    for a, b in conflicts:
-                        msg_lines.append(
-                            f"- {a.get('description','')} ({a.get('date')} {a.get('time')}) ↔ "
-                            f"{b.get('description','')} ({b.get('date')} {b.get('time')})"
-                        )
-                    messagebox.showwarning("Event Conflicts", "\n".join(msg_lines))
+        def _apply():
+            if not events:
+                messagebox.showinfo("Import Events", "No events found.")
+            else:
+                app.sections_data.append({
+                    "title": "Community Events",
+                    "type": "community_events",
+                    "content": events,
+                    "layout_style": "Card",
+                })
+                if hasattr(app, "refresh_listbox_titles"):
+                    app.refresh_listbox_titles()
+                if hasattr(app, "show_placeholder"):
+                    app.show_placeholder()
+                if hasattr(app, "update_preview"):
+                    app.update_preview()
+                if hasattr(app, "show_status_message"):
+                    app.show_status_message(f"Imported {len(events)} events")
+            # Warn if outdated events were present
+            # (If you want to implement outdated event detection, add logic here.)
 
-                if not future_events:
-                    messagebox.showinfo("Import Events", "No future events found.")
-                else:
-                    app.sections_data.append({
-                        "title": "Community Events",
-                        "type": "community_events",
-                        "content": future_events,
-                        "layout_style": "Card",
-                    })
-                    if hasattr(app, "refresh_listbox_titles"):
-                        app.refresh_listbox_titles()
-                    if hasattr(app, "show_placeholder"):
-                        app.show_placeholder()
-                    if hasattr(app, "update_preview"):
-                        app.update_preview()
-                    if hasattr(app, "show_status_message"):
-                        app.show_status_message(f"Imported {len(future_events)} events")
-                # Warn if outdated events were present
-                if outdated_events and hasattr(app, "show_status_message"):
-                    app.show_status_message(f"Warning: {len(outdated_events)} outdated events were ignored (date before today)")
+            if hasattr(app, "_hide_progress"):
+                app._hide_progress()
 
-                if hasattr(app, "_hide_progress"):
-                    app._hide_progress()
+        app.after(0, _apply)
 
-            app.after(0, _apply)
-
-        _submit(app, _worker)
+    _submit(app, _worker)
 
     # ---------- AUTO SYNC AFTER UI SHOWS ----------
     def auto_sync_events_feed():
@@ -303,12 +231,12 @@ def init(app):
         if not url:
             return
         # defer slightly so the window is visible, then run threaded
-        app.after(300, lambda: import_events_feed(url))
+        app.after(300, lambda: import_events_feed(app, url))
 
     # Attach
-    app.import_announcements_csv = import_csv_file
-    app.import_announcements_sheet = import_google_sheet
-    app.import_events_feed = import_events_feed
+    app.import_announcements_csv = lambda: import_csv_file(app)
+    app.import_announcements_sheet = lambda: import_google_sheet(app)
+    app.import_events_feed = lambda url=None: import_events_feed(app, url)
     app.auto_sync_events_feed = auto_sync_events_feed
 
     # kick off auto-sync if configured
