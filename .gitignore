@@ -2,3 +2,15 @@ config.ini
 src/config.ini
 .env
 user_drafts/*.json
+# Ignore generated and environment files
+repo-mirror.git/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.vscode/
+.venv/
+.env
+dist/
+build/
