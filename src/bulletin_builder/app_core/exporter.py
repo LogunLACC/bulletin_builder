@@ -50,7 +50,7 @@ def _render_section_email(section: dict) -> str:
       return f'<table width="100%" cellpadding="0" cellspacing="0" border="0">{"".join(parts)}</table>'
     else:
       return '<div style="opacity:.7;font-size:14px;">No announcements.</div>'
-  elif stype == "events":
+  elif stype in ("events", "community_events", "lacc_events"):
     events = section.get("content", []) or []
     if events:
       cards = "".join(_event_card_email(ev) for ev in events)
