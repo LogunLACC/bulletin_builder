@@ -46,7 +46,6 @@ def parse_announcements_csv(text):
     - Defaults link_text to 'Learn more' when link is present but text is blank
     This helper is append-only and does not modify existing import logic.
     """
-    import csv, io
     if not text:
         return []
     # Strip BOM if present
@@ -82,11 +81,10 @@ def parse_announcements_csv(text):
             items.append(row)
     return items
 # -*- coding: utf-8 -*-
-import csv
 import io
+import csv
 import urllib.request
 import threading
-from pathlib import Path
 from tkinter import filedialog, messagebox, simpledialog
 
 from bulletin_builder.event_feed import (
@@ -102,6 +100,23 @@ NET_TIMEOUT = 12  # seconds
 
 def init(app):
     """Attach CSV/JSON/Feed import handlers onto app."""
+    # Bind handler callables onto the app
+    app.import_announcements_csv = lambda: import_csv_file(app)
+    app.import_announcements_sheet = lambda: import_google_sheet(app)
+    app.import_events_feed = lambda url=None: import_events_feed(app, url)
+
+    def auto_sync_events_feed():
+        url = getattr(app, "events_feed_url", "")
+        if not url:
+            return
+        app.after(300, lambda: import_events_feed(app, url))
+
+    app.auto_sync_events_feed = auto_sync_events_feed
+    # Kick off auto-sync if configured
+    try:
+        app.auto_sync_events_feed()
+    except Exception:
+        pass
 
     # ---------- CSV FILE ----------
 def import_csv_file(app):
@@ -140,7 +155,7 @@ def import_google_sheet(app):
         return
     url = url.strip().strip('"\'')
     if hasattr(app, "_show_progress"):
-        app._show_progress("Fetching Google Sheet…")
+        app._show_progress("Fetching Google Sheet...")
 
     def _worker():
         try:
@@ -173,7 +188,7 @@ def import_events_feed(app, url: str | None = None):
     # Sanitize URL: strip whitespace and quotes
     url = url.strip().strip('"\'')
     if hasattr(app, "_show_progress"):
-        app._show_progress("Fetching events…")
+        app._show_progress("Fetching events...")
 
     def _worker():
         try:
@@ -186,6 +201,21 @@ def import_events_feed(app, url: str | None = None):
 
         raw_events_local = expand_recurring_events(raw_events)
         events = events_to_blocks(raw_events_local)
+        # Optional: restrict to a window starting today when configured
+        try:
+            wnd = getattr(app, 'events_window_days', None)
+            if isinstance(wnd, int) and wnd >= 0:
+                from bulletin_builder.event_feed import filter_events_window
+                events = filter_events_window(events, days=wnd)
+        except Exception:
+            pass
+
+        # Dedupe events to avoid repeated entries in UI
+        try:
+            from bulletin_builder.event_feed import dedupe_events
+            events = dedupe_events(events)
+        except Exception:
+            pass
         process_event_images(events)
         conflicts = detect_conflicts(events)
         if conflicts:
@@ -201,6 +231,8 @@ def import_events_feed(app, url: str | None = None):
             if not events:
                 messagebox.showinfo("Import Events", "No events found.")
             else:
+                if not hasattr(app, "sections_data"):
+                    app.sections_data = []
                 app.sections_data.append({
                     "title": "Community Events",
                     "type": "community_events",
@@ -224,23 +256,6 @@ def import_events_feed(app, url: str | None = None):
         app.after(0, _apply)
 
     _submit(app, _worker)
-
-    # ---------- AUTO SYNC AFTER UI SHOWS ----------
-    def auto_sync_events_feed():
-        url = getattr(app, "events_feed_url", "")
-        if not url:
-            return
-        # defer slightly so the window is visible, then run threaded
-        app.after(300, lambda: import_events_feed(app, url))
-
-    # Attach
-    app.import_announcements_csv = lambda: import_csv_file(app)
-    app.import_announcements_sheet = lambda: import_google_sheet(app)
-    app.import_events_feed = lambda url=None: import_events_feed(app, url)
-    app.auto_sync_events_feed = auto_sync_events_feed
-
-    # kick off auto-sync if configured
-    app.auto_sync_events_feed()
 
 
 # --- INTERNAL ----------------------------------------------------------------

@@ -5,7 +5,6 @@ It intentionally fails softly and returns readable HTML errors when templates
 or data are invalid so the UI can continue running.
 """
 
-import os
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markdown import markdown

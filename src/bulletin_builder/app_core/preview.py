@@ -3,9 +3,7 @@ import os
 import tempfile
 import urllib.request
 import concurrent.futures
-from tkinter import messagebox
 
-from bulletin_builder.postprocess import ensure_postprocessed
 from bulletin_builder.app_core.image_utils import optimize_image
 
 _preview_executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
@@ -29,7 +27,7 @@ def init(app):
     def show_placeholder():
         try:
             if hasattr(app, "status_bar"):
-                app.status_bar.configure(text="Waiting for content…")
+                app.status_bar.configure(text="Waiting for content...")
             # If a code preview widget already exists, show a friendly message
             if hasattr(app, "code_preview"):
                 app.code_preview.delete("1.0", "end")
@@ -108,7 +106,7 @@ def _apply_preview(app, future):
                     app.code_preview.grid_forget()
                 except Exception:
                     pass
-            # Try rendered → raw → fallback to code view
+            # Try rendered -> raw -> fallback to code view
             for html in (rendered, raw_html):
                 try:
                     app.rendered_preview.set_html(html)

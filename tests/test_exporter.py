@@ -1,5 +1,3 @@
-from bulletin_builder.postprocess import ensure_postprocessed
-import pytest
 from bulletin_builder.app_core import exporter
 
 def test_render_bulletin_html_basic():

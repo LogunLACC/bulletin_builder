@@ -1,11 +1,9 @@
 # app_core/core_init.py
 
 import customtkinter as ctk
-import tkinter.messagebox as messagebox
 from pathlib import Path
 import concurrent.futures
 
-import google.generativeai as genai
 import openai
 
 from bulletin_builder.bulletin_renderer import BulletinRenderer

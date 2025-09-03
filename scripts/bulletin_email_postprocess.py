@@ -14,7 +14,9 @@ Usage:
 If output.html is omitted, "_fixed" is appended before the extension.
 """
 
-import sys, re, os, pathlib
+import sys
+import re
+import pathlib
 
 def add_or_merge_style(elem_style: str, additions: dict) -> str:
     """Merge CSS declarations in `additions` into `elem_style` without duplicating keys."""
@@ -28,116 +30,148 @@ def add_or_merge_style(elem_style: str, additions: dict) -> str:
     return ";".join(f"{k}:{v}" for k, v in styles.items() if v) + ";"
 
 def process_html(html: str) -> str:
+    """Postprocess HTML for email clients:
+
+    - Remove doctype/head/script/style/link elements
+    - Inject a small reset CSS and inline it with premailer
+    - Ensure img and a tags keep src/href but have inline styles starting with margin:0;padding:0;
+    """
     try:
         from bs4 import BeautifulSoup  # type: ignore
+        from premailer import transform as premailer_transform  # type: ignore
+        from bulletin_builder.actions_log import log_action
+
         soup = BeautifulSoup(html, "html.parser")
 
-        # 1) Collect in-document anchor targets from TOC (href="#section-id")
-        toc_ids = set()
-        for a in soup.find_all("a", href=True):
-            href = a["href"]
-            if href.startswith("#") and len(href) > 1:
-                toc_ids.add(href[1:].strip())
+        # Extract body content (if missing, use whole document)
+        body = soup.body
+        if body is None:
+            body_html = str(soup)
+        else:
+            body_html = body.decode_contents()
 
-        # 2) Ensure common section ids exist by trying to match headings text or sections
-        #    If id doesn't exist, create on a matching section/heading.
-        #    We try: exact id on any element; else attach id to a heading with matching normalized text.
-        def normalize_txt(t: str) -> str:
-            return re.sub(r"[^a-z0-9]+", "-", t.lower()).strip("-")
+        # Build a minimal wrapper with reset CSS (will be inlined by premailer)
+        reset_css = """
+        /* Email reset: neutralize client defaults */
+        body, table, td, th, p, div, span { margin:0!important; padding:0!important; }
+        * { border:0!important; box-sizing: border-box!important; }
+        a { color:inherit!important; text-decoration:none!important; outline:none!important; }
+        img { display:block!important; border:0!important; margin:0!important; padding:0!important; max-width:100%!important; height:auto!important; }
+        table { border-collapse:collapse!important; border-spacing:0!important; }
+        """
 
-        existing_ids = {tag.get("id") for tag in soup.find_all(attrs={"id": True})}
-        existing_ids = {i for i in existing_ids if i}
+        wrapper = f"<html><head><style>{reset_css}</style></head><body>{body_html}</body></html>"
 
-        # Build a map from normalized heading text -> element
-        heading_candidates = {}
-        for hx in soup.find_all(["h1","h2","h3","h4","h5","h6"]):
-            txt = (hx.get_text() or "").strip()
-            if not txt:
-                continue
-            heading_candidates[normalize_txt(txt)] = hx
+        # Inline CSS using premailer
+        try:
+            inlined = premailer_transform(wrapper, remove_classes=True, disable_validation=True)
+        except Exception:
+            # If premailer fails, fall back to the wrapper as-is
+            inlined = wrapper
 
-        for sec_id in toc_ids:
-            if sec_id in existing_ids:
-                continue
-            # Try to find a heading whose normalized text equals the id
-            target = heading_candidates.get(sec_id)
-            if target is None:
-                # Try to find a section-like container to attach to (first large heading fallback)
-                target = soup.find(id=sec_id)
-            if target is None:
-                # Fallback heuristic: attach to the first h2
-                target = soup.find("h2") or soup.find("h1")
-            if target is not None:
-                target["id"] = sec_id
-                existing_ids.add(sec_id)
+        # Parse the inlined result and extract body inner HTML
+        res_soup = BeautifulSoup(inlined, "html.parser")
+        res_body = res_soup.body
+        final_html = res_body.decode_contents() if res_body is not None else str(res_soup)
 
-        # 3) Normalize <img> tags: block, full width (within 600px table), height auto
-        for img in soup.find_all("img"):
-            # Replace .avif with .jpg in src
-            src = img.get("src", "")
-            if src.endswith(".avif"):
+        # Remove any remaining head/script/style/link tags from the result
+        for tag in res_soup.find_all(["script", "style", "link", "head", "meta", "title"]):
+            try:
+                tag.decompose()
+            except Exception:
+                pass
+
+        # Ensure img src / a href preserved and style starts with margin:0;padding:0;
+        def ensure_reset_prefix(style_str: str) -> str:
+            # Parse existing declarations into dict
+            out = {}
+            for part in (style_str or "").split(";"):
+                if ":" in part:
+                    k, v = part.split(":", 1)
+                    out[k.strip().lower()] = v.strip()
+            # Build result starting with margin/padding
+            parts = ["margin:0", "padding:0"]
+            for k, v in out.items():
+                if k in ("margin", "padding"):
+                    continue
+                parts.append(f"{k}:{v}")
+            return ";".join(parts) + ";"
+
+        final_soup = BeautifulSoup(final_html, "html.parser")
+        for img in final_soup.find_all("img"):
+            # keep src but ensure avif -> jpg fallback
+            src = img.get("src", "") or ""
+            if src.lower().endswith('.avif'):
                 img["src"] = src[:-5] + ".jpg"
-            style = img.get("style", "")
-            style = add_or_merge_style(style, {
-                "display": "block",
-                "width": "100%",
-                "max-width": "600px",
-                "height": "auto",
-                "border": "0",
-                "line-height": "0",
-                "outline": "none",
-                "text-decoration": "none"
+            img_style = img.get("style", "")
+            img["style"] = ensure_reset_prefix(img_style)
+            if img.get("width") is None:
+                img["width"] = "600"
+
+        for a in final_soup.find_all("a"):
+            # preserve href
+            href = a.get("href")
+            a_style = a.get("style", "")
+            a["style"] = ensure_reset_prefix(a_style)
+
+        # Ensure tables collapse and tds have no borders
+        for table in final_soup.find_all("table"):
+            tstyle = table.get("style", "")
+            # Merge required table styles
+            tstyle = add_or_merge_style(tstyle, {
+                "border-collapse": "collapse",
+                "border-spacing": "0",
+                "margin": "0",
+                "padding": "0",
             })
-            img["style"] = style
-            # Set width attr to 600 for good measure in some clients
-            img["width"] = "600"
+            table["style"] = tstyle
 
-        # 4) Remove tiny max-width caps from containers (e.g., 320px or 340px)
-        for tag in soup.find_all(True):
-            style = tag.get("style", "")
-            if not style:
-                continue
-            # replace max-width:320px/340px/360px → 600px (or remove if it's inline columns)
-            style_new = re.sub(r"max-width\s*:\s*(320|340|360)px\s*;?", "max-width:600px;", style, flags=re.I)
-            if style_new != style:
-                tag["style"] = style_new
+        for cell in final_soup.find_all(["td", "th"]):
+            cstyle = cell.get("style", "")
+            # Ensure reset prefix and force border:none
+            merged = ensure_reset_prefix(cstyle)
+            # Merge border:none explicitly
+            merged = add_or_merge_style(merged, {"border": "none"})
+            cell["style"] = merged
 
-        return str(soup)
+        # log success
+        try:
+            log_action("postprocess_html", {"imgs": len(final_soup.find_all("img")), "links": len(final_soup.find_all("a"))})
+        except Exception:
+            pass
+        return final_soup.decode()
 
     except Exception:
-        # Fallback: do minimal regex-based fixes if BeautifulSoup isn't available
+        # Very small fallback: attempt regex-based sanitize but keep href/src
         out = html
+        # Remove DOCTYPE and head-like blocks
+        out = re.sub(r"<!DOCTYPE[^>]*>", "", out, flags=re.I)
+        out = re.sub(r"<head[\s\S]*?</head>", "", out, flags=re.I)
+        # Remove scripts and link/style tags
+        out = re.sub(r"<script[\s\S]*?</script>", "", out, flags=re.I)
+        out = re.sub(r"<link[^>]+rel=[\"']?stylesheet[\"']?[^>]*>", "", out, flags=re.I)
+        out = re.sub(r"<style[\s\S]*?</style>", "", out, flags=re.I)
 
-        # Ensure .avif -> .jpg
+        # Basic avif -> jpg
         out = re.sub(r'(<img[^>]+src="[^"]+)\.avif"', r'\1.jpg"', out, flags=re.I)
 
-        # Normalize images: append/merge basic style (best-effort)
-        def fix_img_style(match):
-            tag = match.group(0)
-            # If style exists, merge; else add a style attribute
+        # Ensure images and anchors have margin/padding defaults inline
+        def ensure_inline_reset(m):
+            tag = m.group(0)
             if 'style=' in tag:
-                tag = re.sub(
-                    r'style="([^"]*)"',
-                    lambda m: f'style="{m.group(1)};display:block;width:100%;max-width:600px;height:auto;border:0;line-height:0;outline:none;text-decoration:none;"',
-                    tag, flags=re.I
-                )
+                tag = re.sub(r'style="([^"]*)"', lambda mm: f'style="margin:0;padding:0;{mm.group(1)}"', tag, flags=re.I)
             else:
-                tag = tag.replace("<img", '<img style="display:block;width:100%;max-width:600px;height:auto;border:0;line-height:0;outline:none;text-decoration:none;"')
-            if ' width=' not in tag:
-                tag = tag.replace("<img", '<img width="600"', 1)
+                tag = tag.replace('<img', '<img style="margin:0;padding:0;"', 1) if tag.lower().startswith('<img') else tag.replace('<a', '<a style="margin:0;padding:0;"', 1)
             return tag
 
-        out = re.sub(r'<img\b[^>]*>', fix_img_style, out, flags=re.I)
+        out = re.sub(r'<img\b[^>]*>', ensure_inline_reset, out, flags=re.I)
+        out = re.sub(r'<a\b[^>]*>', ensure_inline_reset, out, flags=re.I)
 
-        # Remove small max-width caps
-        out = re.sub(r'max-width\s*:\s*(320|340|360)px\s*;?', 'max-width:600px;', out, flags=re.I)
-
-        # Anchor ids: if we see a #welcome/#community-events link, add bare IDs to first H2s as fallback
-        if '#welcome' in out and 'id="welcome"' not in out:
-            out = out.replace("<h2", '<h2 id="welcome"', 1)
-        if '#community-events' in out and 'id="community-events"' not in out:
-            out = out.replace("<h2", '<h2 id="community-events"', 1)
-
+        try:
+            from bulletin_builder.actions_log import log_action
+            log_action("postprocess_html_fallback", {"reason": "exception"})
+        except Exception:
+            pass
         return out
 
 def main():

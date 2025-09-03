@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from tkinter import simpledialog, messagebox
+from tkinter import simpledialog
 
 from bulletin_builder.ui.component_library import ComponentLibrary
 
@@ -20,7 +20,7 @@ def init(app):
             with open(path, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2)
             # messagebox.showinfo("Component Saved", f"Saved {path.name}", parent=app)
-        except Exception as e:
+        except Exception:
             # messagebox.showerror("Save Error", str(e), parent=app)
             pass
 

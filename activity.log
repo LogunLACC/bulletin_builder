@@ -1,0 +1,181 @@
+2025-08-29T18:49:05.869861Z | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-08-29T18:49:06.542148Z | postprocess_html | {'imgs': 0, 'links': 2}
+2025-08-29T18:49:06.551704Z | postprocess_html | {'imgs': 1, 'links': 1}
+2025-08-29T18:50:57.110732Z | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-08-29T18:50:57.299324Z | postprocess_html | {'imgs': 0, 'links': 2}
+2025-08-29T18:50:57.316273Z | postprocess_html | {'imgs': 1, 'links': 1}
+2025-08-29T18:50:57.319697Z | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-08-29T18:52:01.253751Z | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-08-29T18:52:01.566603Z | postprocess_html | {'imgs': 0, 'links': 2}
+2025-08-29T18:52:01.596792Z | postprocess_html | {'imgs': 1, 'links': 1}
+2025-08-29T18:52:01.602929Z | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-08-29T19:12:16.837153Z | render_email_html | {'title': None, 'sections': 6}
+2025-08-29T19:18:41.739685Z | render_email_html | {'title': 'Test Export', 'sections': 6}
+2025-08-29T19:24:29.326339Z | render_email_html | {'title': 'Test Export', 'sections': 6}
+2025-08-29T19:26:56.103297Z | render_email_html | {'title': 'Full Test Bulletin', 'sections': 6}
+2025-08-29T19:30:57.920776Z | render_email_html | {'title': 'Manual Draft Bulletin', 'sections': 6}
+2025-08-29T19:57:47.896997Z | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-08-29T20:31:51.691619Z | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-08-29T23:08:11.544761Z | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-08-29T23:08:11.762077Z | postprocess_html | {'imgs': 0, 'links': 2}
+2025-08-29T23:08:11.778183Z | postprocess_html | {'imgs': 1, 'links': 1}
+2025-08-29T23:08:11.782763Z | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T16:33:09.329487Z | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T16:33:09.576246Z | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T16:33:09.603647Z | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T16:33:09.607330Z | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T17:16:45.117016Z | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T17:16:45.362988Z | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T17:16:45.379691Z | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T17:16:45.383542Z | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T17:20:49.532105+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T17:20:49.795055+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T17:20:49.811082+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T17:20:49.814362+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T17:35:14.474421+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T17:35:14.723654+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T17:35:14.738559+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T17:35:14.741448+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T17:36:44.230216+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T17:36:44.453850+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T17:36:44.466318+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T17:36:44.469719+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T17:37:33.633987+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T17:37:33.836471+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T17:37:33.849803+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T17:37:33.852380+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T17:50:40.951075+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T17:50:41.189218+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T17:50:41.208276+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T17:50:41.211575+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T17:52:05.739875+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T17:52:05.973133+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T17:52:05.987333+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T17:52:05.990538+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T18:27:34.223713+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T18:27:34.467456+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T18:27:34.492226+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T18:27:34.497280+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T18:29:48.042797+00:00 | render_email_html | {'title': 'LACC Bulletin', 'sections': 0}
+2025-09-03T18:31:45.581958+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T18:31:45.826292+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T18:31:45.842402+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T18:31:45.845717+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T18:32:12.547448+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T18:32:12.769935+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T18:32:12.784366+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T18:32:12.788444+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T18:35:47.981024+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T18:35:48.274958+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T18:35:48.292015+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T18:35:48.297519+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T18:47:31.854498+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T18:47:32.099079+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T18:47:32.115797+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T18:47:32.119104+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T18:50:53.718682+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T18:50:53.939257+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T18:50:53.954055+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T18:50:53.957952+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T19:28:08.133984+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T19:28:08.436134+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T19:28:08.455324+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T19:28:08.461153+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T19:38:06.479634+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T19:38:06.846375+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T19:38:06.872095+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T19:38:06.877172+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T19:38:57.414937+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T19:38:57.695438+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T19:38:57.714923+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T19:38:57.718863+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T19:40:03.403024+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T19:40:03.823904+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T19:40:03.851660+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T19:40:03.859826+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T19:41:11.459877+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T19:41:11.758996+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T19:41:11.778063+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T19:41:11.781769+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T19:42:22.511828+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T19:42:22.963969+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T19:42:22.988101+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T19:42:22.996609+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T19:57:19.373029+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T19:57:19.626143+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T19:57:19.651487+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T19:57:19.657471+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T20:14:13.823346+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T20:14:14.071016+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T20:14:14.089849+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T20:14:14.093684+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T20:16:11.750355+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T20:16:11.991667+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T20:16:12.007678+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T20:16:12.011807+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T20:18:28.419431+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T20:18:28.694568+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T20:18:28.713483+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T20:18:28.717199+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T20:18:29.272400+00:00 | render_email_html | {'title': 'LACC Bulletin', 'sections': 0}
+2025-09-03T20:21:55.951843+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T20:21:56.240251+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T20:21:56.258432+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T20:21:56.325699+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T20:21:56.928487+00:00 | render_email_html | {'title': 'LACC Bulletin', 'sections': 0}
+2025-09-03T20:25:59.330022+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T20:25:59.564087+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T20:25:59.580144+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T20:25:59.590349+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T20:26:00.000449+00:00 | render_email_html | {'title': 'LACC Bulletin', 'sections': 0}
+2025-09-03T21:12:03.640958+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T21:12:03.917847+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T21:12:03.940514+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T21:12:04.041911+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T21:12:04.795243+00:00 | render_email_html | {'title': 'LACC Bulletin', 'sections': 0}
+2025-09-03T21:22:12.216647+00:00 | render_email_html | {'title': 'Weekly Spotlight', 'sections': 2}
+2025-09-03T21:22:32.678799+00:00 | render_email_html | {'title': 'Weekly Spotlight', 'sections': 2}
+2025-09-03T21:28:16.195736+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T21:28:16.471990+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T21:28:16.483746+00:00 | render_email_html | {'title': 'Weekly Spotlight', 'sections': 2}
+2025-09-03T21:28:16.492562+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T21:28:16.573611+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T21:28:17.101059+00:00 | render_email_html | {'title': 'LACC Bulletin', 'sections': 0}
+2025-09-03T21:29:51.375811+00:00 | render_email_html | {'title': 'Weekly Spotlight', 'sections': 2}
+2025-09-03T21:31:59.131470+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T21:31:59.422819+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T21:31:59.434766+00:00 | render_email_html | {'title': 'Weekly Spotlight', 'sections': 1}
+2025-09-03T21:31:59.437030+00:00 | render_email_html | {'title': 'Weekly Spotlight', 'sections': 2}
+2025-09-03T21:31:59.447464+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T21:31:59.477389+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T21:32:00.038760+00:00 | render_email_html | {'title': 'LACC Bulletin', 'sections': 0}
+2025-09-03T21:33:37.817136+00:00 | render_email_html | {'title': 'Weekly Spotlight', 'sections': 2}
+2025-09-03T21:36:07.685969+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T21:36:07.865758+00:00 | postprocess_html | {'imgs': 0, 'links': 1}
+2025-09-03T21:36:08.130905+00:00 | render_email_html | {'title': 'Weekly Spotlight', 'sections': 1}
+2025-09-03T21:36:08.174488+00:00 | render_email_html | {'title': 'Weekly Spotlight', 'sections': 2}
+2025-09-03T21:36:08.281557+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T21:36:08.358186+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T21:36:08.948218+00:00 | render_email_html | {'title': 'LACC Bulletin', 'sections': 0}
+2025-09-03T22:30:17.991831+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T22:30:18.267780+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T22:30:18.279245+00:00 | render_email_html | {'title': 'Weekly Spotlight', 'sections': 1}
+2025-09-03T22:30:18.281607+00:00 | render_email_html | {'title': 'Weekly Spotlight', 'sections': 2}
+2025-09-03T22:30:18.291098+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T22:30:18.379850+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T22:32:15.201242+00:00 | render_email_html | {'title': 'Weekly Spotlight', 'sections': 2}
+2025-09-03T22:41:43.347900+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T22:41:43.619389+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T22:41:43.629047+00:00 | render_email_html | {'title': 'Weekly Spotlight', 'sections': 1}
+2025-09-03T22:41:43.632713+00:00 | render_email_html | {'title': 'Weekly Spotlight', 'sections': 2}
+2025-09-03T22:41:43.642238+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T22:41:43.725251+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T22:41:44.253779+00:00 | render_email_html | {'title': 'LACC Bulletin', 'sections': 0}
+2025-09-03T22:43:11.099637+00:00 | render_email_html | {'title': 'Weekly Spotlight', 'sections': 2}
+2025-09-03T22:58:47.695501+00:00 | render_email_html | {'title': 'Test Bulletin', 'sections': 1}
+2025-09-03T22:58:48.195273+00:00 | postprocess_html | {'imgs': 0, 'links': 2}
+2025-09-03T22:58:48.212318+00:00 | render_email_html | {'title': 'Weekly Spotlight', 'sections': 1}
+2025-09-03T22:58:48.217232+00:00 | render_email_html | {'title': 'Weekly Spotlight', 'sections': 2}
+2025-09-03T22:58:48.232938+00:00 | postprocess_html | {'imgs': 1, 'links': 1}
+2025-09-03T22:58:48.250184+00:00 | render_email_html | {'title': 'Test Email', 'sections': 2}
+2025-09-03T22:58:49.144237+00:00 | render_email_html | {'title': 'LACC Bulletin', 'sections': 0}

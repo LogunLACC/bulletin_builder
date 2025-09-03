@@ -10,7 +10,7 @@ class CustomTextFrame(ctk.CTkFrame):
         print(f"[DEBUG] CustomTextFrame __init__ called. parent={parent}, section_data={section_data}")
         self._init_args = (parent, section_data, refresh_callback, save_component_callback)
         try:
-            super().__init__(parent, fg_color="#ccffcc")  # Debug: green background
+            super().__init__(parent, fg_color="transparent")
             self.section_data = section_data
             self.refresh_callback = refresh_callback
             self.save_component_callback = save_component_callback
@@ -19,8 +19,8 @@ class CustomTextFrame(ctk.CTkFrame):
             self.grid_rowconfigure(99, weight=1)
             self.grid_columnconfigure(1, weight=1)
 
-            debug_label = ctk.CTkLabel(self, text=f"[DEBUG] Editing section: {self.section_data.get('title', '')} (type: {self.section_data.get('type', '')})", text_color="#888888", font=ctk.CTkFont(size=10, slant="italic"))
-            debug_label.grid(row=0, column=0, columnspan=2, sticky="w", padx=(0, 10), pady=(0, 4))
+            # small helper label for accessibility (not a duplicate heading)
+            # (do not duplicate <h2> — templates render section titles)
 
             title_label = ctk.CTkLabel(self, text="Section Title")
             title_label.grid(row=1, column=0, sticky="w", padx=(0, 10), pady=(0, 10))
@@ -50,8 +50,10 @@ class CustomTextFrame(ctk.CTkFrame):
         self.section_data['content'] = self.content_textbox.get("1.0", "end-1c")
         # Propagate changes to main sections_data
         try:
+            # Resolve the top-level application instance and call the sections.update helper
+            app = self.winfo_toplevel()
             from bulletin_builder.app_core.sections import update_section_data
-            update_section_data({'title': self.section_data['title'], 'content': self.section_data['content']})
+            update_section_data(app, {'title': self.section_data['title'], 'content': self.section_data['content']})
         except Exception as e:
             print(f"[ERROR] Could not update section data: {e}")
         self.refresh_callback()
@@ -60,8 +62,9 @@ class CustomTextFrame(ctk.CTkFrame):
         self._on_data_change()
         # Ensure latest data is saved
         try:
+            app = self.winfo_toplevel()
             from bulletin_builder.app_core.sections import update_section_data
-            update_section_data({'title': self.section_data['title'], 'content': self.section_data['content']})
+            update_section_data(app, {'title': self.section_data['title'], 'content': self.section_data['content']})
         except Exception as e:
             print(f"[ERROR] Could not update section data on save: {e}")
         self.save_component_callback(self.section_data)

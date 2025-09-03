@@ -1,4 +1,4 @@
-from bulletin_builder.postprocess import ensure_postprocessed
+﻿from bulletin_builder.postprocess import ensure_postprocessed
 import os
 import customtkinter as ctk
 from bulletin_builder.app_core.loader import init_app
@@ -57,21 +57,22 @@ class BulletinBuilderApp(ctk.CTk):
             if hasattr(self, attr):
                 file_menu.add_command(label=label, command=getattr(self, attr))
 
-        add("Export HTML & Text…", "on_export_html_text_clicked")
+        add("Export HTML & Text...", "on_export_html_text_clicked")
         add("Copy Email-Ready HTML", "on_copy_for_email_clicked")
+        add("Copy FrontSteps HTML", "on_copy_for_frontsteps_clicked")
         add("Open in Browser", "open_in_browser")
         file_menu.add_separator()
-        add("Import Announcements CSV…", "import_announcements_csv")
+        add("Import Announcements CSV...", "import_announcements_csv")
         file_menu.add_separator()
-        add("Export Calendar (.ics)…", "on_export_ics_clicked")
-        add("Send Test Email…", "on_send_test_email_clicked")
+        add("Export Calendar (.ics)...", "on_export_ics_clicked")
+        add("Send Test Email...", "on_send_test_email_clicked")
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.destroy)
 
         # --- Export submenu ---
         export_menu = tk.Menu(file_menu, tearoff=0)
-        export_menu.add_command(label="Bulletin HTML…", command=self.export_bulletin_html)
-        export_menu.add_command(label="Email HTML…", command=self.export_email_html)
+        export_menu.add_command(label="Bulletin HTML...", command=self.export_bulletin_html)
+        export_menu.add_command(label="Email HTML...", command=self.export_email_html)
         file_menu.add_cascade(label="Export", menu=export_menu)
 
         menubar.add_cascade(label="File", menu=file_menu)
@@ -97,7 +98,7 @@ def export_bulletin_html(self):
         with open(path, "w", encoding="utf-8") as f:
             f.write(html)
         if hasattr(self, "show_status_message"):
-            self.show_status_message(f"Exported Bulletin HTML → {path}")
+            self.show_status_message(f"Exported Bulletin HTML: {path}")
         else:
             messagebox.showinfo("Export", f"Saved: {path}")
     except Exception as e:
@@ -133,10 +134,10 @@ def main():
     args = parser.parse_args()
 
     if args.gui:
-        print("📰 Bulletin Builder CLI is running!")
+        print("ðŸ“° Bulletin Builder CLI is running!")
         launch_gui()
     else:
-        print("📰 CLI mode coming soon! Use '--gui' to launch the editor.")
+        print("ðŸ“° CLI mode coming soon! Use '--gui' to launch the editor.")
 
 
 if __name__ == '__main__':
@@ -151,3 +152,4 @@ if __name__ == '__main__':
 
     app = BulletinBuilderApp()
     app.mainloop()
+

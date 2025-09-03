@@ -1,7 +1,6 @@
 import customtkinter as ctk
 import tkinter as tk
 from tkhtmlview import HTMLLabel
-from pathlib import Path
 from ..ui.settings import SettingsFrame
 
 def init(app):
@@ -42,6 +41,76 @@ def init(app):
             if hasattr(app, "status_bar"):
                 app.status_bar.configure(text="Editor ready.")
         app.replace_editor_frame = replace_editor_frame
+
+    # Full menu builder -------------------------------------------------
+    def _build_menus(app):
+        """Attach a rich menu bar wired to known app handlers.
+
+        This mirrors the fallback in __main__ but may include richer
+        application-specific commands when available.
+        """
+        import tkinter as tk
+
+        menubar = tk.Menu(app)
+        file_menu = tk.Menu(menubar, tearoff=0)
+        # Expose for tests and potential external customization
+        try:
+            app._menubar = menubar
+            app._file_menu = file_menu
+        except Exception:
+            pass
+
+        def add(label, attr):
+            # Defer resolution of handler until the menu item is invoked so
+            # the menu shows even if the handler is attached later during init.
+            def _cmd():
+                fn = getattr(app, attr, None)
+                if callable(fn):
+                    return fn()
+            file_menu.add_command(label=label, command=_cmd)
+
+        # Primary file actions (new/open/save) — always visible but resolved lazily
+        file_menu.add_command(label="New Draft", command=lambda: getattr(app, 'new_draft', lambda: None)())
+        file_menu.add_separator()
+        file_menu.add_command(label="Open Draft...", command=lambda: getattr(app, 'open_draft', lambda: None)())
+        file_menu.add_separator()
+        file_menu.add_command(label="Save", command=lambda: getattr(app, 'save_draft', lambda save_as=False: None)())
+        file_menu.add_command(label="Save As...", command=lambda: getattr(app, 'save_draft', lambda save_as=False: None)(save_as=True))
+        file_menu.add_separator()
+
+        add("Export HTML & Text...", "on_export_html_text_clicked")
+        add("Copy Email-Ready HTML", "on_copy_for_email_clicked")
+        add("Copy FrontSteps HTML", "on_copy_for_frontsteps_clicked")
+        add("Open in Browser", "open_in_browser")
+        file_menu.add_separator()
+        add("Import Announcements CSV...", "import_announcements_csv")
+        file_menu.add_separator()
+        add("Export Calendar (.ics)...", "on_export_ics_clicked")
+        add("Send Test Email...", "on_send_test_email_clicked")
+        file_menu.add_separator()
+        file_menu.add_command(label="Exit", command=app.destroy)
+
+        # --- Export submenu ---
+        export_menu = tk.Menu(file_menu, tearoff=0)
+        export_menu.add_command(label="Bulletin HTML...", command=getattr(app, "export_bulletin_html", lambda: None))
+        export_menu.add_command(label="Email HTML...", command=getattr(app, "export_email_html", lambda: None))
+        file_menu.add_cascade(label="Export", menu=export_menu)
+
+        menubar.add_cascade(label="File", menu=file_menu)
+
+        # Tools menu (optional but helpful)
+        tools_menu = tk.Menu(menubar, tearoff=0)
+        tools_menu.add_command(label="Import Announcements CSV...", command=lambda: getattr(app, 'import_announcements_csv', lambda: None)())
+        tools_menu.add_command(label="Import Events Feed...", command=lambda: getattr(app, 'import_events_feed', lambda: None)())
+        tools_menu.add_separator()
+        tools_menu.add_command(label="Run Auto Sync", command=lambda: getattr(app, 'auto_sync_events_feed', lambda: None)())
+        menubar.add_cascade(label="Tools", menu=tools_menu)
+
+        try:
+            app.configure(menu=menubar)
+        except Exception:
+            # On some lightweight widgets or tests configuring a menu can fail.
+            pass
 
     # Attach the full menu builder to the app so __main__ can call it
     app._build_menus = lambda: _build_menus(app)

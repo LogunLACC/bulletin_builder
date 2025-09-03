@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-import sys, subprocess, re, pathlib, fnmatch
+import sys
+import subprocess
+import re
+import pathlib
+import fnmatch
 from typing import List
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]

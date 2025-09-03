@@ -1,4 +1,3 @@
-import pytest
 from src.bulletin_builder.app_core.sanitize import sanitize_email_html
 
 

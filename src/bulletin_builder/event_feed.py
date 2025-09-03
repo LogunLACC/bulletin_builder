@@ -1,15 +1,10 @@
-import csv
-import io
 import json
 import urllib.request
-import os
-import tempfile
 import calendar
 import re
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta, time, timezone, date as date_cls
 from typing import List, Dict, Iterable
 
-from .image_utils import optimize_image
 
 
 def _normalize_tags(raw: Iterable | str | None) -> list[str]:
@@ -136,7 +131,7 @@ def expand_recurring_events(events: List[Dict[str, str]], days: int = 60) -> Lis
     returned as a separate event dictionary with the ``date`` field set.
     Past events are automatically filtered out.
     """
-    start = datetime.utcnow().date()
+    start = datetime.now(timezone.utc).date()
     end = start + timedelta(days=days)
     expanded: List[Dict[str, str]] = []
 
@@ -222,4 +217,90 @@ def detect_conflicts(events: List[Dict[str, str]]) -> List[tuple[Dict[str, str],
         if d1 == d2 and s2 < e1:
             conflicts.append((ev1, ev2))
     return conflicts
+
+
+def filter_events_window(
+    events: List[Dict[str, str]],
+    days: int | None = None,
+    *,
+    start_date: date_cls | None = None,
+) -> List[Dict[str, str]]:
+    """Filter events to a window starting today (inclusive).
+
+    - days is None: no upper bound (returns input unchanged, minus past events if provided as such)
+    - days == 0: only events whose date is today
+    - days > 0: include events with date <= start_date + days
+
+    Unparseable or missing dates are excluded when a window is enforced.
+    """
+    if days is None:
+        return events
+    start = start_date or datetime.now(timezone.utc).date()
+    end = start + timedelta(days=days)
+    out: List[Dict[str, str]] = []
+    for ev in events:
+        dstr = (ev.get("date") or "").strip()
+        if not dstr:
+            continue
+        try:
+            dt = _parse_event_date(dstr)
+            if dt is datetime.max:
+                continue
+            d = dt.date()
+        except Exception:
+            continue
+        if days == 0:
+            if d == start:
+                out.append(ev)
+        else:
+            if start <= d <= end:
+                out.append(ev)
+    return out
+
+
+def _norm_ws(s: str) -> str:
+    return " ".join((s or "").split()).strip().lower()
+
+
+def _canon_date(d: str) -> str:
+    try:
+        dt = _parse_event_date(d or "")
+        if dt is datetime.max:
+            return ""
+        return dt.date().isoformat()
+    except Exception:
+        return ""
+
+
+def _canon_time(tval: str) -> str:
+    try:
+        ts, _ = _parse_time_range(tval or "")
+        if not ts:
+            return ""
+        return f"{ts.hour:02d}:{ts.minute:02d}"
+    except Exception:
+        return ""
+
+
+def dedupe_events(events: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    """Remove duplicate events while preserving order.
+
+    Two events are considered duplicates when they share the same
+    (date, start_time, description) after normalization. If description
+    is empty, the link is used instead. Comparison is case-insensitive
+    and ignores excessive whitespace.
+    """
+    seen: set[tuple[str, str, str]] = set()
+    out: List[Dict[str, str]] = []
+    for ev in events:
+        d = _canon_date(ev.get("date", ""))
+        t = _canon_time(ev.get("time", ""))
+        desc = _norm_ws(ev.get("description") or ev.get("title") or "")
+        link = _norm_ws(ev.get("link", ""))
+        ident = (d, t, desc or link)
+        if ident in seen:
+            continue
+        seen.add(ident)
+        out.append(ev)
+    return out
 

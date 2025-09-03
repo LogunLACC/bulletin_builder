@@ -18,11 +18,11 @@ from __future__ import annotations
 
 import re
 import sys
-from typing import Dict, Tuple
+from typing import Dict
 
 try:
     from bs4 import BeautifulSoup  # type: ignore
-except Exception as exc:  # pragma: no cover
+except Exception:  # pragma: no cover
     print("BeautifulSoup (bs4) is required for this post-processor. Please install with: pip install beautifulsoup4")
     raise
 
