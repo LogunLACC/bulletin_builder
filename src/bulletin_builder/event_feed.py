@@ -257,3 +257,50 @@ def filter_events_window(
                 out.append(ev)
     return out
 
+
+def _norm_ws(s: str) -> str:
+    return " ".join((s or "").split()).strip().lower()
+
+
+def _canon_date(d: str) -> str:
+    try:
+        dt = _parse_event_date(d or "")
+        if dt is datetime.max:
+            return ""
+        return dt.date().isoformat()
+    except Exception:
+        return ""
+
+
+def _canon_time(tval: str) -> str:
+    try:
+        ts, _ = _parse_time_range(tval or "")
+        if not ts:
+            return ""
+        return f"{ts.hour:02d}:{ts.minute:02d}"
+    except Exception:
+        return ""
+
+
+def dedupe_events(events: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    """Remove duplicate events while preserving order.
+
+    Two events are considered duplicates when they share the same
+    (date, start_time, description) after normalization. If description
+    is empty, the link is used instead. Comparison is case-insensitive
+    and ignores excessive whitespace.
+    """
+    seen: set[tuple[str, str, str]] = set()
+    out: List[Dict[str, str]] = []
+    for ev in events:
+        d = _canon_date(ev.get("date", ""))
+        t = _canon_time(ev.get("time", ""))
+        desc = _norm_ws(ev.get("description") or ev.get("title") or "")
+        link = _norm_ws(ev.get("link", ""))
+        ident = (d, t, desc or link)
+        if ident in seen:
+            continue
+        seen.add(ident)
+        out.append(ev)
+    return out
+

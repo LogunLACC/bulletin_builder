@@ -209,6 +209,13 @@ def import_events_feed(app, url: str | None = None):
                 events = filter_events_window(events, days=wnd)
         except Exception:
             pass
+
+        # Dedupe events to avoid repeated entries in UI
+        try:
+            from bulletin_builder.event_feed import dedupe_events
+            events = dedupe_events(events)
+        except Exception:
+            pass
         process_event_images(events)
         conflicts = detect_conflicts(events)
         if conflicts:
