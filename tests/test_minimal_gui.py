@@ -10,6 +10,7 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 import customtkinter as ctk
+import pytest
 
 def test_minimal_gui():
     """Test minimal GUI without full app initialization."""
@@ -20,8 +21,11 @@ def test_minimal_gui():
         ctk.set_appearance_mode("Dark")
         ctk.set_default_color_theme("blue")
 
-        # Create root window
-        root = ctk.CTk()
+        # Create root window (skip if Tk not available)
+        try:
+            root = ctk.CTk()
+        except Exception as e:
+            pytest.skip(f"Tk not available: {e}")
         root.title("Minimal Bulletin Builder Test")
         root.geometry("400x200")
 

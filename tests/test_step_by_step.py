@@ -10,6 +10,7 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 import customtkinter as ctk
+import pytest
 
 def test_step_by_step():
     """Test app initialization step by step."""
@@ -19,7 +20,10 @@ def test_step_by_step():
     try:
         # Step 1: Basic app creation
         print("Step 1: Creating basic app...")
-        app = ctk.CTk()
+        try:
+            app = ctk.CTk()
+        except Exception as e:
+            pytest.skip(f"Tk not available: {e}")
         app.title("Test Bulletin Builder")
         app.geometry("400x200")
         print("âœ“ Basic app created")
