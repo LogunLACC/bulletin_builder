@@ -201,6 +201,14 @@ def import_events_feed(app, url: str | None = None):
 
         raw_events_local = expand_recurring_events(raw_events)
         events = events_to_blocks(raw_events_local)
+        # Optional: restrict to a window starting today when configured
+        try:
+            wnd = getattr(app, 'events_window_days', None)
+            if isinstance(wnd, int) and wnd >= 0:
+                from bulletin_builder.event_feed import filter_events_window
+                events = filter_events_window(events, days=wnd)
+        except Exception:
+            pass
         process_event_images(events)
         conflicts = detect_conflicts(events)
         if conflicts:

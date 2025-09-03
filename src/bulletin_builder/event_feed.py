@@ -2,7 +2,7 @@ import json
 import urllib.request
 import calendar
 import re
-from datetime import datetime, timedelta, time, timezone
+from datetime import datetime, timedelta, time, timezone, date as date_cls
 from typing import List, Dict, Iterable
 
 
@@ -217,4 +217,43 @@ def detect_conflicts(events: List[Dict[str, str]]) -> List[tuple[Dict[str, str],
         if d1 == d2 and s2 < e1:
             conflicts.append((ev1, ev2))
     return conflicts
+
+
+def filter_events_window(
+    events: List[Dict[str, str]],
+    days: int | None = None,
+    *,
+    start_date: date_cls | None = None,
+) -> List[Dict[str, str]]:
+    """Filter events to a window starting today (inclusive).
+
+    - days is None: no upper bound (returns input unchanged, minus past events if provided as such)
+    - days == 0: only events whose date is today
+    - days > 0: include events with date <= start_date + days
+
+    Unparseable or missing dates are excluded when a window is enforced.
+    """
+    if days is None:
+        return events
+    start = start_date or datetime.now(timezone.utc).date()
+    end = start + timedelta(days=days)
+    out: List[Dict[str, str]] = []
+    for ev in events:
+        dstr = (ev.get("date") or "").strip()
+        if not dstr:
+            continue
+        try:
+            dt = _parse_event_date(dstr)
+            if dt is datetime.max:
+                continue
+            d = dt.date()
+        except Exception:
+            continue
+        if days == 0:
+            if d == start:
+                out.append(ev)
+        else:
+            if start <= d <= end:
+                out.append(ev)
+    return out
 
