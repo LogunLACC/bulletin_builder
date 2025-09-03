@@ -33,9 +33,15 @@ def test_click_file_menu_export(monkeypatch, tmp_path):
 
         # Stub dialogs to a temp path
         out_html = tmp_path / 'menu_out.html'
+        out_email = tmp_path / 'menu_email.html'
         import tkinter.filedialog as fd
         import tkinter.messagebox as mb
-        monkeypatch.setattr(fd, 'asksaveasfilename', lambda **kw: str(out_html))
+        def _choose_path(**kw):
+            title = kw.get('title', '') or ''
+            if 'Email' in title:
+                return str(out_email)
+            return str(out_html)
+        monkeypatch.setattr(fd, 'asksaveasfilename', _choose_path)
         monkeypatch.setattr(mb, 'showinfo', lambda *a, **kw: None)
         monkeypatch.setattr(mb, 'showerror', lambda *a, **kw: None)
 
@@ -75,6 +81,28 @@ def test_click_file_menu_export(monkeypatch, tmp_path):
         # Files created by handler
         assert out_html.exists()
         assert (tmp_path / 'menu_out.txt').exists()
+
+        # Also invoke Export -> Email HTML... from the submenu
+        export_idx = None
+        end = file_menu.index('end') or 0
+        for i in range(end + 1):
+            if file_menu.type(i) == 'cascade' and (file_menu.entrycget(i, 'label') or '') == 'Export':
+                export_idx = i
+                break
+        assert export_idx is not None, 'Export submenu not found'
+        sub_name = file_menu.entrycget(export_idx, 'menu')
+        export_menu = root.nametowidget(sub_name)
+        email_idx = None
+        end2 = export_menu.index('end') or 0
+        for i in range(end2 + 1):
+            if export_menu.type(i) != 'command':
+                continue
+            if (export_menu.entrycget(i, 'label') or '').startswith('Email HTML'):
+                email_idx = i
+                break
+        assert email_idx is not None, 'Email HTML item not found'
+        export_menu.invoke(email_idx)
+        assert out_email.exists()
     finally:
         try:
             root.destroy()
