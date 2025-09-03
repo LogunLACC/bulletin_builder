@@ -53,6 +53,12 @@ def init(app):
 
         menubar = tk.Menu(app)
         file_menu = tk.Menu(menubar, tearoff=0)
+        # Expose for tests and potential external customization
+        try:
+            app._menubar = menubar
+            app._file_menu = file_menu
+        except Exception:
+            pass
 
         def add(label, attr):
             # Defer resolution of handler until the menu item is invoked so
@@ -79,14 +85,14 @@ def init(app):
         add("Import Announcements CSV...", "import_announcements_csv")
         file_menu.add_separator()
         add("Export Calendar (.ics)...", "on_export_ics_clicked")
-        add("Send Test Email…", "on_send_test_email_clicked")
+        add("Send Test Email...", "on_send_test_email_clicked")
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=app.destroy)
 
         # --- Export submenu ---
         export_menu = tk.Menu(file_menu, tearoff=0)
-        export_menu.add_command(label="Bulletin HTML…", command=getattr(app, "export_bulletin_html", lambda: None))
-        export_menu.add_command(label="Email HTML…", command=getattr(app, "export_email_html", lambda: None))
+        export_menu.add_command(label="Bulletin HTML...", command=getattr(app, "export_bulletin_html", lambda: None))
+        export_menu.add_command(label="Email HTML...", command=getattr(app, "export_email_html", lambda: None))
         file_menu.add_cascade(label="Export", menu=export_menu)
 
         menubar.add_cascade(label="File", menu=file_menu)
