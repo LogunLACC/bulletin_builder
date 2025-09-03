@@ -1,4 +1,5 @@
-import pathlib, sys
+import pathlib
+import sys
 # prefer the canonical location if present
 p1 = pathlib.Path('src/sanitize.py')
 p2 = pathlib.Path('src/bulletin_builder/app_core/sanitize.py')

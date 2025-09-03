@@ -49,8 +49,44 @@ def _event_card_email(ev: dict) -> str:
   )
 
 
+def _event_card_email_rich(ev: dict) -> str:
+  img = (ev.get("image_url") or ev.get("image") or "").strip()
+  link = (ev.get("link") or ev.get("url") or "").strip()
+  title = escape((ev.get("title") or ev.get("description") or ev.get("name") or ev.get("event") or "").strip())
+  date_txt = escape((ev.get("date") or "").strip())
+  time_txt = (ev.get("time") or "").strip()
+  when = date_txt + (f" at {escape(time_txt)}" if time_txt else "")
+  img_html = ""
+  if img:
+    # simple image block (full width)
+    img_html = (
+      '<tr>'
+      '<td style="border:none;padding:0;">'
+      f'<a href="{escape(link or img)}" style="margin:0; padding:0; text-decoration:none;">'
+      f'<img src="{escape(img)}" alt="{title}" style="width:100%; height:auto; margin:0; padding:0; display:block; border-radius:8px 8px 0 0;" />'
+      '</a>'
+      '</td>'
+      '</tr>'
+    )
+  btn_html = f'<a href="{escape(link)}" style="display:inline-block; background-color:#103040; color:#fff; padding:6px 12px; border-radius:4px; text-decoration:none;">More Info</a>' if link else ""
+  return (
+    '<table cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse; border:1px solid #ddd; border-radius:8px; margin:0 0 12px 0;">'
+    f'{img_html}'
+    '<tr><td style="border:none; padding:20px;">'
+    f'<strong style="font-size:1.1em; color:#333;">{title}</strong><br>'
+    f'<span style="font-size:1em; color:#103040; font-weight:bold;">{when}</span>'
+    '</td></tr>'
+    f'<tr><td style="border:none; padding:0 20px 20px 20px; text-align:center;">{btn_html}</td></tr>'
+    '</table>'
+  )
+
+
 def _render_section_email(section: dict) -> str:
   stype = section.get("type", "")
+  title = (section.get("title") or "").strip()
+  slug = _slug(title) if title else ""
+  header_html = f'<div id="{slug}" style="margin:0; padding:0"><h2>{escape(title)}</h2></div>' if title else ""
+
   if stype == "announcements":
     items = section.get("content", []) or []
     parts = []
@@ -70,25 +106,29 @@ def _render_section_email(section: dict) -> str:
         f'{link_html}'
         f'</td></tr>'
       )
-    if parts:
-      return f'<table width="100%" cellpadding="0" cellspacing="0" border="0">{"".join(parts)}</table>'
-    else:
-      return '<div style="opacity:.7;font-size:14px;">No announcements.</div>'
+    content_html = (
+      f'<table width="100%" cellpadding="0" cellspacing="0" border="0">{"".join(parts)}</table>'
+      if parts else '<div style="opacity:.7;font-size:14px;">No announcements.</div>'
+    )
+    return header_html + content_html
+
   elif stype in ("events", "community_events", "lacc_events"):
     events = section.get("content", []) or []
     if events:
-      cards = "".join(_event_card_email(ev) for ev in events)
+      cards = "".join(_event_card_email_rich(ev) for ev in events)
     else:
       cards = '<div style="opacity:.7;font-size:14px;">No events available.</div>'
-    return f'<div class="event-cards">{cards}</div>'
+    return header_html + f'<div class="event-cards">{cards}</div>'
+
   elif stype == "custom_text":
     text = ""
     content = section.get("content", {})
     if isinstance(content, dict):
       text = content.get("text", "")
-    return f'<div style="font-size:15px;line-height:1.7;">{escape(text)}</div>'
+    return header_html + f'<div style="font-size:15px;line-height:1.7;">{escape(text)}</div>'
+
   else:
-    return '<div style="opacity:.7;font-size:14px;">No content available.</div>'
+    return header_html + '<div style="opacity:.7;font-size:14px;">No content available.</div>'
 
 
 def _render_section_html(section: dict) -> str:
@@ -160,6 +200,12 @@ def render_email_html(ctx: dict) -> str:
       f'</center>'
       f'</body>'
     )
+    # Make URLs email-safe (HTTPS + AVIF->JPG where possible)
+    try:
+      from bulletin_builder.app_core.url_upgrade import upgrade_http_to_https
+      html = upgrade_http_to_https(html, convert_avif=True)
+    except Exception:
+      pass
     return ensure_postprocessed(html)
   except Exception as e:
     tb = traceback.format_exc()
@@ -279,6 +325,50 @@ def init(app):
       except Exception:
         print('Copy Error', e)
 
+  def on_copy_for_frontsteps_clicked():
+    """Copy full template-rendered HTML (with head/style) for FrontSteps.
+
+    Uses the main template renderer to produce visually identical output to
+    the in-app preview. Leaves head/style intact for better paste fidelity
+    into web editors like FrontSteps. Upgrades URLs and converts AVIF to JPG
+    where possible to avoid mixed-content or unsupported formats.
+    """
+    try:
+      # Render via template engine
+      try:
+        from bulletin_builder.bulletin_renderer import BulletinRenderer
+        settings = getattr(app, 'settings_frame', None)
+        settings_dict = settings.dump() if settings and hasattr(settings, 'dump') else {}
+        br = BulletinRenderer()
+        html = br.render_html(sections_data=getattr(app, 'sections_data', []), settings=settings_dict)
+      except Exception as e:
+        html = f"<html><body><p>Render error: {e}</p></body></html>"
+
+      # Make URLs safer for email/web paste
+      try:
+        from bulletin_builder.app_core.url_upgrade import upgrade_http_to_https
+        html = upgrade_http_to_https(html, convert_avif=True)
+      except Exception:
+        pass
+
+      # Prefer clipboard; fallback to writing a temp file and opening it
+      if hasattr(app, 'clipboard_clear') and hasattr(app, 'clipboard_append'):
+        app.clipboard_clear()
+        app.clipboard_append(html)
+        if hasattr(app, 'show_status_message'):
+          app.show_status_message('FrontSteps HTML copied to clipboard')
+      else:
+        fd, tmp = tempfile.mkstemp(suffix='.html')
+        os.close(fd)
+        with open(tmp, 'w', encoding='utf-8') as f:
+          f.write(html)
+        webbrowser.open(tmp)
+    except Exception as e:
+      try:
+        messagebox.showerror('Copy Error', str(e))
+      except Exception:
+        print('Copy FrontSteps Error', e)
+
   def on_export_ics_clicked():
     try:
       # Basic ICS exporter: include event titles as SUMMARY only when events present
@@ -335,6 +425,7 @@ def init(app):
   # Attach to app
   app.on_export_html_text_clicked = on_export_html_text_clicked
   app.on_copy_for_email_clicked = on_copy_for_email_clicked
+  app.on_copy_for_frontsteps_clicked = on_copy_for_frontsteps_clicked
   app.on_export_ics_clicked = on_export_ics_clicked
   app.on_send_test_email_clicked = on_send_test_email_clicked
   

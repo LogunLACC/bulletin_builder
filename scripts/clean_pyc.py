@@ -1,5 +1,4 @@
 import os
-import sys
 root = os.path.dirname(os.path.dirname(__file__))
 removed = []
 for dirpath, dirnames, filenames in os.walk(root):

@@ -3,7 +3,6 @@ Command Line Interface for Bulletin Builder
 """
 import argparse
 import sys
-import os
 
 def main():
     """Main CLI entry point for Bulletin Builder"""

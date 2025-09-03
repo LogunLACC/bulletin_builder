@@ -1,7 +1,5 @@
 {# This partial is for sections with type 'announcements' #}
-{% if section.title %}
-    <h2>{{ section.title }}</h2>
-{% endif %}
+{# The main layout prints the section <h2> already; render the announcement items only. #}
 
 {% set items = section.content or [] %}
 {% for item in items %}
@@ -9,7 +7,7 @@
     <h4>{{ item.title }}</h4>
     <div class="a-body">{{ item.body | safe }}</div>
     {% if item.link %}
-      <p><a href="{{ item.link }}">{{ item.link_text or item.link }}</a></p>
+      <p><a style="margin:0; padding:0;" href="{{ item.link }}">{{ item.link_text or item.link }}</a></p>
     {% endif %}
   </article>
 {% endfor %}

@@ -1,0 +1,80 @@
+﻿{
+    "generated_at":  "2025-08-29T10:32:40.3473111-07:00",
+    "stacks":  {
+                   "python":  true,
+                   "node":  false
+               },
+    "repo":  "Bulletin Builder",
+    "steps":  [
+                  {
+                      "name":  "git:status",
+                      "status":  "ok"
+                  },
+                  {
+                      "status":  "error",
+                      "error":  "  WARNING: The script glom.exe is installed in \u0027C:\\Users\\LogunJohnston\\AppData\\Roaming\\Python\\Python313\\Scripts\u0027 which is not on PATH.",
+                      "name":  "py:install-tools"
+                  },
+                  {
+                      "name":  "py:ruff",
+                      "status":  "ok"
+                  },
+                  {
+                      "name":  "py:mypy",
+                      "status":  "ok"
+                  },
+                  {
+                      "name":  "py:bandit",
+                      "status":  "ok"
+                  },
+                  {
+                      "name":  "py:pip-audit",
+                      "status":  "ok"
+                  },
+                  {
+                      "name":  "py:licenses",
+                      "status":  "ok"
+                  },
+                  {
+                      "name":  "py:detect-tests",
+                      "status":  "ok"
+                  },
+                  {
+                      "name":  "py:pytest",
+                      "status":  "ok"
+                  },
+                  {
+                      "name":  "py:semgrep",
+                      "status":  "ok"
+                  },
+                  {
+                      "name":  "py:detect-secrets",
+                      "status":  "ok"
+                  },
+                  {
+                      "status":  "skipped",
+                      "name":  "node",
+                      "reason":  "no package.json"
+                  }
+              ],
+    "outputs":  {
+                    "npm_audit":  "reports/npm-audit.json",
+                    "py_licenses":  "reports/py-licenses.json",
+                    "semgrep_py":  "reports/semgrep.json",
+                    "eslint":  "reports/eslint.json",
+                    "semgrep_node":  "reports/semgrep-node.json",
+                    "depcheck":  "reports/depcheck.txt",
+                    "tsc":  "reports/tsc.txt",
+                    "detect_secrets":  "reports/detect-secrets.json",
+                    "git":  "reports/git.json",
+                    "node_licenses":  "reports/node-licenses.json",
+                    "detect_secrets_n":  "reports/detect-secrets-node.json",
+                    "pip_audit":  "reports/pip-audit.json",
+                    "ruff":  "reports/ruff.json",
+                    "vitest":  "reports/vitest.txt",
+                    "jest":  "reports/jest.txt",
+                    "bandit":  "reports/bandit.json",
+                    "mypy":  "reports/mypy.txt",
+                    "pytest":  "reports/pytest.txt"
+                }
+}

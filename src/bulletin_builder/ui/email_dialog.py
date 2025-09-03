@@ -1,5 +1,4 @@
 import customtkinter as ctk
-import tkinter as tk
 
 class EmailDialog(ctk.CTkToplevel):
     """Dialog to capture a destination email address."""

@@ -50,7 +50,9 @@ def add_section_dialog(app):
     result = dlg.get_input()
     if result:
         title, sec_type = result
-        app.sections_data.append({'title': title, 'type': sec_type, 'content': {}})
+        # Announcements expect a list for 'content'; most other sections use a dict
+        content = [] if sec_type == 'announcements' else {}
+        app.sections_data.append({'title': title, 'type': sec_type, 'content': content})
         app.refresh_listbox_titles()
         # Select the newly added section
         idx = len(app.sections_data) - 1

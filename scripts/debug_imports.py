@@ -1,4 +1,6 @@
-import sys, importlib, os
+import sys
+import importlib
+import os
 print('cwd', os.getcwd())
 print('sys.path[0]', sys.path[0])
 spec = importlib.util.find_spec('test_theme_modes')

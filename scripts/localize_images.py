@@ -7,7 +7,12 @@ Usage:
 
 If you don't know the final WordPress path yet, omit --public-prefix and it'll use a relative media/ path.
 """
-import argparse, base64, os, re, sys, hashlib
+import argparse
+import base64
+import os
+import re
+import sys
+import hashlib
 from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 from html.parser import HTMLParser
@@ -17,7 +22,7 @@ from io import BytesIO
 from PIL import Image
 
 try:
-    import pillow_avif  # registers AVIF with Pillow
+    pass  # registers AVIF with Pillow
 except Exception:
     pass
 

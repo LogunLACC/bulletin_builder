@@ -1,4 +1,3 @@
-import os
 import pathlib
 
 def get_templates_dir():

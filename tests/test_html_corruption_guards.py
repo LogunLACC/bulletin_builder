@@ -1,4 +1,3 @@
-import re
 from bulletin_builder.app_core.sanitize import sanitize_email_html
 
 def test_no_tagname_corruption_when_inserting_style():

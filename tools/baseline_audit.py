@@ -6,7 +6,9 @@ Usage:
   python tools/baseline_audit.py --mode web   path/to/file.html [...]
 Exit: 0 pass, 1 fail
 """
-import argparse, re, sys
+import argparse
+import re
+import sys
 from pathlib import Path
 from typing import List, Dict, Any
 
@@ -140,7 +142,8 @@ Exit codes:
 This script performs audits only (no mutation). It is NPM-free and safe to run anywhere.
 """
 
-import argparse, re, sys
+import re
+import sys
 from pathlib import Path
 from typing import List, Dict, Any
 

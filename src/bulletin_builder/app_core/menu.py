@@ -5,29 +5,24 @@ def _add_if(app, menu, label, attr):
         menu.add_command(label=label, command=getattr(app, attr))
 
 def init(app):
-    """Register the File menu items on the main application."""
-    menubar = tk.Menu(app)
-    filemenu = tk.Menu(menubar, tearoff=0)
-    # New/Open/Save commands
-    filemenu.add_command(label="New Draft", command=app.new_draft)
-    filemenu.add_separator()
-    filemenu.add_command(label="Open Draft...", command=app.open_draft)
-    filemenu.add_separator()
-    filemenu.add_command(label="Save", command=app.save_draft)
-    filemenu.add_command(label="Save As...", command=lambda: app.save_draft(save_as=True))
-    filemenu.add_separator()
-    filemenu.add_command(label="Exit", command=app.quit)
+    """Attach the expected file/tool handlers to the app object but do not
+    build a menubar here. UI construction (menus) is handled centrally by
+    `ui_setup.init` so that only one authoritative menu exists and duplicates
+    are avoided.
 
-    _add_if(app, filemenu, "Import Announcements CSV…", "import_announcements_csv")
-    _add_if(app, filemenu, "Import Google Sheet (CSV)…", "import_announcements_sheet")
-    _add_if(app, filemenu, "Import Events Feed…", "import_events_feed")
-    filemenu.add_separator()
-    _add_if(app, filemenu, "Export HTML & Text…", "on_export_html_text_clicked")
-    _add_if(app, filemenu, "Copy Email-Ready HTML", "on_copy_for_email_clicked")
-    _add_if(app, filemenu, "Open in Browser", "open_in_browser")
-    _add_if(app, filemenu, "Export Calendar (.ics)…", "on_export_ics_clicked")
-    filemenu.add_separator()
-    filemenu.add_command(label="Exit", command=app.quit)
-
-    menubar.add_cascade(label="File", menu=filemenu)
-    app.config(menu=menubar)
+    This function simply ensures the app exposes the common handler attributes
+    so menu building code (ui_setup) can safely reference them.
+    """
+    # Ensure standard handlers exist (defaults are no-ops so UI items work)
+    app.new_draft = getattr(app, 'new_draft', lambda: None)
+    app.open_draft = getattr(app, 'open_draft', lambda: None)
+    app.save_draft = getattr(app, 'save_draft', lambda save_as=False: None)
+    app.import_announcements_csv = getattr(app, 'import_announcements_csv', lambda: None)
+    app.import_announcements_sheet = getattr(app, 'import_announcements_sheet', lambda: None)
+    app.import_events_feed = getattr(app, 'import_events_feed', lambda url=None: None)
+    app.on_export_html_text_clicked = getattr(app, 'on_export_html_text_clicked', lambda: None)
+    app.on_copy_for_email_clicked = getattr(app, 'on_copy_for_email_clicked', lambda: None)
+    app.open_in_browser = getattr(app, 'open_in_browser', lambda: None)
+    app.on_export_ics_clicked = getattr(app, 'on_export_ics_clicked', lambda: None)
+    # No UI construction here; ui_setup.build_menus will create the actual menubar.
+    return None

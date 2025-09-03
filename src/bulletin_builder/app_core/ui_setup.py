@@ -80,6 +80,7 @@ def init(app):
 
         add("Export HTML & Text...", "on_export_html_text_clicked")
         add("Copy Email-Ready HTML", "on_copy_for_email_clicked")
+        add("Copy FrontSteps HTML", "on_copy_for_frontsteps_clicked")
         add("Open in Browser", "open_in_browser")
         file_menu.add_separator()
         add("Import Announcements CSV...", "import_announcements_csv")

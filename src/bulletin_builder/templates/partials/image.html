@@ -1,7 +1,6 @@
 {# This partial is for sections with type 'image' #}
-{% if section.title %}
-    <h2>{{ section.title }}</h2>
-{% endif %}
+{# The main layout already renders the section <h2> when a title exists.
+   Keep this partial focused on the image content only to avoid duplicate headings. #}
 
 {% if section.src %}
 <p style="text-align: center;">

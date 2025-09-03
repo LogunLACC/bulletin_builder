@@ -38,7 +38,7 @@ def init(app):
         if not path: return
         try:
             data = json.loads(Path(path).read_text(encoding='utf-8'))
-        except Exception as e:
+        except Exception:
             # messagebox.showerror('Open Error',str(e))
             return
         app.sections_data[:] = data.get('sections',[])
@@ -71,7 +71,7 @@ def init(app):
         try:
             Path(app.current_draft_path).write_text(json.dumps(payload,indent=2), encoding='utf-8')
             app.show_status_message(f"Draft saved: {Path(app.current_draft_path).name}")
-        except Exception as e:
+        except Exception:
             # messagebox.showerror('Save Error',str(e))
             pass
 

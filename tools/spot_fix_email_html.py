@@ -4,7 +4,8 @@ Spot-fix legacy EMAIL HTML files in place:
   - Convert known-safe .avif[?query] -> .jpg
   - (Optionally) enforce basic style starts if missing
 """
-import sys, re
+import sys
+import re
 from pathlib import Path
 
 RX = re.compile(r'(?i)(?P<attr>\b(?:src|href)\s*=\s*["\'])(?P<url>https?://(?P<host>[^/"\']+)[^"\']*\.avif(?:\?[^"\']*)?)(?P<rest>["\'])')

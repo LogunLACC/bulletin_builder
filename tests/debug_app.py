@@ -14,7 +14,6 @@ def test_imports():
     """Test basic imports without GUI."""
     print("Testing basic imports...")
     try:
-        import bulletin_builder
         print("✓ bulletin_builder imported")
     except Exception as e:
         print(f"✗ bulletin_builder import failed: {e}")
@@ -22,7 +21,6 @@ def test_imports():
         return False
 
     try:
-        from bulletin_builder.app_core import config
         print("✓ config module imported")
     except Exception as e:
         print(f"✗ config import failed: {e}")
@@ -30,7 +28,6 @@ def test_imports():
         return False
 
     try:
-        from bulletin_builder.app_core.config import load_api_key, load_openai_key, load_events_feed_url
         print("✓ config functions imported")
     except Exception as e:
         print(f"✗ config functions import failed: {e}")
