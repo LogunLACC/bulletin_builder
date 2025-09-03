@@ -9,9 +9,10 @@ from html import escape
 import re
 import traceback
 
-from pathlib import Path
 
+import os
 from bulletin_builder.postprocess import ensure_postprocessed
+from bulletin_builder.actions_log import log_action
 
 
 def _slug(text: str) -> str:
@@ -90,6 +91,10 @@ def _render_section_html(section: dict) -> str:
 def render_email_html(ctx: dict) -> str:
   """Render a conservative, email-ready HTML output for a bulletin context."""
   try:
+    try:
+      log_action("render_email_html", {"title": ctx.get("title"), "sections": len(ctx.get("sections", []))})
+    except Exception:
+      pass
     title = ctx.get("title", "Bulletin")
     date = ctx.get("date", "")
     sections = ctx.get("sections", [])
@@ -107,7 +112,7 @@ def render_email_html(ctx: dict) -> str:
       for s in sections:
         t = s.get("title", "")
         if t:
-          items.append(f'<li><a href="#' + _slug(t) + '">' + escape(t) + '</a></li>')
+          items.append('<li><a href="#' + _slug(t) + '">' + escape(t) + '</a></li>')
       toc = '<ul style="margin:0 0 24px 0;padding:0 0 0 18px;">' + "\n".join(items) + '</ul>' if items else ""
 
     html = (
@@ -156,7 +161,7 @@ def render_bulletin_html(ctx: dict) -> str:
       for s in sections:
         t = s.get("title", "")
         if t:
-          items.append(f'<li><a href="#' + _slug(t) + '">' + escape(t) + '</a></li>')
+          items.append('<li><a href="#' + _slug(t) + '">' + escape(t) + '</a></li>')
       toc = '<ul>' + "\n".join(items) + '</ul>' if items else ""
 
     html = (
@@ -179,5 +184,173 @@ def collect_context(*args, **kwargs) -> dict:
 
 
 def init(app):
-  """No-op init for compatibility when imported in headless contexts."""
+  """Attach lightweight exporter menu handlers onto the app.
+
+  Handlers are conservative and non-destructive: they render HTML using the
+  existing renderers and either save to disk, copy to clipboard (if a GUI
+  root is available), or write a harmless temporary file. All operations are
+  best-effort and wrapped in try/except to remain safe in headless tests.
+  """
+  import tempfile
+  import webbrowser
+  from tkinter import filedialog, messagebox, simpledialog
+
+  def _collect_context():
+    try:
+      # Prefer a GUI-aware collect_context on the app if present
+      if hasattr(app, 'collect_context') and callable(app.collect_context):
+        return app.collect_context()
+      # Fallback to renderer + settings
+      settings = app.settings_frame.dump() if hasattr(app, 'settings_frame') else {}
+      return {'title': settings.get('bulletin_title','Bulletin'), 'date': settings.get('bulletin_date',''), 'sections': getattr(app,'sections_data',[]), 'settings': settings}
+    except Exception:
+      return {'title': 'Bulletin', 'date': '', 'sections': getattr(app,'sections_data',[]), 'settings': {}}
+
+  def on_export_html_text_clicked():
+    try:
+      ctx = _collect_context()
+      html = render_bulletin_html(ctx)
+      default = f"{ctx.get('title','bulletin').replace(' ','_')}.html"
+      path = filedialog.asksaveasfilename(defaultextension='.html', initialfile=default, title='Export Bulletin HTML')
+      if not path:
+        return
+      with open(path, 'w', encoding='utf-8') as f:
+        f.write(html)
+      # Offer a plain-text copy (very small best-effort conversion)
+      text_path = path.rsplit('.',1)[0] + '.txt'
+      text = re.sub(r'<[^>]+>', '', html)
+      with open(text_path, 'w', encoding='utf-8') as f:
+        f.write(text)
+      if hasattr(app, 'show_status_message'):
+        app.show_status_message(f'Exported HTML → {path}')
+      else:
+        messagebox.showinfo('Export', f'Exported HTML → {path}')
+    except Exception as e:
+      try:
+        messagebox.showerror('Export Error', str(e))
+      except Exception:
+        print('Export Error', e)
+
+  def on_copy_for_email_clicked():
+    try:
+      ctx = _collect_context()
+      html = render_email_html(ctx)
+      # Copy to clipboard if app root has clipboard methods, else write to temp file and open
+      if hasattr(app, 'clipboard_clear') and hasattr(app, 'clipboard_append'):
+        app.clipboard_clear()
+        app.clipboard_append(html)
+        if hasattr(app, 'show_status_message'):
+          app.show_status_message('Email HTML copied to clipboard')
+        else:
+          messagebox.showinfo('Copied', 'Email-ready HTML copied to clipboard')
+      else:
+        fd, tmp = tempfile.mkstemp(suffix='.html')
+        os.close(fd)
+        with open(tmp, 'w', encoding='utf-8') as f:
+          f.write(html)
+        webbrowser.open(tmp)
+    except Exception as e:
+      try:
+        messagebox.showerror('Copy Error', str(e))
+      except Exception:
+        print('Copy Error', e)
+
+  def on_export_ics_clicked():
+    try:
+      # Basic ICS exporter: include event titles as SUMMARY only when events present
+      sections = getattr(app, 'sections_data', []) or []
+      events = []
+      for s in sections:
+        if s.get('type') in ('community_events', 'events'):
+          events.extend(s.get('content') or [])
+      if not events:
+        messagebox.showinfo('Export ICS', 'No events found to export.')
+        return
+      ics_lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//LACC//BulletinBuilder//EN']
+      for ev in events:
+        title = ev.get('title', ev.get('description','Event'))
+        ics_lines += ['BEGIN:VEVENT', f'SUMMARY:{title}', 'END:VEVENT']
+      ics_lines.append('END:VCALENDAR')
+      default = 'events.ics'
+      path = filedialog.asksaveasfilename(defaultextension='.ics', initialfile=default, title='Export Events (.ics)')
+      if not path:
+        return
+      with open(path, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(ics_lines))
+      if hasattr(app, 'show_status_message'):
+        app.show_status_message(f'Exported events → {path}')
+      else:
+        messagebox.showinfo('Export', f'Exported events → {path}')
+    except Exception as e:
+      try:
+        messagebox.showerror('Export Error', str(e))
+      except Exception:
+        print('ICS Export Error', e)
+
+  def on_send_test_email_clicked():
+    try:
+      recipient = simpledialog.askstring('Send Test Email', 'Enter test recipient email address:')
+      if not recipient:
+        return
+      ctx = _collect_context()
+      html = render_email_html(ctx)
+      # For safety, write to a temporary file and open in browser
+      fd, tmp = tempfile.mkstemp(suffix='.html')
+      os.close(fd)
+      with open(tmp, 'w', encoding='utf-8') as f:
+        f.write(html)
+      webbrowser.open(tmp)
+      if hasattr(app, 'show_status_message'):
+        app.show_status_message(f'Test email prepared for {recipient} (opened in browser)')
+    except Exception as e:
+      try:
+        messagebox.showerror('Send Error', str(e))
+      except Exception:
+        print('Send Error', e)
+
+  # Attach to app
+  app.on_export_html_text_clicked = on_export_html_text_clicked
+  app.on_copy_for_email_clicked = on_copy_for_email_clicked
+  app.on_export_ics_clicked = on_export_ics_clicked
+  app.on_send_test_email_clicked = on_send_test_email_clicked
+  
+  # Optional explicit exports used by UI export submenu
+  def export_bulletin_html():
+    try:
+      ctx = _collect_context()
+      html = render_bulletin_html(ctx)
+      default = f"{ctx.get('title','Bulletin').replace(' ','_')}.html"
+      path = filedialog.asksaveasfilename(defaultextension='.html', initialfile=default, title='Export Bulletin HTML')
+      if not path:
+        return
+      with open(path, 'w', encoding='utf-8') as f:
+        f.write(html)
+      if hasattr(app, 'show_status_message'):
+        app.show_status_message(f"Exported Bulletin HTML: {path}")
+    except Exception as e:
+      try:
+        messagebox.showerror('Export Error', str(e))
+      except Exception:
+        print('Export Error', e)
+
+  def export_email_html():
+    try:
+      ctx = _collect_context()
+      html = render_email_html(ctx)
+      default = f"{ctx.get('title','Bulletin').replace(' ','_')}_email.html"
+      path = filedialog.asksaveasfilename(defaultextension='.html', initialfile=default, title='Export Email HTML')
+      if not path:
+        return
+      with open(path, 'w', encoding='utf-8') as f:
+        f.write(html)
+      if hasattr(app, 'show_status_message'):
+        app.show_status_message(f"Exported Email HTML: {path}")
+    except Exception as e:
+      try:
+        messagebox.showerror('Export Error', str(e))
+      except Exception:
+        print('Export Error', e)
+
+  app.export_bulletin_html = export_bulletin_html
+  app.export_email_html = export_email_html
   return None
