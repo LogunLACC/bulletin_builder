@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Minimal Bulletin Builder test to isolate the popup issue.
 """
@@ -33,21 +33,21 @@ def test_minimal_gui():
         button = ctk.CTkButton(root, text="Close", command=root.quit)
         button.pack(pady=10)
 
-        print("✓ Minimal GUI created successfully")
-        print("✓ No popups should appear")
+        print("âœ“ Minimal GUI created successfully")
+        print("âœ“ No popups should appear")
         print("Close the window to continue...")
 
         # Run the GUI (this will block until window is closed)
         root.mainloop()
 
-        print("✓ GUI closed successfully")
-        return True
+        print("âœ“ GUI closed successfully")
+        assert True
 
     except Exception as e:
-        print(f"✗ Minimal GUI failed: {e}")
+        print(f"âœ— Minimal GUI failed: {e}")
         import traceback
         traceback.print_exc()
-        return False
+        assert False
 
 if __name__ == "__main__":
     print("Minimal Bulletin Builder GUI Test")
@@ -56,6 +56,6 @@ if __name__ == "__main__":
     success = test_minimal_gui()
 
     if success:
-        print("\n✓ Basic GUI test passed - issue is in app initialization")
+        print("\nâœ“ Basic GUI test passed - issue is in app initialization")
     else:
-        print("\n✗ Basic GUI test failed - issue is in GUI setup")
+        print("\nâœ— Basic GUI test failed - issue is in GUI setup")

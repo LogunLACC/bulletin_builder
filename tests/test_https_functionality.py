@@ -1,9 +1,8 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Test script for HTTPS/security functionality
 """
 import sys
-import os
 
 # Add src to path
 sys.path.insert(0, 'src')
@@ -13,33 +12,32 @@ def test_functionality():
     try:
         # Import new modules
         from bulletin_builder.app_core.url_upgrade import upgrade_http_to_https, is_secure_context
-        from bulletin_builder.app_core.sanitize import sanitize_email_html
-        print('✓ All modules imported successfully')
+        print('âœ“ All modules imported successfully')
 
         # Test URL upgrade functionality
         test_html = '<img src="http://lakealmanorcountryclub.com/test.jpg">'
         upgraded = upgrade_http_to_https(test_html)
-        print(f'✓ URL upgrade works: {upgraded}')
+        print(f'âœ“ URL upgrade works: {upgraded}')
 
         # Test secure context
         secure = is_secure_context()
-        print(f'✓ Secure context check: {secure}')
+        print(f'âœ“ Secure context check: {secure}')
 
         # Test that upgraded URL is HTTPS
         if 'https://lakealmanorcountryclub.com/test.jpg' in upgraded:
-            print('✓ HTTP to HTTPS upgrade working correctly')
+            print('âœ“ HTTP to HTTPS upgrade working correctly')
         else:
-            print('✗ HTTP to HTTPS upgrade failed')
-            return False
+            print('âœ— HTTP to HTTPS upgrade failed')
+            assert False
 
-        print('✓ All HTTPS/security functionality working correctly!')
-        return True
+        print('âœ“ All HTTPS/security functionality working correctly!')
+        assert True
 
     except Exception as e:
-        print(f'✗ Error: {e}')
+        print(f'âœ— Error: {e}')
         import traceback
         traceback.print_exc()
-        return False
+        assert False
 
 if __name__ == "__main__":
     success = test_functionality()

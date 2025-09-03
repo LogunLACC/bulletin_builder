@@ -1,15 +1,10 @@
-import csv
-import io
 import json
 import urllib.request
-import os
-import tempfile
 import calendar
 import re
 from datetime import datetime, timedelta, time
 from typing import List, Dict, Iterable
 
-from .image_utils import optimize_image
 
 
 def _normalize_tags(raw: Iterable | str | None) -> list[str]:
@@ -136,7 +131,7 @@ def expand_recurring_events(events: List[Dict[str, str]], days: int = 60) -> Lis
     returned as a separate event dictionary with the ``date`` field set.
     Past events are automatically filtered out.
     """
-    start = datetime.utcnow().date()
+    start = datetime.now(datetime.UTC).date()
     end = start + timedelta(days=days)
     expanded: List[Dict[str, str]] = []
 
