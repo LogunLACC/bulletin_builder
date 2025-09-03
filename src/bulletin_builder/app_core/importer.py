@@ -155,7 +155,7 @@ def import_google_sheet(app):
         return
     url = url.strip().strip('"\'')
     if hasattr(app, "_show_progress"):
-        app._show_progress("Fetching Google Sheet…")
+        app._show_progress("Fetching Google Sheet...")
 
     def _worker():
         try:
@@ -188,7 +188,7 @@ def import_events_feed(app, url: str | None = None):
     # Sanitize URL: strip whitespace and quotes
     url = url.strip().strip('"\'')
     if hasattr(app, "_show_progress"):
-        app._show_progress("Fetching events…")
+        app._show_progress("Fetching events...")
 
     def _worker():
         try:

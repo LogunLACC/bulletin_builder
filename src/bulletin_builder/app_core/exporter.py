@@ -222,9 +222,9 @@ def init(app):
       with open(text_path, 'w', encoding='utf-8') as f:
         f.write(text)
       if hasattr(app, 'show_status_message'):
-        app.show_status_message(f'Exported HTML → {path}')
+        app.show_status_message(f'Exported HTML: {path}')
       else:
-        messagebox.showinfo('Export', f'Exported HTML → {path}')
+        messagebox.showinfo('Export', f'Exported HTML: {path}')
     except Exception as e:
       try:
         messagebox.showerror('Export Error', str(e))
@@ -278,9 +278,9 @@ def init(app):
       with open(path, 'w', encoding='utf-8') as f:
         f.write('\n'.join(ics_lines))
       if hasattr(app, 'show_status_message'):
-        app.show_status_message(f'Exported events → {path}')
+        app.show_status_message(f'Exported events: {path}')
       else:
-        messagebox.showinfo('Export', f'Exported events → {path}')
+        messagebox.showinfo('Export', f'Exported events: {path}')
     except Exception as e:
       try:
         messagebox.showerror('Export Error', str(e))
