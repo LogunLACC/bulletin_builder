@@ -57,13 +57,13 @@ class BulletinBuilderApp(ctk.CTk):
             if hasattr(self, attr):
                 file_menu.add_command(label=label, command=getattr(self, attr))
 
-        add("Export HTML & Text…", "on_export_html_text_clicked")
+        add("Export HTML & Text...", "on_export_html_text_clicked")
         add("Copy Email-Ready HTML", "on_copy_for_email_clicked")
         add("Open in Browser", "open_in_browser")
         file_menu.add_separator()
-        add("Import Announcements CSV…", "import_announcements_csv")
+        add("Import Announcements CSV...", "import_announcements_csv")
         file_menu.add_separator()
-        add("Export Calendar (.ics)…", "on_export_ics_clicked")
+        add("Export Calendar (.ics)...", "on_export_ics_clicked")
         add("Send Test Email…", "on_send_test_email_clicked")
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.destroy)

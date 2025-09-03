@@ -19,7 +19,7 @@ def log_action(action: str, details: str | None = None) -> None:
     try:
         repo_root = pathlib.Path(__file__).resolve().parents[2]
         log_file = repo_root / "activity.log"
-        ts = datetime.datetime.now(datetime.UTC).isoformat()
+        ts = datetime.datetime.now(datetime.timezone.utc).isoformat()
         with open(log_file, "a", encoding="utf-8") as f:
             line = ts + " | " + action
             if details:
@@ -29,7 +29,7 @@ def log_action(action: str, details: str | None = None) -> None:
         # Best-effort fallback: try current working directory
         try:
             alt = pathlib.Path.cwd() / "activity.log"
-            ts = datetime.datetime.now(datetime.UTC).isoformat()
+            ts = datetime.datetime.now(datetime.timezone.utc).isoformat()
             with open(alt, "a", encoding="utf-8") as f:
                 f.write(ts + " | " + action + (" | " + str(details) if details else "") + "\n")
         except Exception:

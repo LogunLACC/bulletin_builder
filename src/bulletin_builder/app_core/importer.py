@@ -216,6 +216,8 @@ def import_events_feed(app, url: str | None = None):
             if not events:
                 messagebox.showinfo("Import Events", "No events found.")
             else:
+                if not hasattr(app, "sections_data"):
+                    app.sections_data = []
                 app.sections_data.append({
                     "title": "Community Events",
                     "type": "community_events",

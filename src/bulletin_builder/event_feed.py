@@ -2,7 +2,7 @@ import json
 import urllib.request
 import calendar
 import re
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta, time, timezone
 from typing import List, Dict, Iterable
 
 
@@ -131,7 +131,7 @@ def expand_recurring_events(events: List[Dict[str, str]], days: int = 60) -> Lis
     returned as a separate event dictionary with the ``date`` field set.
     Past events are automatically filtered out.
     """
-    start = datetime.now(datetime.UTC).date()
+    start = datetime.now(timezone.utc).date()
     end = start + timedelta(days=days)
     expanded: List[Dict[str, str]] = []
 
