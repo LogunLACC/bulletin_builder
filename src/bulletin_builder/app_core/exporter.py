@@ -20,9 +20,33 @@ def _slug(text: str) -> str:
 
 
 def _event_card_email(ev: dict) -> str:
-  title = escape(ev.get("title", ""))
-  date = escape(ev.get("date", ""))
-  return f'<div style="margin-bottom:8px;"><strong>{title}</strong> <span style="color:#888;">{date}</span></div>'
+  """Render a compact email-friendly event line.
+
+  Falls back from `title` to `description` (and a few common aliases) and
+  shows date with optional time. Includes a simple More Info link when present.
+  """
+  raw_title = (
+    ev.get("title")
+    or ev.get("description")
+    or ev.get("name")
+    or ev.get("event")
+    or ""
+  )
+  title = escape(raw_title)
+  date_txt = escape(ev.get("date", ""))
+  time_txt = (ev.get("time") or "").strip()
+  when = date_txt + (f" at {escape(time_txt)}" if time_txt else "")
+  link = (ev.get("link") or "").strip()
+  more = f' <a href="{escape(link)}" style="color:#1a73e8;text-decoration:underline;">More Info</a>' if link else ""
+  if not title and not when:
+    title = "Event"
+  return (
+    '<div style="margin-bottom:8px;">'
+    f'<strong>{title}</strong> '
+    f'<span style="color:#888;">{when}</span>'
+    f'{more}'
+    '</div>'
+  )
 
 
 def _render_section_email(section: dict) -> str:
