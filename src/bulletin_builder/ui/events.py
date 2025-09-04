@@ -68,6 +68,11 @@ class EventsFrame(ctk.CTkFrame):
         add_event_button.grid(row=3, column=0, sticky="ew", pady=(10, 0))
 
         self.rebuild_event_list()
+        # Force placeholders to render on initial paint
+        try:
+            self.after(60, self._refresh_placeholders)
+        except Exception:
+            pass
 
     def on_style_change(self, value):
         self.section_data['layout_style'] = value
@@ -78,6 +83,10 @@ class EventsFrame(ctk.CTkFrame):
             widget.destroy()
         for i, event_item in enumerate(self.section_data['content']):
             self.create_event_entry_widget(event_item, i)
+        try:
+            self.after(10, self._refresh_placeholders)
+        except Exception:
+            pass
 
     def create_event_entry_widget(self, event_item_data, index):
         entry_frame = ctk.CTkFrame(self.scrollable_frame)
@@ -128,6 +137,11 @@ class EventsFrame(ctk.CTkFrame):
         map_entry.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
         map_entry.insert(0, event_item_data.get("map_link", ""))
         map_entry.bind("<KeyRelease>", lambda e, i=index: self.update_event_data(i, "map_link", e.widget.get()))
+        try:
+            # Nudge placeholder drawing shortly after creation
+            self.after(5, self._refresh_placeholders)
+        except Exception:
+            pass
 
     def add_event_item(self):
         self.section_data['content'].append({
@@ -140,11 +154,19 @@ class EventsFrame(ctk.CTkFrame):
         })
         self.rebuild_event_list()
         self._on_data_change()
+        try:
+            self.after(10, self._refresh_placeholders)
+        except Exception:
+            pass
 
     def remove_event_item(self, index):
         self.section_data['content'].pop(index)
         self.rebuild_event_list()
         self._on_data_change()
+        try:
+            self.after(10, self._refresh_placeholders)
+        except Exception:
+            pass
 
     def update_event_data(self, index, key, value):
         while len(self.section_data['content']) <= index:
@@ -159,3 +181,27 @@ class EventsFrame(ctk.CTkFrame):
     def _on_save_component(self):
         self._on_data_change()
         self.save_component_callback(self.section_data)
+
+    def _refresh_placeholders(self):
+        """Force CTkEntry placeholders to render when fields are empty.
+        Some CustomTkinter versions defer placeholder drawing until focus
+        changes; toggling the configured placeholder_text nudges a redraw.
+        """
+        try:
+            def _walk(w):
+                yield w
+                for c in getattr(w, "winfo_children", lambda: [])():
+                    yield from _walk(c)
+            for w in _walk(self.scrollable_frame):
+                try:
+                    pt = w.cget("placeholder_text")  # may raise if unsupported
+                except Exception:
+                    continue
+                try:
+                    # Only reconfigure if entry is empty
+                    if hasattr(w, "get") and not w.get():
+                        w.configure(placeholder_text=pt)
+                except Exception:
+                    pass
+        except Exception:
+            pass
