@@ -36,3 +36,7 @@ def test_announcement_padding_and_zero_padding_cells():
     out = ensure_postprocessed(src)
     assert "padding:12px 16px" in out
     assert "padding:0 16px" in out
+
+
+def test_pytest_discovery():
+  assert True
