@@ -31,9 +31,20 @@ class AnnouncementsFrame(ctk.CTkFrame):
         right = ctk.CTkFrame(self)
         right.pack(side="left", fill="both", expand=True, padx=6, pady=6)
 
-        self.title_entry = ctk.CTkEntry(right)
+        self.title_entry = ctk.CTkEntry(right, placeholder_text="Announcement title…")
         self.title_entry.pack(fill="x", pady=(0, 4))
-        self.body_text = ctk.CTkTextbox(right, height=120)
+
+        # Optional link text + URL
+        self.link_text_entry = ctk.CTkEntry(right, placeholder_text="Link title (optional)…")
+        self.link_text_entry.pack(fill="x", pady=(0, 4))
+        self.link_url_entry = ctk.CTkEntry(right, placeholder_text="https://example.com (optional)…")
+        self.link_url_entry.pack(fill="x", pady=(0, 6))
+
+        try:
+            self.body_text = ctk.CTkTextbox(right, height=120, placeholder_text="Body (supports simple text)…")
+        except Exception:
+            # Older CustomTkinter versions may not support placeholder_text on CTkTextbox
+            self.body_text = ctk.CTkTextbox(right, height=120)
         self.body_text.pack(fill="both", expand=True)
 
         btn_frame = ctk.CTkFrame(right, fg_color="transparent")
@@ -48,6 +59,11 @@ class AnnouncementsFrame(ctk.CTkFrame):
 
         if isinstance(section, dict):
             self.set_section(section)
+        # Ensure placeholders render immediately on first paint
+        try:
+            self.after(60, self._refresh_placeholders)
+        except Exception:
+            pass
 
     def set_section(self, section: Dict[str, Any]):
         self.section = section or {}
@@ -68,7 +84,18 @@ class AnnouncementsFrame(ctk.CTkFrame):
             except Exception:
                 ann = []
 
-        self.announcements = [dict(x) if isinstance(x, dict) else {"title": str(x), "body": ""} for x in ann]
+        norm: List[Dict[str, Any]] = []
+        for x in ann:
+            if isinstance(x, dict):
+                norm.append({
+                    "title": x.get("title", ""),
+                    "body": x.get("body", ""),
+                    "link": x.get("link", ""),
+                    "link_text": x.get("link_text", ""),
+                })
+            else:
+                norm.append({"title": str(x), "body": "", "link": "", "link_text": ""})
+        self.announcements = norm
         self._refresh_list()
 
     def get_content(self) -> List[Dict[str, Any]]:
@@ -102,6 +129,16 @@ class AnnouncementsFrame(ctk.CTkFrame):
         self.title_entry.delete(0, "end")
         self.title_entry.insert(0, a.get("title", ""))
         try:
+            self.link_text_entry.delete(0, "end")
+            self.link_text_entry.insert(0, a.get("link_text", ""))
+        except Exception:
+            pass
+        try:
+            self.link_url_entry.delete(0, "end")
+            self.link_url_entry.insert(0, a.get("link", ""))
+        except Exception:
+            pass
+        try:
             self.body_text.delete("1.0", "end")
             self.body_text.insert("1.0", a.get("body", ""))
         except Exception:
@@ -109,7 +146,7 @@ class AnnouncementsFrame(ctk.CTkFrame):
 
     def _add_item(self):
         self._save_current_if_any()
-        self.announcements.append({"title": "", "body": ""})
+        self.announcements.append({"title": "", "body": "", "link": "", "link_text": ""})
         self._refresh_list(select=len(self.announcements) - 1)
 
     def _save_current_if_any(self):
@@ -121,6 +158,14 @@ class AnnouncementsFrame(ctk.CTkFrame):
             a["body"] = self.body_text.get("1.0", "end-1c")
         except Exception:
             a["body"] = a.get("body", "")
+        try:
+            a["link_text"] = self.link_text_entry.get().strip()
+        except Exception:
+            a["link_text"] = a.get("link_text", "")
+        try:
+            a["link"] = self.link_url_entry.get().strip()
+        except Exception:
+            a["link"] = a.get("link", "")
 
         try:
             self.items_list.delete(self.current_index)
@@ -138,6 +183,27 @@ class AnnouncementsFrame(ctk.CTkFrame):
 
         try:
             self.on_dirty()
+        except Exception:
+            pass
+
+    def _refresh_placeholders(self):
+        """Force placeholder drawing for empty fields on initial paint."+
+        This works around a CustomTkinter quirk where placeholders sometimes
+        don't render until a first focus change.
+        """
+        try:
+            # Reconfigure with the same placeholder values to trigger redraw
+            if hasattr(self.title_entry, "configure"):
+                self.title_entry.configure(placeholder_text=self.title_entry.cget("placeholder_text"))
+            if hasattr(self.link_text_entry, "configure"):
+                self.link_text_entry.configure(placeholder_text=self.link_text_entry.cget("placeholder_text"))
+            if hasattr(self.link_url_entry, "configure"):
+                self.link_url_entry.configure(placeholder_text=self.link_url_entry.cget("placeholder_text"))
+            if hasattr(self.body_text, "configure"):
+                try:
+                    self.body_text.configure(placeholder_text=self.body_text.cget("placeholder_text"))
+                except Exception:
+                    pass
         except Exception:
             pass
 
