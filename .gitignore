@@ -14,3 +14,11 @@ __pycache__/
 .env
 dist/
 build/
+reports/
+activity.log
+tmp_*/
+tmp_*.py
+tmp_export/
+exports/
+.github/workflows/*.bak
+repo-scan.ps1

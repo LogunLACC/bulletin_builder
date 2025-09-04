@@ -3,6 +3,7 @@ import urllib.request
 import calendar
 import re
 from datetime import datetime, timedelta, time, timezone, date as date_cls
+from functools import lru_cache
 from typing import List, Dict, Iterable
 
 
@@ -71,6 +72,7 @@ def fetch_events(url: str) -> List[Dict[str, str]]:
     return events
 
 
+@lru_cache(maxsize=1024)
 def _parse_event_date(d: str) -> datetime:
     """
     Try ISO first, then fallback to 'Sat, 06 Sep 2025'-style.
@@ -165,6 +167,7 @@ def expand_recurring_events(events: List[Dict[str, str]], days: int = 60) -> Lis
     return expanded
 
 
+@lru_cache(maxsize=1024)
 def _parse_time(value: str) -> time | None:
     """Parse a time string to ``datetime.time`` if possible."""
     if not value:
@@ -184,6 +187,7 @@ def _parse_time(value: str) -> time | None:
     return None
 
 
+@lru_cache(maxsize=1024)
 def _parse_time_range(value: str) -> tuple[time | None, time | None]:
     """Return (start, end) times from a value like '9am-10am'."""
     if not value:
