@@ -38,7 +38,12 @@ class AnnouncementsFrame(ctk.CTkFrame):
 
         btn_frame = ctk.CTkFrame(right, fg_color="transparent")
         btn_frame.pack(fill="x", pady=(4, 0))
+        # Left-side controls
         ctk.CTkButton(btn_frame, text="+ Add", command=self._add_item).pack(side="left")
+        ctk.CTkButton(btn_frame, text="Remove", command=self._delete_selected).pack(side="left", padx=(6, 0))
+        ctk.CTkButton(btn_frame, text="↑ Up", width=70, command=lambda: self._move_selected(-1)).pack(side="left", padx=(6, 0))
+        ctk.CTkButton(btn_frame, text="↓ Down", width=70, command=lambda: self._move_selected(1)).pack(side="left", padx=(6, 0))
+        # Right-side control
         ctk.CTkButton(btn_frame, text="Save", command=self._save_current_if_any).pack(side="right")
 
         if isinstance(section, dict):
@@ -135,6 +140,59 @@ class AnnouncementsFrame(ctk.CTkFrame):
             self.on_dirty()
         except Exception:
             pass
+
+    def _delete_selected(self):
+        if self.current_index is None:
+            return
+        idx = self.current_index
+        # Remove item
+        try:
+            del self.announcements[idx]
+        except Exception:
+            return
+        # Decide next selection
+        if not self.announcements:
+            self.current_index = None
+            try:
+                self.title_entry.delete(0, "end")
+                self.body_text.delete("1.0", "end")
+            except Exception:
+                pass
+            self._refresh_list()
+        else:
+            new_idx = min(idx, len(self.announcements) - 1)
+            self._refresh_list(select=new_idx)
+        # Notify app and mark dirty
+        try:
+            app = self.winfo_toplevel()
+            if app and hasattr(app, "update_section_data"):
+                app.update_section_data({"content": self.announcements})
+        except Exception:
+            pass
+        self._notify_dirty()
+
+    def _move_selected(self, delta: int):
+        if self.current_index is None:
+            return
+        i = self.current_index
+        j = i + int(delta)
+        if j < 0 or j >= len(self.announcements):
+            return
+        # Save edits to current before swapping
+        self._save_current_if_any()
+        try:
+            self.announcements[i], self.announcements[j] = self.announcements[j], self.announcements[i]
+        except Exception:
+            return
+        self._refresh_list(select=j)
+        # Notify app and mark dirty
+        try:
+            app = self.winfo_toplevel()
+            if app and hasattr(app, "update_section_data"):
+                app.update_section_data({"content": self.announcements})
+        except Exception:
+            pass
+        self._notify_dirty()
 
     def _revert_current(self):
         if self.current_index is None:
