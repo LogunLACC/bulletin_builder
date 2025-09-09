@@ -53,7 +53,7 @@ class BulletinBuilderApp(ctk.CTk):
         self.save_events_url_to_config = save_events_feed_url
 
         # Wire up all subsystems (core_init, handlers, drafts, sections, exporter, preview, UI)
-        from .app_core.core_init import init as core_init
+        from bulletin_builder.app_core.core_init import init as core_init
         core_init(self)
         init_app(self)
 
