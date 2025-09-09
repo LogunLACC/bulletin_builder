@@ -70,3 +70,30 @@ def save_events_feed_url(url: str) -> None:
     config["events"]["feed_url"] = url.strip().strip('"\'')
     with open(CONFIG_FILE, "w") as f:
         config.write(f)
+
+
+def load_events_auto_import() -> bool:
+    """Read the auto-import flag for events feed. Defaults to False."""
+    import configparser
+    import os
+    config = configparser.ConfigParser()
+    if os.path.exists(CONFIG_FILE):
+        config.read(CONFIG_FILE)
+        try:
+            return config.getboolean("events", "auto_import", fallback=False)
+        except Exception:
+            return False
+    return False
+
+
+def save_events_auto_import(enabled: bool) -> None:
+    """Persist the auto-import flag for events feed."""
+    import configparser
+    config = configparser.ConfigParser()
+    if os.path.exists(CONFIG_FILE):
+        config.read(CONFIG_FILE)
+    if "events" not in config:
+        config["events"] = {}
+    config["events"]["auto_import"] = "true" if enabled else "false"
+    with open(CONFIG_FILE, "w") as f:
+        config.write(f)

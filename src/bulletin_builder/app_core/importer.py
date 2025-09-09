@@ -109,6 +109,13 @@ def init(app):
         url = getattr(app, "events_feed_url", "")
         if not url:
             return
+        try:
+            from bulletin_builder.app_core.config import load_events_auto_import
+            if not load_events_auto_import():
+                return
+        except Exception:
+            # If config cannot be read, default to disabled (safe)
+            return
         app.after(300, lambda: import_events_feed(app, url))
 
     app.auto_sync_events_feed = auto_sync_events_feed

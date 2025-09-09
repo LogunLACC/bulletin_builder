@@ -80,8 +80,23 @@ class SettingsFrame(ctk.CTkFrame):
         self.events_feed_entry = ctk.CTkEntry(self)
         self.events_feed_entry.grid(row=7, column=1, sticky="ew", pady=(0,5))
 
+        # Auto-import toggle for events feed
+        try:
+            self.events_auto_import_var = ctk.BooleanVar(value=False)
+        except Exception:
+            # Fallback if BooleanVar unavailable in customtkinter bindings
+            import tkinter as tk
+            self.events_auto_import_var = tk.BooleanVar(value=False)
+        self.events_auto_import_switch = ctk.CTkSwitch(
+            self,
+            text="Auto-import Events on Startup",
+            variable=self.events_auto_import_var,
+            command=self._on_auto_import_toggled,
+        )
+        self.events_auto_import_switch.grid(row=8, column=1, sticky="w", pady=(0,5))
+
         # Appearance Mode
-        ctk.CTkLabel(self, text="Appearance:").grid(row=8, column=0, sticky="w", pady=(0,5))
+        ctk.CTkLabel(self, text="Appearance:").grid(row=9, column=0, sticky="w", pady=(0,5))
         self.appearance_option = ctk.CTkOptionMenu(
             self,
             values=["Light", "Dark", "Hybrid"],
@@ -93,10 +108,10 @@ class SettingsFrame(ctk.CTkFrame):
         except Exception:
             current = "Dark"
         self.appearance_option.set(current)
-        self.appearance_option.grid(row=8, column=1, sticky="ew", pady=(0,5))
+        self.appearance_option.grid(row=9, column=1, sticky="ew", pady=(0,5))
 
         # Events Window (optional filter for upcoming events)
-        ctk.CTkLabel(self, text="Events Window:").grid(row=9, column=0, sticky="w", pady=(0,5))
+        ctk.CTkLabel(self, text="Events Window:").grid(row=10, column=0, sticky="w", pady=(0,5))
         self._events_window_values = [
             "All",
             "Today only",
@@ -110,7 +125,7 @@ class SettingsFrame(ctk.CTkFrame):
             values=self._events_window_values,
             command=self._on_events_window_changed,
         )
-        self.events_window_menu.grid(row=9, column=1, sticky="ew", pady=(0,5))
+        self.events_window_menu.grid(row=10, column=1, sticky="ew", pady=(0,5))
 
         self.grid_columnconfigure(1, weight=1)
 
@@ -199,6 +214,13 @@ class SettingsFrame(ctk.CTkFrame):
         except Exception:
             pass
 
+        # Auto-import flag from config
+        try:
+            from bulletin_builder.app_core.config import load_events_auto_import
+            self.events_auto_import_var.set(bool(load_events_auto_import()))
+        except Exception:
+            self.events_auto_import_var.set(False)
+
         # Events Window selection
         default_events_window_days = None  # All
         wnd_days = settings_data.get("events_window_days", default_events_window_days)
@@ -233,6 +255,7 @@ class SettingsFrame(ctk.CTkFrame):
             "google_api_key": self.google_api_entry.get(),
             "openai_api_key": self.openai_api_entry.get(),
             "events_feed_url": self.events_feed_entry.get(),
+            "auto_import_events": bool(self.events_auto_import_var.get()),
             "appearance_mode": self.appearance_option.get(),
             "events_window_days": None if self.events_window_menu.get() == 'All' else self._label_to_days(self.events_window_menu.get()),
         }
@@ -325,5 +348,13 @@ class SettingsFrame(ctk.CTkFrame):
                 setattr(app, 'events_window_days', self._label_to_days(label))
             if callable(self.refresh_callback):
                 self.refresh_callback()
+        except Exception:
+            pass
+
+    def _on_auto_import_toggled(self):
+        """Persist auto-import toggle immediately."""
+        try:
+            from bulletin_builder.app_core.config import save_events_auto_import
+            save_events_auto_import(bool(self.events_auto_import_var.get()))
         except Exception:
             pass
