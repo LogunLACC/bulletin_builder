@@ -13,7 +13,7 @@
         {% for section in sections %}
             {% if section.title %}
             {% set section_id = section.title|lower|replace(' ', '-')|replace('.', '')|replace(',', '')|replace('!', '')|replace('?', '') %}
-            <li><a href="#{{ section_id }}">{{ section.title }}</a></li>
+            <li><a style="margin:0; padding:0;" href="#{{ section_id }}">{{ section.title }}</a></li>
             {% endif %}
         {% endfor %}
     </ul>

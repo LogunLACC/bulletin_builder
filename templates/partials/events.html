@@ -9,33 +9,65 @@
         {% for group in tag_group.events | group_events(settings.bulletin_date) %}
             <h4>{{ group.header }}</h4>
         {% if section.layout_style == 'Grid' %}
-        <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse; font-size: 0;">
+        <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse; border-spacing:0; font-size: 0;">
             {% for row in group.events|batch(2) %}
             <tr>
                 {% for event in row %}
-                <td width="50%" style="padding-right: {% if loop.first %}10px{% else %}0{% endif %}; padding-left: {% if not loop.first %}10px{% else %}0{% endif %}; vertical-align: top; border: none;">
-                    <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse; margin-bottom: 20px;">
+                <td width="50%" style="border:none; padding-right: {% if loop.first %}10px{% else %}0{% endif %}; padding-left: {% if not loop.first %}10px{% else %}0{% endif %}; vertical-align: top;">
+                    <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse; border-spacing:0; margin-bottom: 20px;">
                         <tr>
-                            <td style="border: none; padding: 0;">
-                                <a href="{{ event.image_url or '#' }}" target="_blank" style="margin: 0; padding: 0; text-decoration: none;">
-                                    <img src="{{ event.image_url or 'https://placehold.co/300x400/eeeeee/999999?text=No+Image' }}" alt="{{ event.description or 'Event' }}" style="width: 100%; height: auto; margin: 0; padding: 0; display: block; border-radius: 8px;" />
+                            <td style="border:none; padding:0;">
+                                <a href="{{ event.image_url or '#' }}" target="_blank" style="margin:0; padding:0; text-decoration: none;">
+                                    <img src="{{ event.image_url or 'https://placehold.co/300x400/eeeeee/999999?text=No+Image' }}" alt="{{ event.description or 'Event' }}" style="margin:0; padding:0; width:100%; height:auto; display:block; border-radius:8px;" />
                                 </a>
                             </td>
                         </tr>
                         <tr>
-                            <td style="border: none; padding: 10px 0; font-size: 14px;">
+                            <td style="border:none; padding:10px 0; font-size:14px;">
                                 <strong style="font-size: 1.1em; color: #333;">{{ event.description }}</strong><br>
                                 <span style="font-size: 0.9em; color: #666;">{{ event.date }} {% if event.time %}at {{ event.time }}{% endif %}</span>
                             </td>
                         </tr>
                         {% if event.link or event.map_link %}
                         <tr>
-                            <td style="border: none; padding: 5px 0; text-align: center;">
+                            <td style="border:none; padding:5px 0; text-align:center;">
                                 {% if event.link %}
-                                <a href="{{ event.link }}" target="_blank" style="display:inline-block; background-color: {{ settings.colors.primary or '#1F6AA5' }}; color:#fff; padding:6px 12px; border-radius:4px; text-decoration:none; margin-right:5px;">More Info</a>
+                                <div style="margin:0; padding:0; font-size:16px; line-height:1; display:inline-block; margin-right:5px;">
+                                  <table role="presentation" style="border-collapse:collapse; border-spacing:0; margin:0 auto;" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                      <td style="border:none; padding:0; text-align:center;">
+                                        <!--[if mso]>
+                                        <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="{{ event.link }}" arcsize="12%" stroke="f" fillcolor="#103040" style="height:36px; v-text-anchor:middle; width:120px;">
+                                          <w:anchorlock/>
+                                          <center style="color:#ffffff; font-family:Arial, Helvetica, sans-serif; font-size:16px; font-weight:bold;">More Info</center>
+                                        </v:roundrect>
+                                        <![endif]-->
+                                        <!--[if !mso]><!-- -->
+                                        <a style="margin:0; padding:0; display:inline-block; background-color:#103040; color:#ffffff; font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size:16px; font-weight:bold; line-height:36px; min-height:36px; border-radius:4px; padding-left:14px; padding-right:14px; text-decoration:none; text-align:center;" href="{{ event.link }}" target="_blank" rel="noopener">More Info</a>
+                                        <!--<![endif]-->
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
                                 {% endif %}
                                 {% if event.map_link %}
-                                <a href="{{ event.map_link }}" target="_blank" style="display:inline-block; background-color: {{ settings.colors.primary or '#1F6AA5' }}; color:#fff; padding:6px 12px; border-radius:4px; text-decoration:none;">View Map</a>
+                                <div style="margin:0; padding:0; font-size:16px; line-height:1; display:inline-block;">
+                                  <table role="presentation" style="border-collapse:collapse; border-spacing:0; margin:0 auto;" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                      <td style="border:none; padding:0; text-align:center;">
+                                        <!--[if mso]>
+                                        <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="{{ event.map_link }}" arcsize="12%" stroke="f" fillcolor="#103040" style="height:36px; v-text-anchor:middle; width:120px;">
+                                          <w:anchorlock/>
+                                          <center style="color:#ffffff; font-family:Arial, Helvetica, sans-serif; font-size:16px; font-weight:bold;">View Map</center>
+                                        </v:roundrect>
+                                        <![endif]-->
+                                        <!--[if !mso]><!-- -->
+                                        <a style="margin:0; padding:0; display:inline-block; background-color:#103040; color:#ffffff; font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size:16px; font-weight:bold; line-height:36px; min-height:36px; border-radius:4px; padding-left:14px; padding-right:14px; text-decoration:none; text-align:center;" href="{{ event.map_link }}" target="_blank" rel="noopener">View Map</a>
+                                        <!--<![endif]-->
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
                                 {% endif %}
                             </td>
                         </tr>
@@ -48,34 +80,66 @@
             {% endfor %}
         </table>
         {% else %}
-        <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+        <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse; border-spacing:0;">
             {% for event in group.events %}
             <tr>
-                <td style="padding-bottom: 20px; border: none;">
-                    <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse; border: 1px solid #ddd; border-radius: 8px;">
+                <td style="border:none; padding-bottom:20px;">
+                    <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse; border-spacing:0; border: 1px solid #ddd; border-radius: 8px;">
                         {% if event.image_url %}
                         <tr>
-                            <td style="border: none; padding: 0;">
-                                <a href="{{ event.image_url }}" target="_blank" style="margin: 0; padding: 0; text-decoration: none;">
-                                    <img src="{{ event.image_url }}" alt="{{ event.description or 'Event' }}" style="width: 100%; height: auto; margin: 0; padding: 0; display: block; border-radius: 8px 8px 0 0;" />
+                            <td style="border:none; padding:0;">
+                                <a href="{{ event.image_url }}" target="_blank" style="margin:0; padding:0; text-decoration: none;">
+                                    <img src="{{ event.image_url }}" alt="{{ event.description or 'Event' }}" style="margin:0; padding:0; width:100%; height:auto; display:block; border-radius:8px 8px 0 0;" />
                                 </a>
                             </td>
                         </tr>
                         {% endif %}
                         <tr>
-                            <td style="border: none; padding: 20px;">
+                            <td style="border:none; padding:20px;">
                                 <strong style="font-size: 1.2em; color: #333;">{{ event.description }}</strong><br>
                                 <span style="font-size: 1em; color: {{ settings.colors.primary or '#005f73' }}; font-weight: bold;">{{ event.date }} {% if event.time %}at {{ event.time }}{% endif %}</span>
                             </td>
                         </tr>
                         {% if event.link or event.map_link %}
                         <tr>
-                            <td style="border: none; padding: 0 20px 20px 20px; text-align: center;">
+                            <td style="border:none; padding:0 20px 20px 20px; text-align:center;">
                                 {% if event.link %}
-                                <a href="{{ event.link }}" target="_blank" style="display:inline-block; background-color: {{ settings.colors.primary or '#1F6AA5' }}; color:#fff; padding:6px 12px; border-radius:4px; text-decoration:none; margin-right:5px;">More Info</a>
+                                <div style="margin:0; padding:0; font-size:16px; line-height:1; display:inline-block; margin-right:5px;">
+                                  <table role="presentation" style="border-collapse:collapse; border-spacing:0; margin:0 auto;" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                      <td style="border:none; padding:0; text-align:center;">
+                                        <!--[if mso]>
+                                        <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="{{ event.link }}" arcsize="12%" stroke="f" fillcolor="#103040" style="height:36px; v-text-anchor:middle; width:120px;">
+                                          <w:anchorlock/>
+                                          <center style="color:#ffffff; font-family:Arial, Helvetica, sans-serif; font-size:16px; font-weight:bold;">More Info</center>
+                                        </v:roundrect>
+                                        <![endif]-->
+                                        <!--[if !mso]><!-- -->
+                                        <a style="margin:0; padding:0; display:inline-block; background-color:#103040; color:#ffffff; font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size:16px; font-weight:bold; line-height:36px; min-height:36px; border-radius:4px; padding-left:14px; padding-right:14px; text-decoration:none; text-align:center;" href="{{ event.link }}" target="_blank" rel="noopener">More Info</a>
+                                        <!--<![endif]-->
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
                                 {% endif %}
                                 {% if event.map_link %}
-                                <a href="{{ event.map_link }}" target="_blank" style="display:inline-block; background-color: {{ settings.colors.primary or '#1F6AA5' }}; color:#fff; padding:6px 12px; border-radius:4px; text-decoration:none;">View Map</a>
+                                <div style="margin:0; padding:0; font-size:16px; line-height:1; display:inline-block;">
+                                  <table role="presentation" style="border-collapse:collapse; border-spacing:0; margin:0 auto;" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                      <td style="border:none; padding:0; text-align:center;">
+                                        <!--[if mso]>
+                                        <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="{{ event.map_link }}" arcsize="12%" stroke="f" fillcolor="#103040" style="height:36px; v-text-anchor:middle; width:120px;">
+                                          <w:anchorlock/>
+                                          <center style="color:#ffffff; font-family:Arial, Helvetica, sans-serif; font-size:16px; font-weight:bold;">View Map</center>
+                                        </v:roundrect>
+                                        <![endif]-->
+                                        <!--[if !mso]><!-- -->
+                                        <a style="margin:0; padding:0; display:inline-block; background-color:#103040; color:#ffffff; font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size:16px; font-weight:bold; line-height:36px; min-height:36px; border-radius:4px; padding-left:14px; padding-right:14px; text-decoration:none; text-align:center;" href="{{ event.map_link }}" target="_blank" rel="noopener">View Map</a>
+                                        <!--<![endif]-->
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
                                 {% endif %}
                             </td>
                         </tr>
