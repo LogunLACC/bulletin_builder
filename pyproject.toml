@@ -1,6 +1,6 @@
 [project]
 name = "bulletin_builder"
-version = "0.1.0"
+version = "0.1.1"
 description = "Smart desktop builder for community email bulletins"
 authors = [{ name = "Logun", email = "logun.johnston@gmail.com" }]
 readme = "README.md"
