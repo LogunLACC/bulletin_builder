@@ -6,6 +6,7 @@ or data are invalid so the UI can continue running.
 """
 
 from pathlib import Path
+import sys
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markdown import markdown
 
@@ -18,17 +19,36 @@ class BulletinRenderer:
     def __init__(self, templates_dir: Path | str | None = None, theme: str = "default.css", template_name: str | None = None):
         # Resolve template directory (allow None and auto-detect)
         def _auto_templates_dir() -> Path:
+            """Locate templates directory in both dev and PyInstaller bundles.
+
+            Prefers internal packaged templates under `bulletin_builder/templates`.
+            Falls back to common project paths for dev runs.
+            """
             here = Path(__file__).resolve()
-            candidates = [
-                Path.cwd() / "templates",
-                here.parent / "templates",
-                here.parent.parent / "templates",
-                here.parents[2] / "templates" if len(here.parents) >= 3 else here.parent / "templates",
+            candidates: list[Path] = []
+            # PyInstaller onefile/onedir support
+            meipass = getattr(sys, "_MEIPASS", None)
+            if meipass:
+                base = Path(meipass)
+                candidates += [
+                    base / "bulletin_builder" / "templates",
+                    base / "templates",
+                ]
+            # Package-relative candidates (dev: prefer repo root first)
+            candidates += [
+                Path.cwd() / "templates",                   # repo root /templates
+                here.parent / "templates",                 # src/bulletin_builder/templates
+                here.parent.parent / "templates",           # src/bulletin_builder/../templates
             ]
+            # Accept a dir if it contains main_layout.html (or base.html) to avoid false positives
             for c in candidates:
-                if (c / "index.html").exists():
-                    return c
-            return candidates[0]
+                try:
+                    if (c / "main_layout.html").exists() or (c / "base.html").exists():
+                        return c
+                except Exception:
+                    continue
+            # Last-resort fallback to package-relative path
+            return here.parent / "templates"
 
         self.templates_dir = Path(templates_dir) if templates_dir else _auto_templates_dir()
         self.theme = theme
