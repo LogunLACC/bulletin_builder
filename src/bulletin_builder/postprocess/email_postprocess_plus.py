@@ -11,6 +11,7 @@ Safe to run multiple times.
 from __future__ import annotations
 import re
 from typing import Dict
+from bs4 import Comment  # type: ignore
 try:
     from bs4 import BeautifulSoup  # type: ignore
 except Exception:
@@ -113,6 +114,72 @@ def _enforce_inline_safety(soup) -> None:
             "border": "none",
         })
 
+def _already_buttonized(a) -> bool:
+    style = (a.get("style") or "").lower()
+    if all(s in style for s in ("display:inline-block", "line-height:36px", "border-radius:4px")):
+        return True
+    # Look for nearby conditional comment indicating VML button already present
+    try:
+        parent = a.parent
+        if parent:
+            for node in parent.contents:
+                if isinstance(node, Comment) and "v:roundrect" in str(node):
+                    return True
+    except Exception:
+        pass
+    return False
+
+def _buttonize_cta_anchors(soup, color: str = "#103040") -> None:
+    labels = {
+        "read more", "more info", "view map", "register", "rsvp",
+        "buy tickets", "get tickets", "learn more",
+    }
+    anchors = list(soup.find_all("a", href=True))
+    for a in anchors:
+        text = (a.get_text() or "").strip()
+        if not text:
+            continue
+        if text.lower() not in labels:
+            continue
+        if _already_buttonized(a):
+            continue
+        href = a.get("href")
+        label = text
+        # Build wrapper with VML + non-MSO anchor
+        wrapper_html = f'''
+<div style="margin:0; padding:0; font-size:16px; line-height:1;">
+  <table role="presentation" style="border-collapse:collapse; border-spacing:0; margin:0 auto;" cellspacing="0" cellpadding="0">
+    <tr>
+      <td style="border:none; padding:0; text-align:center;">
+        <!--[if mso]>
+        <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="{href}" arcsize="12%" stroke="f" fillcolor="{color}" style="height:36px; v-text-anchor:middle; width:120px;">
+          <w:anchorlock/>
+          <center style="color:#ffffff; font-family:Arial, Helvetica, sans-serif; font-size:16px; font-weight:bold;">{label}</center>
+        </v:roundrect>
+        <![endif]-->
+        <!--[if !mso]><!-- -->
+        <a style="margin:0; padding:0; display:inline-block; background-color:{color}; color:#ffffff; font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size:16px; font-weight:bold; line-height:36px; min-height:36px; border-radius:4px; padding-left:14px; padding-right:14px; text-decoration:none; text-align:center;" href="{href}" target="_blank" rel="noopener">{label}</a>
+        <!--<![endif]-->
+      </td>
+    </tr>
+  </table>
+</div>'''
+        try:
+            frag = BeautifulSoup(wrapper_html, "html.parser")
+            a.replace_with(frag)
+        except Exception:
+            # As a fallback, at least enforce safety styles
+            a["style"] = _merge_style(a.get("style", ""), {
+                "display": "inline-block",
+                "background-color": color,
+                "color": "#ffffff",
+                "text-decoration": "none",
+                "line-height": "36px",
+                "border-radius": "4px",
+                "padding-left": "14px",
+                "padding-right": "14px",
+            })
+
 def process_html(html: str) -> str:
     if not BeautifulSoup or not html or "<html" not in html.lower():
         return html
@@ -120,6 +187,8 @@ def process_html(html: str) -> str:
     _fix_announcement_padding(soup)
     _normalize_toc_and_hr(soup)
     _enforce_inline_safety(soup)
+    # CTA buttons: default to brand color if present in meta/inline; otherwise use standard
+    _buttonize_cta_anchors(soup, color="#103040")
     return str(soup)
 
 def ensure_postprocessed(html: str) -> str:
