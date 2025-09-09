@@ -30,6 +30,10 @@ class EmailDialog(ctk.CTkToplevel):
         ).pack(side="right", padx=(0, 10))
 
         self.email_entry.focus_set()
+        try:
+            self._center_on_parent(parent)
+        except Exception:
+            pass
         self.wait_window()
 
     def on_ok(self):
@@ -44,3 +48,18 @@ class EmailDialog(ctk.CTkToplevel):
 
     def get_email(self):
         return self.result
+
+    def _center_on_parent(self, parent):
+        self.update_idletasks()
+        try:
+            px = parent.winfo_rootx()
+            py = parent.winfo_rooty()
+            pw = parent.winfo_width()
+            ph = parent.winfo_height()
+            ww = self.winfo_width()
+            wh = self.winfo_height()
+            x = max(px + (pw - ww) // 2, 0)
+            y = max(py + (ph - wh) // 2, 0)
+            self.geometry(f"+{x}+{y}")
+        except Exception:
+            pass

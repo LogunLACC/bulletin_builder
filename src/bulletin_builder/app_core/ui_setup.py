@@ -257,7 +257,9 @@ def init(app):
         getattr(app, "save_events_url_callback", lambda *a, **kw: None),
     )
     # The actual form container frame (where labels/entries live)
-    app.settings_frame.grid(row=0, column=0, sticky="nw", padx=12, pady=12)
+    settings_view.grid_rowconfigure(0, weight=1)
+    settings_view.grid_columnconfigure(0, weight=1)
+    app.settings_frame.grid(row=0, column=0, sticky="nsew", padx=12, pady=12)
     # Always load latest config and fallback to defaults
     from bulletin_builder.app_core.config import load_google_api_key, load_openai_key, load_events_feed_url
     def _settings_load_defaults():

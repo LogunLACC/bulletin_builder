@@ -42,7 +42,7 @@ class SettingsFrame(ctk.CTkFrame):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
         content = ctk.CTkFrame(self, fg_color="transparent")
-        content.grid(row=0, column=0, sticky="nsew", padx=16, pady=12)
+        content.grid(row=0, column=0, sticky="nsew", padx=24, pady=18)
         content.grid_columnconfigure(0, weight=0)
         content.grid_columnconfigure(1, weight=1)
         content.grid_columnconfigure(2, weight=0)

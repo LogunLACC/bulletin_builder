@@ -7,29 +7,63 @@ class AddSectionDialog(ctk.CTkToplevel):
     def __init__(self, parent, section_types):
         super().__init__(parent)
         self.title("Add New Section")
-        self.geometry("400x220")
+        self.geometry("420x220")
         self.transient(parent)
         self.grab_set()
         self.result = None
 
+        # Layout with grid for tighter spacing and right-aligned buttons
         frm = ctk.CTkFrame(self)
-        frm.pack(expand=True, fill="both", padx=20, pady=20)
+        frm.grid(row=0, column=0, sticky="nsew", padx=16, pady=16)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
 
-        ctk.CTkLabel(frm, text="Section Title:").pack(anchor="w")
+        frm.grid_columnconfigure(0, weight=0)
+        frm.grid_columnconfigure(1, weight=1)
+        row = 0
+        ctk.CTkLabel(frm, text="Section Title:").grid(row=row, column=0, sticky="w")
         self.title_entry = ctk.CTkEntry(frm)
-        self.title_entry.pack(fill="x", pady=(0,10))
-
-        ctk.CTkLabel(frm, text="Section Type:").pack(anchor="w")
+        self.title_entry.grid(row=row, column=1, sticky="ew", pady=(0,10))
+        row += 1
+        ctk.CTkLabel(frm, text="Section Type:").grid(row=row, column=0, sticky="w")
         self.type_menu = ctk.CTkOptionMenu(frm, values=section_types)
-        self.type_menu.pack(fill="x", pady=(0,20))
+        self.type_menu.grid(row=row, column=1, sticky="ew", pady=(0,10))
+        row += 1
 
-        btnf = ctk.CTkFrame(frm)
-        btnf.pack(fill="x", side="bottom")
-        ctk.CTkButton(btnf, text="OK", command=self.on_ok).pack(side="right")
-        ctk.CTkButton(btnf, text="Cancel", command=self.destroy, fg_color="gray50", hover_color="gray40").pack(side="right", padx=(0,10))
+        btnf = ctk.CTkFrame(frm, fg_color="transparent")
+        btnf.grid(row=row, column=0, columnspan=2, sticky="ew")
+        btnf.grid_columnconfigure(0, weight=1)
+        ctk.CTkButton(btnf, text="Cancel", command=self.destroy, fg_color="gray50", hover_color="gray40").grid(row=0, column=1, padx=(0,8), pady=(8,0))
+        ctk.CTkButton(btnf, text="OK", command=self.on_ok).grid(row=0, column=2, pady=(8,0))
 
         self.title_entry.focus_set()
+        try:
+            self._center_on_parent(parent)
+        except Exception:
+            pass
         self.wait_window()
+
+    def _center_on_parent(self, parent):
+        self.update_idletasks()
+        try:
+            px = parent.winfo_rootx()
+            py = parent.winfo_rooty()
+            pw = parent.winfo_width()
+            ph = parent.winfo_height()
+            ww = self.winfo_width()
+            wh = self.winfo_height()
+            x = max(px + (pw - ww) // 2, 0)
+            y = max(py + (ph - wh) // 2, 0)
+            self.geometry(f"+{x}+{y}")
+        except Exception:
+            # Fallback: center on screen 0
+            sw = self.winfo_screenwidth()
+            sh = self.winfo_screenheight()
+            ww = self.winfo_width()
+            wh = self.winfo_height()
+            x = max((sw - ww) // 2, 0)
+            y = max((sh - wh) // 2, 0)
+            self.geometry(f"+{x}+{y}")
 
     def on_ok(self):
         title = self.title_entry.get().strip()
