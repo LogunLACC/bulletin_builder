@@ -105,18 +105,19 @@ def init(app):
     app.import_announcements_sheet = lambda: import_google_sheet(app)
     app.import_events_feed = lambda url=None: import_events_feed(app, url)
 
-    def auto_sync_events_feed():
+    def auto_sync_events_feed(force: bool = False):
         url = getattr(app, "events_feed_url", "")
         if not url:
             return
-        try:
-            from bulletin_builder.app_core.config import load_events_auto_import
-            if not load_events_auto_import():
+        if not force:
+            try:
+                from bulletin_builder.app_core.config import load_events_auto_import
+                if not load_events_auto_import():
+                    return
+            except Exception:
+                # If config cannot be read, default to disabled (safe)
                 return
-        except Exception:
-            # If config cannot be read, default to disabled (safe)
-            return
-        app.after(300, lambda: import_events_feed(app, url))
+        app.after(50, lambda: import_events_feed(app, url))
 
     app.auto_sync_events_feed = auto_sync_events_feed
     # Kick off auto-sync if configured

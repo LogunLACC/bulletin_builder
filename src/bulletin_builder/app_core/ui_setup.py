@@ -103,7 +103,7 @@ def init(app):
         tools_menu.add_command(label="Import Announcements CSV...", command=lambda: getattr(app, 'import_announcements_csv', lambda: None)())
         tools_menu.add_command(label="Import Events Feed...", command=lambda: getattr(app, 'import_events_feed', lambda: None)())
         tools_menu.add_separator()
-        tools_menu.add_command(label="Run Auto Sync", command=lambda: getattr(app, 'auto_sync_events_feed', lambda: None)())
+        tools_menu.add_command(label="Run Auto Sync", command=lambda: getattr(app, 'auto_sync_events_feed', lambda *a, **k: None)(True))
         menubar.add_cascade(label="Tools", menu=tools_menu)
 
         try:

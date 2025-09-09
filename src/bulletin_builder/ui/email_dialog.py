@@ -58,8 +58,8 @@ class EmailDialog(ctk.CTkToplevel):
             ph = parent.winfo_height()
             ww = self.winfo_width()
             wh = self.winfo_height()
-            x = max(px + (pw - ww) // 2, 0)
-            y = max(py + (ph - wh) // 2, 0)
+            x = px + (pw - ww) // 2
+            y = py + (ph - wh) // 2
             self.geometry(f"+{x}+{y}")
         except Exception:
             pass

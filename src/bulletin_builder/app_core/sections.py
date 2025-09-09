@@ -52,8 +52,8 @@ class AddSectionDialog(ctk.CTkToplevel):
             ph = parent.winfo_height()
             ww = self.winfo_width()
             wh = self.winfo_height()
-            x = max(px + (pw - ww) // 2, 0)
-            y = max(py + (ph - wh) // 2, 0)
+            x = px + (pw - ww) // 2
+            y = py + (ph - wh) // 2
             self.geometry(f"+{x}+{y}")
         except Exception:
             # Fallback: center on screen 0
@@ -61,8 +61,8 @@ class AddSectionDialog(ctk.CTkToplevel):
             sh = self.winfo_screenheight()
             ww = self.winfo_width()
             wh = self.winfo_height()
-            x = max((sw - ww) // 2, 0)
-            y = max((sh - wh) // 2, 0)
+            x = (sw - ww) // 2
+            y = (sh - wh) // 2
             self.geometry(f"+{x}+{y}")
 
     def on_ok(self):
