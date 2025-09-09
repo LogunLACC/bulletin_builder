@@ -38,46 +38,52 @@ class SettingsFrame(ctk.CTkFrame):
 
     def _build_widgets(self):
         from pathlib import Path
-        self.grid_columnconfigure(0, weight=0)
-        self.grid_columnconfigure(1, weight=1)
+        # Outer container to control padding and centering
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+        content = ctk.CTkFrame(self, fg_color="transparent")
+        content.grid(row=0, column=0, sticky="nsew", padx=16, pady=12)
+        content.grid_columnconfigure(0, weight=0)
+        content.grid_columnconfigure(1, weight=1)
+        content.grid_columnconfigure(2, weight=0)
         # Title
-        ctk.CTkLabel(self, text="Bulletin Title:").grid(row=0, column=0, sticky="w", pady=(0,5))
-        self.title_entry = ctk.CTkEntry(self)
+        ctk.CTkLabel(content, text="Bulletin Title:").grid(row=0, column=0, sticky="w", pady=(0,5))
+        self.title_entry = ctk.CTkEntry(content)
         self.title_entry.grid(row=0, column=1, sticky="ew", pady=(0,5))
         ctk.CTkButton(
-            self, text="Suggest Subject", command=self._suggest_subject
-        ).grid(row=0, column=2, padx=(5,0), pady=(0,5))
+            content, text="Suggest Subject", command=self._suggest_subject
+        ).grid(row=0, column=2, padx=(8,0), pady=(0,5))
         # Date
-        ctk.CTkLabel(self, text="Bulletin Date:").grid(row=1, column=0, sticky="w", pady=(0,5))
-        self.date_entry = ctk.CTkEntry(self)
+        ctk.CTkLabel(content, text="Bulletin Date:").grid(row=1, column=0, sticky="w", pady=(0,5))
+        self.date_entry = ctk.CTkEntry(content)
         self.date_entry.grid(row=1, column=1, sticky="ew", pady=(0,5))
         # Theme dropdown
-        ctk.CTkLabel(self, text="Theme:").grid(row=2, column=0, sticky="w", pady=(0,5))
+        ctk.CTkLabel(content, text="Theme:").grid(row=2, column=0, sticky="w", pady=(0,5))
         themes_dir = Path(__file__).resolve().parents[1] / "templates" / "themes"
         try:
             self.themes = sorted([f.name for f in themes_dir.iterdir() if f.suffix == ".css"])
         except Exception:
             self.themes = []
-        self.theme_menu = ctk.CTkOptionMenu(self, values=self.themes)
+        self.theme_menu = ctk.CTkOptionMenu(content, values=self.themes)
         self.theme_menu.grid(row=2, column=1, sticky="ew", pady=(0,5))
         # Colors
-        ctk.CTkLabel(self, text="Primary Color:").grid(row=3, column=0, sticky="w", pady=(0,5))
-        self.primary_color_entry = ctk.CTkEntry(self)
+        ctk.CTkLabel(content, text="Primary Color:").grid(row=3, column=0, sticky="w", pady=(0,5))
+        self.primary_color_entry = ctk.CTkEntry(content)
         self.primary_color_entry.grid(row=3, column=1, sticky="ew", pady=(0,5))
-        ctk.CTkLabel(self, text="Secondary Color:").grid(row=4, column=0, sticky="w", pady=(0,5))
-        self.secondary_color_entry = ctk.CTkEntry(self)
+        ctk.CTkLabel(content, text="Secondary Color:").grid(row=4, column=0, sticky="w", pady=(0,5))
+        self.secondary_color_entry = ctk.CTkEntry(content)
         self.secondary_color_entry.grid(row=4, column=1, sticky="ew", pady=(0,5))
         # API Key
-        ctk.CTkLabel(self, text="Google AI API Key:").grid(row=5, column=0, sticky="w", pady=(0,5))
-        self.google_api_entry = ctk.CTkEntry(self, show="*")
+        ctk.CTkLabel(content, text="Google AI API Key:").grid(row=5, column=0, sticky="w", pady=(0,5))
+        self.google_api_entry = ctk.CTkEntry(content, show="*")
         self.google_api_entry.grid(row=5, column=1, sticky="ew", pady=(0,5))
 
-        ctk.CTkLabel(self, text="OpenAI API Key:").grid(row=6, column=0, sticky="w", pady=(0,5))
-        self.openai_api_entry = ctk.CTkEntry(self, show="*")
+        ctk.CTkLabel(content, text="OpenAI API Key:").grid(row=6, column=0, sticky="w", pady=(0,5))
+        self.openai_api_entry = ctk.CTkEntry(content, show="*")
         self.openai_api_entry.grid(row=6, column=1, sticky="ew", pady=(0,5))
 
-        ctk.CTkLabel(self, text="Events Feed URL:").grid(row=7, column=0, sticky="w", pady=(0,5))
-        self.events_feed_entry = ctk.CTkEntry(self)
+        ctk.CTkLabel(content, text="Events Feed URL:").grid(row=7, column=0, sticky="w", pady=(0,5))
+        self.events_feed_entry = ctk.CTkEntry(content)
         self.events_feed_entry.grid(row=7, column=1, sticky="ew", pady=(0,5))
 
         # Auto-import toggle for events feed
@@ -88,7 +94,7 @@ class SettingsFrame(ctk.CTkFrame):
             import tkinter as tk
             self.events_auto_import_var = tk.BooleanVar(value=False)
         self.events_auto_import_switch = ctk.CTkSwitch(
-            self,
+            content,
             text="Auto-import Events on Startup",
             variable=self.events_auto_import_var,
             command=self._on_auto_import_toggled,
@@ -96,9 +102,9 @@ class SettingsFrame(ctk.CTkFrame):
         self.events_auto_import_switch.grid(row=8, column=1, sticky="w", pady=(0,5))
 
         # Appearance Mode
-        ctk.CTkLabel(self, text="Appearance:").grid(row=9, column=0, sticky="w", pady=(0,5))
+        ctk.CTkLabel(content, text="Appearance:").grid(row=9, column=0, sticky="w", pady=(0,5))
         self.appearance_option = ctk.CTkOptionMenu(
-            self,
+            content,
             values=["Light", "Dark", "Hybrid"],
             command=self._on_appearance_changed,
         )
@@ -111,7 +117,7 @@ class SettingsFrame(ctk.CTkFrame):
         self.appearance_option.grid(row=9, column=1, sticky="ew", pady=(0,5))
 
         # Events Window (optional filter for upcoming events)
-        ctk.CTkLabel(self, text="Events Window:").grid(row=10, column=0, sticky="w", pady=(0,5))
+        ctk.CTkLabel(content, text="Events Window:").grid(row=10, column=0, sticky="w", pady=(0,5))
         self._events_window_values = [
             "All",
             "Today only",
@@ -121,13 +127,13 @@ class SettingsFrame(ctk.CTkFrame):
             "30 days",
         ]
         self.events_window_menu = ctk.CTkOptionMenu(
-            self,
+            content,
             values=self._events_window_values,
             command=self._on_events_window_changed,
         )
         self.events_window_menu.grid(row=10, column=1, sticky="ew", pady=(0,5))
 
-        self.grid_columnconfigure(1, weight=1)
+        content.grid_columnconfigure(1, weight=1)
 
     def load_data(self, settings_data: dict, google_key: str, openai_key: str, events_url: str):
         """Populate all fields, falling back to sensible defaults."""

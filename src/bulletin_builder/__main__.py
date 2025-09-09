@@ -33,16 +33,15 @@ class BulletinBuilderApp(ctk.CTk):
         except Exception:
             pass
         # Restore last window placement/state; default to maximized
+        self._desired_start_state = 'zoomed'
         try:
             geo, st = load_window_state()
             if geo:
                 self.geometry(geo)
-            # Prefer saved state; otherwise start maximized for usability
             if st:
-                self.state(st)
-            else:
-                # Windows supports 'zoomed' for maximized
-                self.state('zoomed')
+                self._desired_start_state = st
+            # Apply desired state now, but also re-assert after UI builds
+            self.state(self._desired_start_state)
         except Exception:
             try:
                 self.state('zoomed')
@@ -86,6 +85,13 @@ class BulletinBuilderApp(ctk.CTk):
             print("[warn] _build_menus not attached by init_app; building minimal menus locally.")
             self._build_menus = self._build_menus_fallback  # expose for consistency
             self._build_menus()
+
+        # Some widget creation paths can reset the window out of maximized.
+        # Re-assert desired state once idle to keep fullscreen/maximized.
+        try:
+            self.after(200, lambda: self.state(self._desired_start_state))
+        except Exception:
+            pass
 
     def _build_menus_fallback(self):
         """
