@@ -85,12 +85,41 @@ def _normalize_toc_and_hr(soup) -> None:
             hr["style"] = "border:0;border-top:1px solid #e5e7eb;margin:16px 0;"
             ul.insert_after(hr)
 
+def _enforce_inline_safety(soup) -> None:
+    """Ensure required inline style prefaces for robust email rendering.
+
+    - <a> and <img>: margin:0; padding:0
+    - <table>: border-collapse:collapse; border-spacing:0
+    - <td>: border:none
+    Idempotent: merges without duplicating properties.
+    """
+    for a in soup.find_all("a"):
+        a["style"] = _merge_style(a.get("style", ""), {
+            "margin": "0",
+            "padding": "0",
+        })
+    for img in soup.find_all("img"):
+        img["style"] = _merge_style(img.get("style", ""), {
+            "margin": "0",
+            "padding": "0",
+        })
+    for table in soup.find_all("table"):
+        table["style"] = _merge_style(table.get("style", ""), {
+            "border-collapse": "collapse",
+            "border-spacing": "0",
+        })
+    for td in soup.find_all("td"):
+        td["style"] = _merge_style(td.get("style", ""), {
+            "border": "none",
+        })
+
 def process_html(html: str) -> str:
     if not BeautifulSoup or not html or "<html" not in html.lower():
         return html
     soup = BeautifulSoup(html, "html.parser")
     _fix_announcement_padding(soup)
     _normalize_toc_and_hr(soup)
+    _enforce_inline_safety(soup)
     return str(soup)
 
 def ensure_postprocessed(html: str) -> str:
