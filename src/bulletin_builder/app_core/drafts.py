@@ -16,7 +16,7 @@ def init(app):
         }
 
     def new_draft():
-        if messagebox.askyesno('New Draft','Discard current draft and start new?'):
+        if messagebox.askyesno('New Draft','Discard current draft and start new?', parent=app):
             app.sections_data.clear()
             app.current_draft_path = None
             if hasattr(app.settings_frame,'load_data'):
@@ -33,7 +33,7 @@ def init(app):
     def open_draft():
         path = filedialog.askopenfilename(
             defaultextension='.json', filetypes=[('Drafts','*.json')],
-            initialdir='./user_drafts', title='Open Draft'
+            initialdir='./user_drafts', title='Open Draft', parent=app
         )
         if not path: return
         try:
@@ -59,7 +59,7 @@ def init(app):
         if not app.current_draft_path or save_as:
             path = filedialog.asksaveasfilename(
                 defaultextension='.json', filetypes=[('Drafts','*.json')],
-                initialdir='./user_drafts', title='Save Draft As'
+                initialdir='./user_drafts', title='Save Draft As', parent=app
             )
             if not path: return
             app.current_draft_path = path

@@ -97,3 +97,35 @@ def save_events_auto_import(enabled: bool) -> None:
     config["events"]["auto_import"] = "true" if enabled else "false"
     with open(CONFIG_FILE, "w") as f:
         config.write(f)
+
+
+# -------- Window placement & state -----------------------------------------
+def load_window_state() -> tuple[str, str]:
+    """Return (geometry, state) from config.
+
+    geometry: standard Tk geometry string like 'WxH+X+Y' or ''
+    state: one of '', 'zoomed', 'normal', 'iconic'
+    """
+    import configparser, os
+    cfg = configparser.ConfigParser()
+    if os.path.exists(CONFIG_FILE):
+        cfg.read(CONFIG_FILE)
+        geo = cfg.get("window", "geometry", fallback="")
+        state = cfg.get("window", "state", fallback="")
+        return geo, state
+    return "", ""
+
+
+def save_window_state(geometry: str, state: str) -> None:
+    import configparser
+    cfg = configparser.ConfigParser()
+    if os.path.exists(CONFIG_FILE):
+        cfg.read(CONFIG_FILE)
+    if "window" not in cfg:
+        cfg["window"] = {}
+    if geometry:
+        cfg["window"]["geometry"] = geometry
+    if state:
+        cfg["window"]["state"] = state
+    with open(CONFIG_FILE, "w") as f:
+        cfg.write(f)

@@ -6,6 +6,8 @@ from bulletin_builder.app_core.config import (
     save_api_key,
     save_openai_key,
     save_events_feed_url,
+    load_window_state,
+    save_window_state,
 )
 from tkinter import filedialog, messagebox
 from bulletin_builder.app_core.exporter import collect_context, render_bulletin_html, render_email_html
@@ -25,6 +27,27 @@ class BulletinBuilderApp(ctk.CTk):
     """
     def __init__(self):
         super().__init__()
+        # Window title and initial fullscreen/maximized
+        try:
+            self.title("LACC Bulletin Builder")
+        except Exception:
+            pass
+        # Restore last window placement/state; default to maximized
+        try:
+            geo, st = load_window_state()
+            if geo:
+                self.geometry(geo)
+            # Prefer saved state; otherwise start maximized for usability
+            if st:
+                self.state(st)
+            else:
+                # Windows supports 'zoomed' for maximized
+                self.state('zoomed')
+        except Exception:
+            try:
+                self.state('zoomed')
+            except Exception:
+                pass
         # Expose config savers for SettingsFrame
         self.save_api_key_to_config = save_api_key
         self.save_openai_key_to_config = save_openai_key
@@ -34,6 +57,27 @@ class BulletinBuilderApp(ctk.CTk):
         from .app_core.core_init import init as core_init
         core_init(self)
         init_app(self)
+
+        # Persist window state on close
+        try:
+            def _on_close():
+                try:
+                    # If maximized, still save geometry from normal state
+                    st = self.state()
+                    if st == 'zoomed':
+                        # Temporarily de-maximize to read geometry, then restore
+                        self.state('normal')
+                        geo = self.geometry()
+                        save_window_state(geo, st)
+                        self.state('zoomed')
+                    else:
+                        save_window_state(self.geometry(), st)
+                except Exception:
+                    pass
+                self.destroy()
+            self.protocol("WM_DELETE_WINDOW", _on_close)
+        except Exception:
+            pass
 
         # Try the menu builder that init_app should have attached; otherwise fall back
         if hasattr(self, "_build_menus"):
@@ -91,7 +135,8 @@ def export_bulletin_html(self):
             defaultextension=".html",
             initialfile=default,
             filetypes=[("HTML", "*.html")],
-            title="Export Bulletin HTML"
+            title="Export Bulletin HTML",
+            parent=self,
         )
         if not path: return
         html = ensure_postprocessed(html)
@@ -100,9 +145,9 @@ def export_bulletin_html(self):
         if hasattr(self, "show_status_message"):
             self.show_status_message(f"Exported Bulletin HTML: {path}")
         else:
-            messagebox.showinfo("Export", f"Saved: {path}")
+            messagebox.showinfo("Export", f"Saved: {path}", parent=self)
     except Exception as e:
-        messagebox.showerror("Export Error", str(e))
+        messagebox.showerror("Export Error", str(e), parent=self)
 
 def export_email_html(self):
     from bulletin_builder.postprocess import ensure_postprocessed
@@ -115,7 +160,8 @@ def export_email_html(self):
             defaultextension=".html",
             initialfile=default,
             filetypes=[("HTML", "*.html")],
-            title="Export Email HTML"
+            title="Export Email HTML",
+            parent=self,
         )
         if not path: return
         with open(path, "w", encoding="utf-8") as f:
@@ -123,9 +169,9 @@ def export_email_html(self):
         if hasattr(self, "show_status_message"):
             self.show_status_message(f"Exported Email HTML  {path}")
         else:
-            messagebox.showinfo("Export", f"Saved: {path}")
+            messagebox.showinfo("Export", f"Saved: {path}", parent=self)
     except Exception as e:
-        messagebox.showerror("Export Error", str(e))
+        messagebox.showerror("Export Error", str(e), parent=self)
 
 
 def main():

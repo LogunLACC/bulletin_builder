@@ -281,7 +281,7 @@ def init(app):
       ctx = _collect_context()
       html = render_bulletin_html(ctx)
       default = f"{ctx.get('title','bulletin').replace(' ','_')}.html"
-      path = filedialog.asksaveasfilename(defaultextension='.html', initialfile=default, title='Export Bulletin HTML')
+      path = filedialog.asksaveasfilename(defaultextension='.html', initialfile=default, title='Export Bulletin HTML', parent=app)
       if not path:
         return
       with open(path, 'w', encoding='utf-8') as f:
@@ -294,10 +294,10 @@ def init(app):
       if hasattr(app, 'show_status_message'):
         app.show_status_message(f'Exported HTML: {path}')
       else:
-        messagebox.showinfo('Export', f'Exported HTML: {path}')
+        messagebox.showinfo('Export', f'Exported HTML: {path}', parent=app)
     except Exception as e:
       try:
-        messagebox.showerror('Export Error', str(e))
+        messagebox.showerror('Export Error', str(e), parent=app)
       except Exception:
         print('Export Error', e)
 
@@ -312,7 +312,7 @@ def init(app):
         if hasattr(app, 'show_status_message'):
           app.show_status_message('Email HTML copied to clipboard')
         else:
-          messagebox.showinfo('Copied', 'Email-ready HTML copied to clipboard')
+          messagebox.showinfo('Copied', 'Email-ready HTML copied to clipboard', parent=app)
       else:
         fd, tmp = tempfile.mkstemp(suffix='.html')
         os.close(fd)
@@ -321,7 +321,7 @@ def init(app):
         webbrowser.open(tmp)
     except Exception as e:
       try:
-        messagebox.showerror('Copy Error', str(e))
+        messagebox.showerror('Copy Error', str(e), parent=app)
       except Exception:
         print('Copy Error', e)
 
@@ -365,7 +365,7 @@ def init(app):
         webbrowser.open(tmp)
     except Exception as e:
       try:
-        messagebox.showerror('Copy Error', str(e))
+        messagebox.showerror('Copy Error', str(e), parent=app)
       except Exception:
         print('Copy FrontSteps Error', e)
 
@@ -386,7 +386,7 @@ def init(app):
         ics_lines += ['BEGIN:VEVENT', f'SUMMARY:{title}', 'END:VEVENT']
       ics_lines.append('END:VCALENDAR')
       default = 'events.ics'
-      path = filedialog.asksaveasfilename(defaultextension='.ics', initialfile=default, title='Export Events (.ics)')
+      path = filedialog.asksaveasfilename(defaultextension='.ics', initialfile=default, title='Export Events (.ics)', parent=app)
       if not path:
         return
       with open(path, 'w', encoding='utf-8') as f:
@@ -394,16 +394,16 @@ def init(app):
       if hasattr(app, 'show_status_message'):
         app.show_status_message(f'Exported events: {path}')
       else:
-        messagebox.showinfo('Export', f'Exported events: {path}')
+        messagebox.showinfo('Export', f'Exported events: {path}', parent=app)
     except Exception as e:
       try:
-        messagebox.showerror('Export Error', str(e))
+        messagebox.showerror('Export Error', str(e), parent=app)
       except Exception:
         print('ICS Export Error', e)
 
   def on_send_test_email_clicked():
     try:
-      recipient = simpledialog.askstring('Send Test Email', 'Enter test recipient email address:')
+      recipient = simpledialog.askstring('Send Test Email', 'Enter test recipient email address:', parent=app)
       if not recipient:
         return
       ctx = _collect_context()
@@ -418,7 +418,7 @@ def init(app):
         app.show_status_message(f'Test email prepared for {recipient} (opened in browser)')
     except Exception as e:
       try:
-        messagebox.showerror('Send Error', str(e))
+        messagebox.showerror('Send Error', str(e), parent=app)
       except Exception:
         print('Send Error', e)
 
@@ -435,7 +435,7 @@ def init(app):
       ctx = _collect_context()
       html = render_bulletin_html(ctx)
       default = f"{ctx.get('title','Bulletin').replace(' ','_')}.html"
-      path = filedialog.asksaveasfilename(defaultextension='.html', initialfile=default, title='Export Bulletin HTML')
+      path = filedialog.asksaveasfilename(defaultextension='.html', initialfile=default, title='Export Bulletin HTML', parent=app)
       if not path:
         return
       with open(path, 'w', encoding='utf-8') as f:
@@ -444,7 +444,7 @@ def init(app):
         app.show_status_message(f"Exported Bulletin HTML: {path}")
     except Exception as e:
       try:
-        messagebox.showerror('Export Error', str(e))
+        messagebox.showerror('Export Error', str(e), parent=app)
       except Exception:
         print('Export Error', e)
 
@@ -453,7 +453,7 @@ def init(app):
       ctx = _collect_context()
       html = render_email_html(ctx)
       default = f"{ctx.get('title','Bulletin').replace(' ','_')}_email.html"
-      path = filedialog.asksaveasfilename(defaultextension='.html', initialfile=default, title='Export Email HTML')
+      path = filedialog.asksaveasfilename(defaultextension='.html', initialfile=default, title='Export Email HTML', parent=app)
       if not path:
         return
       with open(path, 'w', encoding='utf-8') as f:
@@ -462,7 +462,7 @@ def init(app):
         app.show_status_message(f"Exported Email HTML: {path}")
     except Exception as e:
       try:
-        messagebox.showerror('Export Error', str(e))
+        messagebox.showerror('Export Error', str(e), parent=app)
       except Exception:
         print('Export Error', e)
 

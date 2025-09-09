@@ -132,6 +132,7 @@ def import_csv_file(app):
         filetypes=[("CSV Files", "*.csv")],
         initialdir="./user_drafts",
         title="Import Announcements CSV",
+        parent=app,
     )
     if not path:
         return
@@ -152,12 +153,12 @@ def import_csv_file(app):
         if hasattr(app, "show_status_message"):
             app.show_status_message(f"Imported {len(announcements)} announcements")
     except Exception as e:
-        messagebox.showerror("Import Error", str(e))
+        messagebox.showerror("Import Error", str(e), parent=app)
         return
 
     # ---------- GOOGLE SHEET (public CSV URL) ----------
 def import_google_sheet(app):
-    url = simpledialog.askstring("Google Sheet URL", "Enter public CSV URL:")
+    url = simpledialog.askstring("Google Sheet URL", "Enter public CSV URL:", parent=app)
     if not url:
         return
     url = url.strip().strip('"\'')
@@ -172,7 +173,7 @@ def import_google_sheet(app):
             parsed = parse_announcements_csv(text)
         except Exception as e:
             err = e
-            app.after(0, lambda err=err: messagebox.showerror("Import Error", str(err)))
+            app.after(0, lambda err=err: messagebox.showerror("Import Error", str(err), parent=app))
             if hasattr(app, "_hide_progress"):
                 app.after(0, app._hide_progress)
             return
@@ -189,7 +190,7 @@ def import_google_sheet(app):
     # ---------- EVENTS FEED (JSON/CSV URL) ----------
 def import_events_feed(app, url: str | None = None):
     if not url:
-        url = simpledialog.askstring("Events Feed URL", "Enter events JSON/CSV URL:")
+        url = simpledialog.askstring("Events Feed URL", "Enter events JSON/CSV URL:", parent=app)
     if not url:
         return
     # Sanitize URL: strip whitespace and quotes
@@ -201,7 +202,7 @@ def import_events_feed(app, url: str | None = None):
         try:
             raw_events = fetch_events(url)  # ensure internal timeouts inside fetch_events
         except Exception as e:
-            app.after(0, lambda e=e: messagebox.showerror("Import Error", str(e)))
+            app.after(0, lambda e=e: messagebox.showerror("Import Error", str(e), parent=app))
             if hasattr(app, "_hide_progress"):
                 app.after(0, app._hide_progress)
             return
@@ -232,11 +233,11 @@ def import_events_feed(app, url: str | None = None):
                     f"- {a.get('description','')} ({a.get('date')} {a.get('time')}) ↔ "
                     f"{b.get('description','')} ({b.get('date')} {b.get('time')})"
                 )
-            messagebox.showwarning("Event Conflicts", "\n".join(msg_lines))
+            messagebox.showwarning("Event Conflicts", "\n".join(msg_lines), parent=app)
 
         def _apply():
             if not events:
-                messagebox.showinfo("Import Events", "No events found.")
+                messagebox.showinfo("Import Events", "No events found.", parent=app)
             else:
                 if not hasattr(app, "sections_data"):
                     app.sections_data = []
