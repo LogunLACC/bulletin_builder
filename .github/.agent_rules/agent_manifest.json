@@ -1,0 +1,11 @@
+{
+  "name": "Bulletin FrontSteps Formatter",
+  "description": "Agent instructions for transforming Bulletin Builder output to FrontSteps-safe HTML.",
+  "rules_file": ".agent_rules/bulletin_frontsteps_rules.yaml",
+  "tasks": [
+    "Before editing or generating HTML bulletins, load and follow all rules in rules_file.",
+    "Always run Transform Pipeline → Regex Lint Checks → Acceptance Criteria.",
+    "Do not output <html>, <head>, <body>, <style>, or <script> tags. Body-only HTML only.",
+    "All CSS must be inline; enforce inline style starts for <a>, <img>, <table>, <td>."
+  ]
+}

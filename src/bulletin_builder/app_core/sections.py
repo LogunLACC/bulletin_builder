@@ -132,7 +132,7 @@ def on_section_select(app, event=None):
         if section['type'] == 'announcements':
             frame = FrameCls(app.editor_container, section=section, on_dirty=app.refresh_listbox_titles)
         else:
-            frame = FrameCls(app.editor_container, section, app.refresh_listbox_titles, app.save_component)
+            frame = FrameCls(app.editor_container, section, app.refresh_listbox_titles)
         # Do NOT call pack() or grid() on frame here; let replace_editor_frame handle it
         app.replace_editor_frame(frame)
         print(f"[DEBUG] Editor frame replaced for section {idx}")

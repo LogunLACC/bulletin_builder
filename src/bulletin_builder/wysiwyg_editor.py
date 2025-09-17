@@ -1,4 +1,4 @@
-from bulletin_builder.postprocess import ensure_postprocessed
+from bulletin_builder.postprocess import process_html
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import filedialog, simpledialog
@@ -151,7 +151,7 @@ class WysiwygEditor(ctk.CTkToplevel):
 
     def _on_right_click(self, event):
         # Find the closest item and show context menu
-        item = self.canvas.find_closest(event.x, event.y)
+        item = self.canvas.find_closest(event.x, event.y)[0]
         if not item:
             return
         self._context_menu.entryconfig(0, label=("Remove from TOC" if item[0] in self._toc_items else "Add to TOC"))
@@ -407,7 +407,7 @@ class WysiwygEditor(ctk.CTkToplevel):
                 opt_path = optimize_image(path)
                 pil_img = Image.open(opt_path)
                 return (opt_path, pil_img)
-            except Exception as e:
+            except Exception:
                 return (None, str(e))
 
         def on_image_ready(future):
@@ -428,12 +428,6 @@ class WysiwygEditor(ctk.CTkToplevel):
         # Run image processing in background
         future = self._executor.submit(process_image)
         self.after(100, lambda: self._poll_future(future, on_image_ready))
-
-    def _poll_future(self, future, callback):
-        if future.done():
-            callback(future)
-        else:
-            self.after(100, lambda: self._poll_future(future, callback))
 
     def add_button(self):
         label = simpledialog.askstring("Button Label", "Enter button label:", parent=self)
@@ -484,7 +478,7 @@ class WysiwygEditor(ctk.CTkToplevel):
         html_lines.append("</body></html>")
         path = filedialog.asksaveasfilename(defaultextension='.html', filetypes=[('HTML','*.html')])
         if path:
-            html = ensure_postprocessed("\n".join(html_lines))
+            html = process_html("\n".join(html_lines))
             with open(path, 'w', encoding='utf-8') as f:
                 f.write(html)
 
@@ -492,7 +486,7 @@ def launch_gui():
     import os
     from .__main__ import BulletinBuilderApp
 
-    # ✅ Ensure required folders exist
+    # ✅ Ensure required directories exist
     for d in [
         'templates/partials',
         'templates/themes',

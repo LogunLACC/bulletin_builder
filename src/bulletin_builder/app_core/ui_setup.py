@@ -21,23 +21,16 @@ def init(app):
         def replace_editor_frame(new_frame):
             parent = app.editor_container
             # Do not destroy the new frame we're keeping
-            for child in list(parent.winfo_children()):
-                if child is new_frame:
-                    continue
+            for child in app.editor_container.winfo_children():
                 try: child.grid_forget()
-                except Exception:
-                    try: child.pack_forget()
-                    except Exception: pass
+                except Exception: pass
                 child.destroy()
             # Ensure it's created with the correct parent
             if new_frame.master is not parent:
                 raise RuntimeError("Editor frame must be created with parent=app.editor_container")
             parent.grid_rowconfigure(0, weight=1)
             parent.grid_columnconfigure(0, weight=1)
-            try:
-                new_frame.grid(row=0, column=0, sticky="nsew")
-            except Exception:
-                new_frame.pack(fill="both", expand=True)
+            new_frame.grid(row=0, column=0, sticky="nsew")
             if hasattr(app, "status_bar"):
                 app.status_bar.configure(text="Editor ready.")
         app.replace_editor_frame = replace_editor_frame

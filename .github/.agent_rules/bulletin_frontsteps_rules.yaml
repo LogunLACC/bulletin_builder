@@ -1,0 +1,255 @@
+meta:
+  name: Bulletin Builder → FrontSteps Formatting Rules
+  version: 1.0.0
+  owner: "Logun (Marketing)"
+  purpose: >
+    Enforce strict output formatting for FrontSteps bulletins that is safe across major email clients (Gmail,
+    Apple Mail, Outlook desktop/Windows Mail), while matching FrontSteps’ paste-in HTML constraints.
+  scope:
+    - bulletin_html_body_only
+    - no head/body/doctype/style/script
+  mantra: "Inline everything. Table everything. Nothing unclosed."
+
+invariants:
+  disallow_elements:
+    - "!DOCTYPE"
+    - "html"
+    - "head"
+    - "body"
+    - "style"
+    - "script"
+    - "link"
+    - "iframe"
+    - "video"
+    - "audio"
+    - "svg"
+    - "form"
+  allowed_elements:
+    - "table"
+    - "tr"
+    - "td"
+    - "tbody"
+    - "thead"
+    - "tfoot"
+    - "p"
+    - "h1"
+    - "h2"
+    - "h3"
+    - "h4"
+    - "div"
+    - "span"
+    - "a"
+    - "img"
+    - "ul"
+    - "ol"
+    - "li"
+    - "br"
+    - "hr"
+  layout_principles:
+    - "Use table-based layout only; no flex/grid/floats/positioning."
+    - "Max container width 600px; center via table cell alignment."
+    - "Spacing via padding/margins on elements, not CSS classes (inline only)."
+  encoding: "UTF-8"
+  whitespace_policy:
+    - "Preserve author line breaks where possible."
+    - "Normalize indentation (2 spaces) but never change semantics."
+  url_policy:
+    - "All href/src must be absolute URLs (https recommended)."
+    - "No data: URLs."
+  font_policy:
+    stack: "Arial, Helvetica, sans-serif"
+    notes:
+      - "Avoid webfonts; many clients block them."
+      - "Use inline font-size/color/line-height everywhere."
+  color_policy:
+    default_text: "#506070"
+    lacc_maroon: "#960706"
+    safe_bg: "#ffffff"
+    safe_divider: "#dddddd"
+
+inline_css_requirements:
+  # These MUST be the first declarations in the style attribute for each tag type.
+  tag_starts:
+    a: "margin:0; padding:0;"
+    img: "margin:0; padding:0; border:none;"
+    table: "border-collapse:collapse; border-spacing:0;"
+    td: "border:none;"
+  # Common safe defaults appended after tag_starts:
+  defaults:
+    text_block: "font-family: Arial, Helvetica, sans-serif; font-size:16px; line-height:1.5; color:#506070;"
+    heading: "font-family: Arial, Helvetica, sans-serif; font-weight:bold; line-height:1.3; color:#103040;"
+    container_cell: "margin:0; padding:0; border:none;"
+
+transform_pipeline:
+  # The agent should apply these steps in order.
+  - name: StripForbiddenWrappers
+    actions:
+      - "Remove <!DOCTYPE>, <html>, <head>, <body>, <style>, <script>, and their contents."
+  - name: EnsureAbsoluteUrls
+    actions:
+      - "For all <a href> and <img src>, verify absolute https URLs; flag otherwise."
+  - name: EnforceInlineStarts
+    actions:
+      - "For every <a>, ensure style begins with 'margin:0; padding:0;'"
+      - "For every <img>, ensure style begins with 'margin:0; padding:0; border:none;'"
+      - "For every <table>, ensure style begins with 'border-collapse:collapse; border-spacing:0;'"
+      - "For every <td>, ensure style begins with 'border:none;'"
+  - name: NormalizeTypography
+    actions:
+      - "Apply defaults.text_block to <p>, <li>, and text <div>/<span> where missing."
+      - "Apply defaults.heading and explicit font-size to <h1>-<h4>."
+      - "Disallow <h5>-<h6>; convert to <h4> with font-size:16-18px."
+  - name: TableLayoutGuard
+    actions:
+      - "Reject or convert any flex/grid/float styles into table-based structure."
+      - "Ensure a single 100% width outer table and one centered 600px container table."
+  - name: ImageHygiene
+    actions:
+      - "Require width and height attributes on <img> (pixels)."
+      - "Add alt text; if missing, set alt=''."
+      - "Disallow CSS background images; use inline <img> elements."
+  - name: SpacingNormalization
+    actions:
+      - "Use padding on <td> for section spacing (e.g., padding:16px 24px;)."
+      - "Limit <br> stacking to max 2 in a row; prefer padding."
+  - name: LinkSafety
+    actions:
+      - "For <a>, add rel='noopener noreferrer' and target='_blank' when external."
+  - name: ListSafety
+    actions:
+      - "Set list styles inline on <ul>/<ol>/<li>; avoid nested complex lists."
+  - name: AccessibilityPass
+    actions:
+      - "Ensure headings are hierarchical (h1>h2>h3>h4)."
+      - "Alt text present on all images; decorative images use empty alt."
+      - "Link text is descriptive (no bare URLs where possible)."
+  - name: OutlookQuirks
+    actions:
+      - "Avoid shorthand margins (okay to keep but ensure explicit line-height)."
+      - "Set line-height explicitly on headings and paragraphs."
+      - "Use fixed px widths on images and container table cells."
+  - name: Sanitization
+    actions:
+      - "Remove HTML comments."
+      - "Quote all attribute values."
+      - "Collapse duplicate spaces in attributes."
+  - name: Validation
+    actions:
+      - "Verify all tags closed properly."
+      - "Verify no forbidden elements remain."
+      - "Verify required style starts for a/img/table/td present."
+      - "Verify absolute URLs and image dimensions exist."
+
+lint_checks:
+  regex:
+    # Fail if forbidden wrappers exist:
+    - pattern: "<\\/?(html|head|body|style|script|link|iframe|svg|form)\\b"
+      message: "Forbidden element present."
+      level: error
+    # Require inline starts on <a>:
+    - pattern: "<a\\b(?:(?!style=).)*style=\"(?!margin:0; padding:0;)"
+      message: "<a> style must start with 'margin:0; padding:0;'"
+      level: error
+    # Require inline starts on <img>:
+    - pattern: "<img\\b(?:(?!style=).)*style=\"(?!margin:0; padding:0; border:none;)"
+      message: "<img> style must start with 'margin:0; padding:0; border:none;'"
+      level: error
+    # Require inline starts on <table>:
+    - pattern: "<table\\b(?:(?!style=).)*style=\"(?!border-collapse:collapse; border-spacing:0;)"
+      message: "<table> style must start with 'border-collapse:collapse; border-spacing:0;'"
+      level: error
+    # Require inline starts on <td>:
+    - pattern: "<td\\b(?:(?!style=).)*style=\"(?!border:none;)"
+      message: "<td> style must start with 'border:none;'"
+      level: error
+    # Absolute URLs in href/src:
+    - pattern: "\\b(href|src)=\"(?!https?://)"
+      message: "href/src must be absolute URLs."
+      level: error
+    # Missing width/height on <img>:
+    - pattern: "<img(?![^>]*\\bwidth=)(?![^>]*\\bheight=)[^>]*>"
+      message: "<img> requires width and height attributes."
+      level: error
+
+acceptance_criteria:
+  - "No forbidden elements remain."
+  - "All links/images use absolute URLs."
+  - "All a/img/table/td have required style starts in the correct order."
+  - "All images include width, height, and alt."
+  - "Headings are hierarchical with explicit font-size/line-height."
+  - "Max outer content width 600px and centered."
+  - "No comments, all attributes quoted, all tags closed."
+  - "Renders legibly in Gmail, Apple Mail, Outlook desktop (Windows), Outlook web."
+
+starter_template_body_only: |
+  <!-- Body-only HTML (paste into FrontSteps). Keep comments out in final output; this line is okay as a guide while editing. -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; border-spacing:0; background:#f4f4f4;">
+    <tr>
+      <td align="center" style="border:none; padding:24px;">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="border-collapse:collapse; border-spacing:0; background:#ffffff; border:1px solid #dddddd;">
+          <tr>
+            <td style="border:none; padding:20px;">
+              <h1 style="margin:0; padding:0; font-family: Arial, Helvetica, sans-serif; font-weight:bold; font-size:24px; line-height:1.3; color:#103040;">
+                Weekly Bulletin
+              </h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="border:none; padding:0 20px 20px 20px;">
+              <p style="margin:0 0 12px 0; padding:0; font-family: Arial, Helvetica, sans-serif; font-size:16px; line-height:1.5; color:#506070;">
+                Welcome to this week’s updates. Highlights below:
+              </p>
+              <ul style="margin:0 0 16px 20px; padding:0; font-family: Arial, Helvetica, sans-serif; font-size:16px; line-height:1.5; color:#506070;">
+                <li style="margin:0 0 8px 0; padding:0;">Event A</li>
+                <li style="margin:0 0 8px 0; padding:0;">Event B</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td style="border:none; padding:0 20px 20px 20px;">
+              <img src="https://example.com/image.jpg" width="560" height="315" alt="Event photo" style="margin:0; padding:0; border:none; display:block;" />
+            </td>
+          </tr>
+          <tr>
+            <td style="border:none; padding:0 20px 20px 20px;">
+              <p style="margin:0 0 8px 0; padding:0; font-family: Arial, Helvetica, sans-serif; font-size:16px; line-height:1.5; color:#506070;">
+                Learn more:
+                <a href="https://example.com/details" target="_blank" rel="noopener noreferrer" style="margin:0; padding:0; text-decoration:underline; color:#960706;">Event Details</a>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="border:none; padding:20px;">
+              <hr style="margin:0; padding:0; border:none; border-top:1px solid #dddddd; height:0;" />
+              <p style="margin:12px 0 0 0; padding:0; font-family: Arial, Helvetica, sans-serif; font-size:12px; line-height:1.5; color:#7a8a9a;">
+                You’re receiving this because you follow LACC updates.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+quick_howto_for_agents:
+  - "Take Bulletin Builder HTML output (body content only)."
+  - "Run Transform Pipeline in the order above."
+  - "Run Regex Lint Checks; fix all errors."
+  - "Compare against Acceptance Criteria; fix any misses."
+  - "Replace content sections inside starter_template_body_only if rebuilding structure."
+  - "Deliver final: body-only HTML string (no head/doctype/style/script)."
+
+common_pitfalls_and_fixes:
+  - pitfall: "Accidentally pasting full HTML document."
+    fix: "Strip wrappers and keep only the inner content table."
+  - pitfall: "Relative URLs break images/links."
+    fix: "Convert to absolute https URLs."
+  - pitfall: "Images collapse in Outlook."
+    fix: "Set width/height attributes and display:block."
+  - pitfall: "Spacing looks different per client."
+    fix: "Prefer padding on <td>; avoid multiple <br>."
+  - pitfall: "Custom fonts not loading."
+    fix: "Stick to the provided system stack."
+
+changelog:
+  - "1.0.0 — Initial ruleset aligning FrontSteps and email-client safety."

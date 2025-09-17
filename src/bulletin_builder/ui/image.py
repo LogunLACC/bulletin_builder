@@ -6,14 +6,13 @@ class ImageFrame(ctk.CTkFrame):
     """
     A frame for editing an 'image' section by pasting an image URL.
     """
-    def __init__(self, parent, section_data: dict, refresh_callback: callable, save_component_callback: callable):
+    def __init__(self, parent, section_data: dict, refresh_callback: callable):
         print(f"[DEBUG] ImageFrame __init__ called. parent={parent}, section_data={section_data}")
         self._init_args = (parent, section_data, refresh_callback, save_component_callback)
         try:
             super().__init__(parent, fg_color="#ccccff")  # Debug: blue background
             self.section_data = section_data
             self.refresh_callback = refresh_callback
-            self.save_component_callback = save_component_callback
 
             self.grid_rowconfigure(99, weight=1)
             self.grid_columnconfigure(1, weight=1)
@@ -41,8 +40,7 @@ class ImageFrame(ctk.CTkFrame):
             self.alt_text_entry.insert(0, self.section_data.get("alt", ""))
             self.alt_text_entry.bind("<KeyRelease>", self._on_data_change)
 
-            save_comp_button = ctk.CTkButton(self, text="Save as Component", command=self._on_save_component)
-            save_comp_button.grid(row=3, column=1, sticky="e", pady=(10, 0))
+            
             # Layout fix: ensure frame expands and grid works
             self.grid_propagate(True)
             self.update_idletasks()
@@ -60,4 +58,5 @@ class ImageFrame(ctk.CTkFrame):
 
     def _on_save_component(self):
         self._on_data_change()
-        self.save_component_callback(self.section_data)
+        app = self.winfo_toplevel()
+        app.save_component(self.section_data)

@@ -11,7 +11,7 @@ import traceback
 
 
 import os
-from bulletin_builder.postprocess import ensure_postprocessed
+from bulletin_builder.postprocess import process_html
 from bulletin_builder.actions_log import log_action
 
 
@@ -107,7 +107,7 @@ def _render_section_email(section: dict) -> str:
         f'</td></tr>'
       )
     content_html = (
-      f'<table width="100%" cellpadding="0" cellspacing="0" border="0">{"".join(parts)}</table>'
+      f'<table width="100%" cellpadding="0" cellspacing="0" border="0">{"" .join(parts)}</table>'
       if parts else '<div style="opacity:.7;font-size:14px;">No announcements.</div>'
     )
     return header_html + content_html
@@ -129,27 +129,6 @@ def _render_section_email(section: dict) -> str:
 
   else:
     return header_html + '<div style="opacity:.7;font-size:14px;">No content available.</div>'
-
-
-def _render_section_html(section: dict) -> str:
-  # Web-focused rendering (simpler than email card layout)
-  stype = section.get("type", "")
-  if stype == "custom_text":
-    content = section.get("content", {})
-    text = content.get("text", "") if isinstance(content, dict) else str(content or "")
-    return f"<div style=\"font-size:15px;line-height:1.7;\">{escape(text)}</div>"
-  if stype == "announcements":
-    items = section.get("content", []) or []
-    parts = []
-    for a in items:
-      title = escape(a.get("title", ""))
-      body = escape(a.get("body", ""))
-      parts.append(f"<div style=\"margin-bottom:12px;\"><strong>{title}</strong><div>{body}</div></div>")
-    return "".join(parts) if parts else '<div style="opacity:.7;font-size:14px;">No announcements.</div>'
-  if stype == "events":
-    events = section.get("content", []) or []
-    return "".join(_event_card_email(ev) for ev in events) if events else '<div style="opacity:.7;font-size:14px;">No events available.</div>'
-  return '<div style="opacity:.7;font-size:14px;">No content available.</div>'
 
 
 def render_email_html(ctx: dict) -> str:
@@ -180,25 +159,25 @@ def render_email_html(ctx: dict) -> str:
       toc = '<ul style="margin:0 0 24px 0;padding:0 0 0 18px;">' + "\n".join(items) + '</ul>' if items else ""
 
     html = (
-      f'<body style="background:#f9f9fb;">'
-      f'<center>'
-      f'<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f9f9fb" style="padding:0;margin:0;border-collapse:collapse;border:none;">'
-      f'<tr><td align="center">'
-      f'<table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;margin:32px 0 48px 0;padding:0 24px 24px 24px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.04);font-family:Arial,Helvetica,sans-serif;border-collapse:collapse;border:none;">'
-      f'<tr><td style="padding:32px 0 0 0;text-align:center;">'
+      '<body style="background:#f9f9fb;">'
+      '<center>'
+      '<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f9f9fb" style="padding:0;margin:0;border-collapse:collapse;border:none;">'
+      '<tr><td align="center">'
+      '<table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;margin:32px 0 48px 0;padding:0 24px 24px 24px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.04);font-family:Arial,Helvetica,sans-serif;border-collapse:collapse;border:none;">'
+      '<tr><td style="padding:32px 0 0 0;text-align:center;">'
       f'<h1 style="font-size:2em;margin:0 0 8px 0;">{escape(title)}</h1>'
       f'<div style="color:#555;font-size:1.1em;margin-bottom:12px;">{escape(date)}</div>'
-      f'<hr style="margin:18px 0 24px 0;border:0;border-top:1px solid #e5e7eb;">'
+      '<hr style="margin:18px 0 24px 0;border:0;border-top:1px solid #e5e7eb;">'
       f'{toc}'
-      f'</td></tr>'
-      f'<tr><td>'
+      '</td></tr>'
+      '<tr><td>'
       f'{sections_html}'
-      f'</td></tr>'
-      f'</table>'
-      f'</td></tr>'
-      f'</table>'
-      f'</center>'
-      f'</body>'
+      '</td></tr>'
+      '</table>'
+      '</td></tr>'
+      '</table>'
+      '</center>'
+      '</body>'
     )
     # Make URLs email-safe (HTTPS + AVIF->JPG where possible)
     try:
@@ -206,10 +185,10 @@ def render_email_html(ctx: dict) -> str:
       html = upgrade_http_to_https(html, convert_avif=True)
     except Exception:
       pass
-    return ensure_postprocessed(html)
+    return process_html(html)
   except Exception as e:
     tb = traceback.format_exc()
-    return ensure_postprocessed(f"<body><pre style='color:red;'>Export error: {escape(str(e))}\n{escape(tb)}</pre></body>")
+    return process_html(f"<body><pre style='color:red;'>Export error: {escape(str(e))}\n{escape(tb)}</pre></body>")
 
 
 def render_bulletin_html(ctx: dict) -> str:
@@ -239,7 +218,7 @@ def render_bulletin_html(ctx: dict) -> str:
       f"<h1 style=\"font-size:2em;margin:0 0 8px 0;\">{escape(title)}</h1>"
       f"{toc}{sections_html}</div></center></body>"
     )
-    return ensure_postprocessed(html)
+    return process_html(html)
   except Exception as e:
     tb = traceback.format_exc()
     return f"<body><pre style='color:red;'>Export error: {escape(str(e))}\n{escape(tb)}</pre></body>"
@@ -344,7 +323,7 @@ def init(app):
       except Exception as e:
         html = f"<html><body><p>Render error: {e}</p></body></html>"
 
-      # Make URLs safer for email/web paste
+      # Make URLs email-safe (HTTPS + AVIF->JPG where possible)
       try:
         from bulletin_builder.app_core.url_upgrade import upgrade_http_to_https
         html = upgrade_http_to_https(html, convert_avif=True)
@@ -399,7 +378,7 @@ def init(app):
       try:
         messagebox.showerror('Export Error', str(e), parent=app)
       except Exception:
-        print('ICS Export Error', e)
+        print('Export Error', e)
 
   def on_send_test_email_clicked():
     try:
@@ -412,7 +391,7 @@ def init(app):
       fd, tmp = tempfile.mkstemp(suffix='.html')
       os.close(fd)
       with open(tmp, 'w', encoding='utf-8') as f:
-        f.write(html)
+          f.write(html)
       webbrowser.open(tmp)
       if hasattr(app, 'show_status_message'):
         app.show_status_message(f'Test email prepared for {recipient} (opened in browser)')
@@ -430,42 +409,6 @@ def init(app):
   app.on_send_test_email_clicked = on_send_test_email_clicked
   
   # Optional explicit exports used by UI export submenu
-  def export_bulletin_html():
-    try:
-      ctx = _collect_context()
-      html = render_bulletin_html(ctx)
-      default = f"{ctx.get('title','Bulletin').replace(' ','_')}.html"
-      path = filedialog.asksaveasfilename(defaultextension='.html', initialfile=default, title='Export Bulletin HTML', parent=app)
-      if not path:
-        return
-      with open(path, 'w', encoding='utf-8') as f:
-        f.write(html)
-      if hasattr(app, 'show_status_message'):
-        app.show_status_message(f"Exported Bulletin HTML: {path}")
-    except Exception as e:
-      try:
-        messagebox.showerror('Export Error', str(e), parent=app)
-      except Exception:
-        print('Export Error', e)
-
-  def export_email_html():
-    try:
-      ctx = _collect_context()
-      html = render_email_html(ctx)
-      default = f"{ctx.get('title','Bulletin').replace(' ','_')}_email.html"
-      path = filedialog.asksaveasfilename(defaultextension='.html', initialfile=default, title='Export Email HTML', parent=app)
-      if not path:
-        return
-      with open(path, 'w', encoding='utf-8') as f:
-        f.write(html)
-      if hasattr(app, 'show_status_message'):
-        app.show_status_message(f"Exported Email HTML: {path}")
-    except Exception as e:
-      try:
-        messagebox.showerror('Export Error', str(e), parent=app)
-      except Exception:
-        print('Export Error', e)
-
-  app.export_bulletin_html = export_bulletin_html
-  app.export_email_html = export_email_html
+    app.export_bulletin_html = render_bulletin_html
+  app.export_email_html = render_email_html
   return None

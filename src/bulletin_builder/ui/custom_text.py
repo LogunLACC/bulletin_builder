@@ -6,14 +6,13 @@ class CustomTextFrame(ctk.CTkFrame):
     """
     A frame for editing a 'custom_text' section, containing a title and content.
     """
-    def __init__(self, parent, section_data: dict, refresh_callback: callable, save_component_callback: callable):
+    def __init__(self, parent, section_data: dict, refresh_callback: callable):
         print(f"[DEBUG] CustomTextFrame __init__ called. parent={parent}, section_data={section_data}")
         self._init_args = (parent, section_data, refresh_callback, save_component_callback)
         try:
             super().__init__(parent, fg_color="transparent")
             self.section_data = section_data
             self.refresh_callback = refresh_callback
-            self.save_component_callback = save_component_callback
 
             # Debug label for section info
             self.grid_rowconfigure(99, weight=1)
@@ -37,8 +36,7 @@ class CustomTextFrame(ctk.CTkFrame):
             self.content_textbox.insert("1.0", self.section_data.get("content", ""))
             self.content_textbox.bind("<KeyRelease>", self._on_data_change)
 
-            save_comp_button = ctk.CTkButton(self, text="Save as Component", command=self._on_save_component)
-            save_comp_button.grid(row=3, column=1, sticky="e", pady=(10, 0))
+            
             print(f"[DEBUG] CustomTextFrame children: {[str(w) for w in self.winfo_children()]}")
             print("[DEBUG] CustomTextFrame __init__ completed successfully.")
         except Exception as e:
@@ -67,4 +65,4 @@ class CustomTextFrame(ctk.CTkFrame):
             update_section_data(app, {'title': self.section_data['title'], 'content': self.section_data['content']})
         except Exception as e:
             print(f"[ERROR] Could not update section data on save: {e}")
-        self.save_component_callback(self.section_data)
+        app.save_component(self.section_data)

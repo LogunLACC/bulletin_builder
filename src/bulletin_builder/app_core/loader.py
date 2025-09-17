@@ -3,6 +3,7 @@ from importlib import import_module
 MODULES = [
     ("core_init", True),      # builds frames, status/progress, basic hooks
     ("handlers", False),
+    ("component_manager", False),
     ("drafts", False),
     ("sections", False),
     ("suggestions", False),   # Ensure full menubar (File + Tools) is wired even if ui_setup's fallback kicks in

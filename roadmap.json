@@ -7,78 +7,186 @@
       "name": "Codebase Cleanup & Stability",
       "goal": "Remove unused files, reorganize modules, and ensure all imports are valid with no missing dependencies.",
       "tasks": [
-        "Identify and delete unused Python files, images, and assets from the repository.",
-        "Fix broken imports such as 'bulletin_builder.menu' and ensure all modules load without error.",
-        "Remove redundant UI components such as duplicate 'Save as Component' buttons.",
-        "Fix Tkinter geometry manager conflicts by ensuring each container uses either grid or pack, not both.",
-        "Resolve all 'clear_editor_panel' related stacking issues by replacing panels instead of appending."
+        {
+          "description": "Identify and delete unused Python files, images, and assets from the repository.",
+          "status": "complete"
+        },
+        {
+          "description": "Fix broken imports such as 'bulletin_builder.menu' and ensure all modules load without error.",
+          "status": "todo"
+        },
+        {
+          "description": "Remove redundant UI components such as duplicate 'Save as Component' buttons.",
+          "status": "todo"
+        },
+        {
+          "description": "Fix Tkinter geometry manager conflicts by ensuring each container uses either grid or pack, not both.",
+          "status": "todo"
+        },
+        {
+          "description": "Resolve all 'clear_editor_panel' related stacking issues by replacing panels instead of appending.",
+          "status": "todo"
+        }
       ]
     },
     {
       "name": "UI/UX Overhaul",
       "goal": "Modern, consistent, themeable UI with improved usability for all sections.",
       "tasks": [
-        "Implement a theme system with Light, Dark, and Hybrid modes, selectable in settings.",
-        "Redesign the layout for better section navigation — left panel for sections, right panel for editor, status bar at bottom.",
-        "Add a responsive layout so the app scales correctly on different resolutions.",
-        "Ensure all buttons, icons, and labels use consistent styling and spacing.",
-        "Add tooltips and hover states for all interactive elements.",
-        "Improve accessibility with proper font sizes, color contrast, and keyboard navigation."
+        {
+          "description": "Implement a theme system with Light, Dark, and Hybrid modes, selectable in settings.",
+          "status": "todo"
+        },
+        {
+          "description": "Redesign the layout for better section navigation — left panel for sections, right panel for editor, status bar at bottom.",
+          "status": "todo"
+        },
+        {
+          "description": "Add a responsive layout so the app scales correctly on different resolutions.",
+          "status": "todo"
+        },
+        {
+          "description": "Ensure all buttons, icons, and labels use consistent styling and spacing.",
+          "status": "todo"
+        },
+        {
+          "description": "Add tooltips and hover states for all interactive elements.",
+          "status": "todo"
+        },
+        {
+          "description": "Improve accessibility with proper font sizes, color contrast, and keyboard navigation.",
+          "status": "todo"
+        }
       ]
     },
     {
       "name": "Performance Optimization",
       "goal": "Make the app faster and more responsive by reducing load times and preventing unnecessary re-renders.",
       "tasks": [
-        "Lazy-load section content only when selected.",
-        "Cache loaded assets and templates in memory to avoid redundant file reads.",
-        "Profile startup and remove any heavy blocking operations.",
-        "Optimize image loading and resizing in the WYSIWYG editor.",
-        "Ensure smooth drag-and-drop for components and section reordering."
+        {
+          "description": "Lazy-load section content only when selected.",
+          "status": "todo"
+        },
+        {
+          "description": "Cache loaded assets and templates in memory to avoid redundant file reads.",
+          "status": "todo"
+        },
+        {
+          "description": "Profile startup and remove any heavy blocking operations.",
+          "status": "todo"
+        },
+        {
+          "description": "Optimize image loading and resizing in the WYSIWYG editor.",
+          "status": "todo"
+        },
+        {
+          "description": "Ensure smooth drag-and-drop for components and section reordering.",
+          "status": "todo"
+        }
       ]
     },
     {
       "name": "Element-Based Email Builder",
       "goal": "Allow adding modular content elements without automatically generating Table of Contents entries.",
       "tasks": [
-        "Add toolbar buttons for H1, H2, paragraph text, single image (portrait or landscape), two-column, and three-column layouts.",
-        "Allow drag-and-drop to position elements within a section.",
-        "Ensure added elements do not auto-link to TOC unless explicitly marked by the user.",
-        "Enable style editing for each element, respecting email-safe rules.",
-        "Implement copy, duplicate, and delete actions for each element."
+        {
+          "description": "Add toolbar buttons for H1, H2, paragraph text, single image (portrait or landscape), two-column, and three-column layouts.",
+          "status": "todo"
+        },
+        {
+          "description": "Allow drag-and-drop to position elements within a section.",
+          "status": "todo"
+        },
+        {
+          "description": "Ensure added elements do not auto-link to TOC unless explicitly marked by the user.",
+          "status": "todo"
+        },
+        {
+          "description": "Enable style editing for each element, respecting email-safe rules.",
+          "status": "todo"
+        },
+        {
+          "description": "Implement copy, duplicate, and delete actions for each element.",
+          "status": "todo"
+        }
       ]
     },
     {
       "name": "Strict Email Export Compliance",
       "goal": "Ensure exported HTML emails always follow compatibility rules unless overridden.",
       "tasks": [
-        "Automatically set margin:0; padding:0; for all <img> and <a> elements.",
-        "Set table cells to border=0, cellpadding=0, cellspacing=0 by default.",
-        "Allow per-element exceptions only when explicitly set by the user.",
-        "Ensure all inline CSS is applied for maximum email client compatibility.",
-        "Run an automated validation step before export to catch non-compliant elements."
+        {
+          "description": "Automatically set margin:0; padding:0; for all <img> and <a> elements.",
+          "status": "todo"
+        },
+        {
+          "description": "Set table cells to border=0, cellpadding=0, cellspacing=0 by default.",
+          "status": "todo"
+        },
+        {
+          "description": "Allow per-element exceptions only when explicitly set by the user.",
+          "status": "todo"
+        },
+        {
+          "description": "Ensure all inline CSS is applied for maximum email client compatibility.",
+          "status": "todo"
+        },
+        {
+          "description": "Run an automated validation step before export to catch non-compliant elements.",
+          "status": "todo"
+        }
       ]
     },
     {
       "name": "New Features & Quality of Life",
       "goal": "Add actually useful, user-requested features to improve workflow.",
       "tasks": [
-        "Add a real-time preview panel for both desktop and mobile email views.",
-        "Add undo/redo support in the WYSIWYG editor.",
-        "Enable saving and reusing custom elements as components.",
-        "Integrate an AI helper for quick copy suggestions, image alt text, and accessibility checks.",
-        "Add export to both HTML and ready-to-send email package formats."
+        {
+          "description": "Add a real-time preview panel for both desktop and mobile email views.",
+          "status": "todo"
+        },
+        {
+          "description": "Add undo/redo support in the WYSIWYG editor.",
+          "status": "todo"
+        },
+        {
+          "description": "Enable saving and reusing custom elements as components.",
+          "status": "todo"
+        },
+        {
+          "description": "Integrate an AI helper for quick copy suggestions, image alt text, and accessibility checks.",
+          "status": "todo"
+        },
+        {
+          "description": "Add export to both HTML and ready-to-send email package formats.",
+          "status": "todo"
+        }
       ]
     },
     {
       "name": "Testing & Final Polish",
       "goal": "Ship with zero runtime errors and a clean, optimized user experience.",
       "tasks": [
-        "Run full unit and integration test coverage for core modules.",
-        "Test email output in major email clients (Outlook, Gmail, Apple Mail).",
-        "Test all supported operating systems and screen resolutions.",
-        "Remove all debug logging unless in development mode.",
-        "Update documentation and create a quickstart guide."
+        {
+          "description": "Run full unit and integration test coverage for core modules.",
+          "status": "todo"
+        },
+        {
+          "description": "Test email output in major email clients (Outlook, Gmail, Apple Mail).",
+          "status": "todo"
+        },
+        {
+          "description": "Test all supported operating systems and screen resolutions.",
+          "status": "todo"
+        },
+        {
+          "description": "Remove all debug logging unless in development mode.",
+          "status": "todo"
+        },
+        {
+          "description": "Update documentation and create a quickstart guide.",
+          "status": "todo"
+        }
       ]
     }
   ],

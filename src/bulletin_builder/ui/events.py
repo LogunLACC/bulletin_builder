@@ -8,14 +8,13 @@ class EventsFrame(ctk.CTkFrame):
     """
     A frame for editing an 'events' section, with a single layout style for the whole section.
     """
-    def __init__(self, parent, section_data: dict, refresh_callback: callable, save_component_callback: callable):
+    def __init__(self, parent, section_data: dict, refresh_callback: callable):
         print(f"[DEBUG] EventsFrame __init__ called. parent={parent}, section_data={section_data}")
         self._init_args = (parent, section_data, refresh_callback, save_component_callback)
         try:
             super().__init__(parent, fg_color="transparent")
             self.section_data = section_data
             self.refresh_callback = refresh_callback
-            self.save_component_callback = save_component_callback
 
             if not isinstance(self.section_data.get('content'), list):
                 self.section_data['content'] = []
@@ -44,8 +43,7 @@ class EventsFrame(ctk.CTkFrame):
         self.title_entry.insert(0, self.section_data.get("title", "Events"))
         self.title_entry.bind("<KeyRelease>", self._on_data_change)
 
-        save_comp_button = ctk.CTkButton(top_frame, text="Save as Component", command=self._on_save_component)
-        save_comp_button.grid(row=0, column=2, padx=(10, 0))
+        
 
         style_frame = ctk.CTkFrame(self, fg_color="transparent")
         style_frame.grid(row=1, column=0, sticky="ew", pady=(0, 10))
@@ -180,7 +178,8 @@ class EventsFrame(ctk.CTkFrame):
         
     def _on_save_component(self):
         self._on_data_change()
-        self.save_component_callback(self.section_data)
+        app = self.winfo_toplevel()
+        app.save_component(self.section_data)
 
     def _refresh_placeholders(self):
         """Force CTkEntry placeholders to render when fields are empty.
