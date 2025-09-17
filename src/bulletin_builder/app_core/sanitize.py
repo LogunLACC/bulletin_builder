@@ -1,4 +1,4 @@
-"""
+﻿"""
 Email HTML sanitizer for LACC formatting rules.
 """
 
@@ -32,7 +32,7 @@ def _ensure_contains(style: str, fragment: str) -> str:
     return style.rstrip().rstrip(';') + ('; ' if style.strip() else '') + fragment.rstrip(';') + ';'
 
 def sanitize_email_html(html: str) -> str:
-    # 0) Strip <!doctype>, <head>…</head>, all <link rel="stylesheet"...>, and all <script ...>…</script>
+    # 0) Strip <!doctype>, <head>â€¦</head>, all <link rel="stylesheet"...>, and all <script ...>â€¦</script>
     html = re.sub(r'<!doctype[^>]*>\s*', '', html, flags=re.I)
     html = re.sub(r'<head\b[^>]*>.*?</head>', '', html, flags=re.I|re.S)
     html = re.sub(r'<link\b[^>]*rel=["\']stylesheet["\'][^>]*>\s*', '', html, flags=re.I)
@@ -43,16 +43,22 @@ def sanitize_email_html(html: str) -> str:
     # Remove attributes such as onerror="..." or onclick='...'
     html = re.sub(r'''(?is)\s+on[a-z]+\s*=\s*(?:"[^"]*"|'[^']*')''', '', html)
 
-    # 1) Ensure a/img/table/td have a style attribute when missing (NOTE THE LEADING SPACE)
+        # 1) Ensure a/img/table/td have a style attribute when missing (NOTE THE LEADING SPACE)
     html = re.sub(r'(<a\b)(?![^>]*style=)',   r'\1 style="margin:0; padding:0;"', html, flags=re.I)
     html = re.sub(r'(<img\b)(?![^>]*style=)', r'\1 style="margin:0; padding:0;"', html, flags=re.I)
     html = re.sub(r'(<table\b)(?![^>]*style=)', r'\1 style="border-collapse:collapse;"', html, flags=re.I)
     html = re.sub(r'(<td\b)(?![^>]*style=)',  r'\1 style="border:none;"', html, flags=re.I)
-
-    # 2) Prepend/normalize when style already exists; keep enforced rules first, dedupe props
+# 2) Prepend/normalize when style already exists; keep enforced rules first, dedupe props
     html = re.sub(r'(<a\b[^>]*style=")([^"]*)"',  lambda m: f'{m.group(1)}{_prepend_rule(m.group(2), "margin:0; padding:0")}"',  html, flags=re.I)
     html = re.sub(r'(<img\b[^>]*style=")([^"]*)"', lambda m: f'{m.group(1)}{_prepend_rule(m.group(2), "margin:0; padding:0")}"', html, flags=re.I)
-    html = re.sub(r'(<table\b[^>]*style=")([^"]*)"',lambda m: f'{m.group(1)}{_ensure_contains(m.group(2), "border-collapse:collapse")}"', html, flags=re.I)
+    html = re.sub(
+        r'(<table\b[^>]*style=")([^"]*)"',
+        lambda m: f'{m.group(1)}{_ensure_contains(m.group(2), "border-collapse:collapse")}"',
+        html,
+        flags=re.I,
+    )
     html = re.sub(r'(<td\b[^>]*style=")([^"]*)"',   lambda m: f'{m.group(1)}{_prepend_rule(m.group(2), "border:none")}"',       html, flags=re.I)
 
     return html
+
+

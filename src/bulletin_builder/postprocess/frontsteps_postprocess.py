@@ -47,6 +47,10 @@ _RX_FORBIDDEN_WRAPPERS = (
     re.compile(r"(?is)<\/?(?:html|head|style|script|link|iframe|svg|form)\b[^>]*>"),
 )
 
+# Unwrap <center> tags entirely (FrontSteps prefers table alignment)
+_RX_CENTER_OPEN = re.compile(r"(?is)<center\b[^>]*>")
+_RX_CENTER_CLOSE = re.compile(r"(?is)</center>")
+
 _RX_ATTR = {
     "href": re.compile(r"(?is)\bhref\s*=\s*([\"\'])(.*?)\1"),
     "src": re.compile(r"(?is)\bsrc\s*=\s*([\"\'])(.*?)\1"),
@@ -71,6 +75,9 @@ def _strip_wrappers_and_extract_body(html: str) -> str:
     # Remove now any residual closing body/html if they slipped through
     content = re.sub(r"(?is)</?body[^>]*>", "", content)
     content = re.sub(r"(?is)</?html[^>]*>", "", content)
+    # Unwrap center tags
+    content = _RX_CENTER_OPEN.sub("", content)
+    content = _RX_CENTER_CLOSE.sub("", content)
     # Drop HTML comments
     content = _RX_TAG["comment"].sub("", content)
     return content.strip()
@@ -181,11 +188,29 @@ def _process_img(attrs: str) -> str:
     if not _RX_ATTR["alt"].search(attrs):
         attrs = _attrs_set(attrs, "alt", "")
 
-    # Width/height attributes: favor width when container is 600px
-    if not _RX_ATTR["width"].search(attrs):
-        attrs = _attrs_set(attrs, "width", "600")
-    # Height left as-is if present; we avoid forcing a possibly-wrong value
+    # Width/height attributes: favor width when container is 600px; try to infer height
+    width_val = None
+    w_m = _RX_ATTR["width"].search(attrs)
+    if w_m:
+        width_val = w_m.group(2)
+    else:
+        width_val = "600"
+        attrs = _attrs_set(attrs, "width", width_val)
 
+    # Try to infer height from src patterns like 600x400 or rs:fill:500:250
+    height_val = None
+    if src_m:
+        s = src_m.group(2)
+        m_wh = re.search(r"(?i)/(\d{2,4})x(\d{2,4})(?:\D|$)", s)
+        if m_wh:
+            height_val = m_wh.group(2)
+        else:
+            m_fill = re.search(r"(?i)rs:fill:(\d{2,4}):(\d{2,4})", s)
+            if m_fill:
+                height_val = m_fill.group(2)
+    if height_val and height_val.isdigit():
+        attrs = _attrs_set(attrs, "height", height_val)
+    
     return f"<img{_cleanup_attrs_spacing(attrs)} />"
 
 
@@ -272,7 +297,28 @@ def process_frontsteps_html(html: str) -> str:
     # 5) Remove residual HTML comments
     out = _RX_TAG["comment"].sub("", out)
 
-    # 6) Trim excess whitespace lines
+    # 6) Unescape encoded HTML blocks inside <div> that look like embedded markup (from prior escaping)
+    def _unescape_div_blocks(html_text: str) -> str:
+        rx_div = re.compile(r"(?is)(<div[^>]*>)(?P<inner>(?:(?!</div>).)*)</div>")
+        def _maybe_unescape(m):
+            head, inner = m.group(1), m.group('inner')
+            # Heuristic: if inner contains many entity-encoded angle brackets and almost no real '<', unescape
+            if ('&lt;' in inner or '&gt;' in inner) and inner.count('<') < 3:
+                decoded = unescape(inner)
+                # After decoding, run minimal sanitization: strip forbidden wrappers/center/comments again
+                tmp = decoded
+                for rx in _RX_FORBIDDEN_WRAPPERS:
+                    tmp = rx.sub("", tmp)
+                tmp = _RX_CENTER_OPEN.sub("", tmp)
+                tmp = _RX_CENTER_CLOSE.sub("", tmp)
+                tmp = _RX_TAG['comment'].sub("", tmp)
+                return head + tmp + "</div>"
+            return m.group(0)
+        return rx_div.sub(_maybe_unescape, html_text)
+
+    out = _unescape_div_blocks(out)
+
+    # 7) Trim excess whitespace lines
     out = re.sub(r"\n{3,}", "\n\n", out)
 
     return out.strip()

@@ -66,7 +66,9 @@ def process_html(html: str) -> str:
             style = _ensure_attr(style, 'border:none')
             new_attrs = re.sub(r'style="[^"]*"', f'style="{style}"', attrs, flags=re.IGNORECASE)
             return '<a' + new_attrs + '>'
-        return '<a' + attrs + '>'
+        # If no style present, add defaults
+        sep = '' if attrs.endswith(' ') or attrs == '' else ' '
+        return '<a' + attrs + f'{sep}style="margin:0;padding:0;border:none;">'
 
     html = re.sub(r'<a([^>]*)>', _fix_anchor_with_style, html, flags=re.IGNORECASE)
 
@@ -98,12 +100,14 @@ def process_html(html: str) -> str:
             style = style_match.group(1)
             if 'border-collapse' not in style:
                 style += 'border-collapse:collapse;'
+            if 'border-spacing' not in style:
+                style += 'border-spacing:0;'
             if 'border:none' not in style:
                 style += 'border:none;'
             new_attrs = re.sub(r'style="[^"]*"', f'style="{style}"', attrs, flags=re.IGNORECASE)
             return '<table' + new_attrs + '>'
         else:
-            return '<table' + attrs + ' style="border-collapse:collapse;border:none;">'
+            return '<table' + attrs + ' style="border-collapse:collapse;border-spacing:0;border:none;">'
 
     html = re.sub(r'<table([^>]*)>', _fix_table, html, flags=re.IGNORECASE)
 

@@ -22,6 +22,8 @@ def init(app):
             parent = app.editor_container
             # Do not destroy the new frame we're keeping
             for child in app.editor_container.winfo_children():
+                if child is new_frame:
+                    continue
                 try: child.grid_forget()
                 except Exception: pass
                 child.destroy()

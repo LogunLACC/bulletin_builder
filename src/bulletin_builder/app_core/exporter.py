@@ -197,6 +197,25 @@ def render_bulletin_html(ctx: dict) -> str:
     title = ctx.get("title", "Bulletin")
     sections = ctx.get("sections", [])
 
+    def _render_section_html(section: dict) -> str:
+      stype = section.get("type", "")
+      title = (section.get("title") or "").strip()
+      header = f"<h2>{escape(title)}</h2>" if title else ""
+      if stype == "custom_text":
+        content = section.get("content", {}) or {}
+        text = content.get("text", "") if isinstance(content, dict) else str(content or "")
+        return header + f"<div>{escape(text)}</div>"
+      elif stype == "announcements":
+        items = section.get("content", []) or []
+        inner = []
+        for a in items:
+          at = escape(a.get("title", ""))
+          body = escape(a.get("body", ""))
+          inner.append(f"<div><strong>{at}</strong><div>{body}</div></div>")
+        return header + ("".join(inner) if inner else "<div>No announcements.</div>")
+      else:
+        return header
+
     sections_html = ""
     for s in sections:
       try:
@@ -415,6 +434,32 @@ def init(app):
   app.on_send_test_email_clicked = on_send_test_email_clicked
   
   # Optional explicit exports used by UI export submenu
-  app.export_bulletin_html = render_bulletin_html
-  app.export_email_html = render_email_html
+  def _export_bulletin_html():
+    try:
+      ctx = _collect_context()
+      html = render_bulletin_html(ctx)
+      default = f"{ctx.get('title','bulletin').replace(' ','_')}.html"
+      path = filedialog.asksaveasfilename(defaultextension='.html', initialfile=default, title='Export Bulletin HTML', parent=app)
+      if not path:
+        return
+      with open(path, 'w', encoding='utf-8') as f:
+        f.write(html)
+    except Exception:
+      pass
+
+  def _export_email_html():
+    try:
+      ctx = _collect_context()
+      html = render_email_html(ctx)
+      default = f"{ctx.get('title','bulletin').replace(' ','_')}_email.html"
+      path = filedialog.asksaveasfilename(defaultextension='.html', initialfile=default, title='Export Email HTML', parent=app)
+      if not path:
+        return
+      with open(path, 'w', encoding='utf-8') as f:
+        f.write(html)
+    except Exception:
+      pass
+
+  app.export_bulletin_html = _export_bulletin_html
+  app.export_email_html = _export_email_html
   return None
