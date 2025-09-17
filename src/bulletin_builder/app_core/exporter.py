@@ -305,30 +305,36 @@ def init(app):
         print('Copy Error', e)
 
   def on_copy_for_frontsteps_clicked():
-    """Copy full template-rendered HTML (with head/style) for FrontSteps.
+    """Copy FrontSteps‑safe body-only HTML to clipboard.
 
-    Uses the main template renderer to produce visually identical output to
-    the in-app preview. Leaves head/style intact for better paste fidelity
-    into web editors like FrontSteps. Upgrades URLs and converts AVIF to JPG
-    where possible to avoid mixed-content or unsupported formats.
+    Renders the email-friendly version, then applies FrontSteps rules to
+    produce a body-only fragment with inline-safe styles and absolute URLs.
     """
     try:
-      # Render via template engine
-      try:
-        from bulletin_builder.bulletin_renderer import BulletinRenderer
-        settings = getattr(app, 'settings_frame', None)
-        settings_dict = settings.dump() if settings and hasattr(settings, 'dump') else {}
-        br = BulletinRenderer()
-        html = br.render_html(sections_data=getattr(app, 'sections_data', []), settings=settings_dict)
-      except Exception as e:
-        html = f"<html><body><p>Render error: {e}</p></body></html>"
+      # Collect context then render email‑friendly HTML (table layout + inline styles)
+      ctx = _collect_context()
+      html = render_email_html(ctx)
 
-      # Make URLs email-safe (HTTPS + AVIF->JPG where possible)
+      # Upgrade URLs (HTTPS + AVIF->JPG where possible)
       try:
         from bulletin_builder.app_core.url_upgrade import upgrade_http_to_https
         html = upgrade_http_to_https(html, convert_avif=True)
       except Exception:
         pass
+
+      # Apply FrontSteps postprocessing: strip wrappers, enforce style starts, absolute URLs, etc.
+      try:
+        from bulletin_builder.postprocess import process_frontsteps_html
+        html = process_frontsteps_html(html)
+      except Exception:
+        # Fall back to the email HTML body content if FS processing fails
+        try:
+          import re as _re
+          m = _re.search(r"(?is)<body[^>]*>(.*?)</body>", html)
+          if m:
+            html = m.group(1)
+        except Exception:
+          pass
 
       # Prefer clipboard; fallback to writing a temp file and opening it
       if hasattr(app, 'clipboard_clear') and hasattr(app, 'clipboard_append'):
@@ -409,6 +415,6 @@ def init(app):
   app.on_send_test_email_clicked = on_send_test_email_clicked
   
   # Optional explicit exports used by UI export submenu
-    app.export_bulletin_html = render_bulletin_html
+  app.export_bulletin_html = render_bulletin_html
   app.export_email_html = render_email_html
   return None
