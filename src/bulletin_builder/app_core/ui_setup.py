@@ -282,8 +282,17 @@ def init(app):
     for i in range(4): controls.grid_columnconfigure(i, weight=(1 if i == 3 else 0))
 
     app.device_var = tk.StringVar(value="Desktop")
+    def _on_device_change(choice):
+        try:
+            if hasattr(app, 'set_preview_device'):
+                app.set_preview_device(choice)
+            if hasattr(app, 'update_preview'):
+                app.update_preview()
+        except Exception:
+            pass
     ctk.CTkOptionMenu(controls, variable=app.device_var,
-                      values=["Desktop", "Mobile"]).grid(row=0, column=0, padx=(0, 8))
+                      values=["Desktop", "Tablet", "Mobile"],
+                      command=_on_device_change).grid(row=0, column=0, padx=(0, 8))
 
     app.preview_mode_var = tk.StringVar(value="Code")
     def on_preview_mode_change(choice):
@@ -302,6 +311,8 @@ def init(app):
     ctk.CTkButton(controls, text="View in Browser",
                   command=getattr(app, "open_in_browser", lambda: None)).grid(row=0, column=3, sticky="e")
 
+    # Expose a preview area reference for device width tweaks
+    app.preview_area = preview_view
     app.rendered_preview = HTMLLabel(preview_view, html="", background="#f4f4f4")
     app.code_preview = tk.Text(preview_view, wrap="word", bg="#f4f4f4", fg="#222", font=("Consolas", 12))
     app.code_preview.insert("1.0", "Ready. Build your bulletin to preview here.")

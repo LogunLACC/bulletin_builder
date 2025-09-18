@@ -143,7 +143,7 @@
       "tasks": [
         {
           "description": "Add a real-time preview panel for both desktop and mobile email views.",
-          "status": "todo"
+          "status": "complete"
         },
         {
           "description": "Add undo/redo support in the WYSIWYG editor.",

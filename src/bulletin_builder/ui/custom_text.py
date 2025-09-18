@@ -1,4 +1,6 @@
 import customtkinter as ctk
+import os
+DEBUG = bool(int(os.getenv('BB_DEBUG', '0') or '0'))
 from .base_section import SectionRegistry
 
 @SectionRegistry.register("custom_text")
@@ -7,7 +9,8 @@ class CustomTextFrame(ctk.CTkFrame):
     A frame for editing a 'custom_text' section, containing a title and content.
     """
     def __init__(self, parent, section_data: dict, refresh_callback: callable):
-        print(f"[DEBUG] CustomTextFrame __init__ called. parent={parent}, section_data={section_data}")
+        if DEBUG:
+            print(f"[DEBUG] CustomTextFrame __init__ called. parent={parent}, section_data={section_data}")
         self._init_args = (parent, section_data, refresh_callback, save_component_callback)
         try:
             super().__init__(parent, fg_color="transparent")
@@ -36,9 +39,9 @@ class CustomTextFrame(ctk.CTkFrame):
             self.content_textbox.insert("1.0", self.section_data.get("content", ""))
             self.content_textbox.bind("<KeyRelease>", self._on_data_change)
 
-            
-            print(f"[DEBUG] CustomTextFrame children: {[str(w) for w in self.winfo_children()]}")
-            print("[DEBUG] CustomTextFrame __init__ completed successfully.")
+            if DEBUG:
+                print(f"[DEBUG] CustomTextFrame children: {[str(w) for w in self.winfo_children()]}")
+                print("[DEBUG] CustomTextFrame __init__ completed successfully.")
         except Exception as e:
             print(f"[ERROR] Exception in CustomTextFrame __init__: {e}")
             raise

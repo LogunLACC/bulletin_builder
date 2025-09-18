@@ -1,4 +1,7 @@
 import customtkinter as ctk
+import os
+
+DEBUG = bool(int(os.getenv('BB_DEBUG', '0') or '0'))
 import tkinter as tk
 from bulletin_builder.ui.base_section import SectionRegistry
 
@@ -119,14 +122,17 @@ def init(app):
 
 # --- Section Selection ---
 def on_section_select(app, event=None):
-    print("[DEBUG] on_section_select called")
+    if DEBUG:
+        print("[DEBUG] on_section_select called")
     sel = app.section_listbox.curselection()
     if not sel:
-        print("[DEBUG] on_section_select: no selection")
+        if DEBUG:
+            print("[DEBUG] on_section_select: no selection")
         return
     idx = sel[0]
     section = app.sections_data[idx]
-    print(f"[DEBUG] on_section_select: idx={idx}, section type={section.get('type')}, title={section.get('title')}")
+    if DEBUG:
+        print(f"[DEBUG] on_section_select: idx={idx}, section type={section.get('type')}, title={section.get('title')}")
     try:
         FrameCls = SectionRegistry.get_frame(section['type'])
         if section['type'] == 'announcements':
@@ -135,7 +141,8 @@ def on_section_select(app, event=None):
             frame = FrameCls(app.editor_container, section, app.refresh_listbox_titles)
         # Do NOT call pack() or grid() on frame here; let replace_editor_frame handle it
         app.replace_editor_frame(frame)
-        print(f"[DEBUG] Editor frame replaced for section {idx}")
+        if DEBUG:
+            print(f"[DEBUG] Editor frame replaced for section {idx}")
     except Exception as e:
         print(f"[ERROR] Could not build/replace editor frame: {e}")
     app.active_editor_index = idx
