@@ -59,6 +59,21 @@ def sanitize_email_html(html: str) -> str:
     )
     html = re.sub(r'(<td\b[^>]*style=")([^"]*)"',   lambda m: f'{m.group(1)}{_prepend_rule(m.group(2), "border:none")}"',       html, flags=re.I)
 
+    # 3) Ensure table attribute defaults for email clients
+    def _ensure_table_attrs(m):
+        attrs = m.group(1)
+        def _has(attr):
+            return re.search(rf'(?i)\b{attr}\s*=\s*(?:"[^"]*"|\'[^\']*\'|\S+)', attrs) is not None
+        if not _has('cellpadding'):
+            attrs += ' cellpadding="0"'
+        if not _has('cellspacing'):
+            attrs += ' cellspacing="0"'
+        if not _has('border'):
+            attrs += ' border="0"'
+        return '<table' + attrs + '>'
+
+    html = re.sub(r'(?is)<table([^>]*)>', _ensure_table_attrs, html)
+
     return html
 
 
