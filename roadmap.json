@@ -21,7 +21,7 @@
         },
         {
           "description": "Fix Tkinter geometry manager conflicts by ensuring each container uses either grid or pack, not both.",
-          "status": "todo"
+          "status": "complete"
         },
         {
           "description": "Resolve all 'clear_editor_panel' related stacking issues by replacing panels instead of appending.",
@@ -35,7 +35,7 @@
       "tasks": [
         {
           "description": "Implement a theme system with Light, Dark, and Hybrid modes, selectable in settings.",
-          "status": "todo"
+          "status": "complete"
         },
         {
           "description": "Redesign the layout for better section navigation — left panel for sections, right panel for editor, status bar at bottom.",
@@ -133,7 +133,7 @@
         },
         {
           "description": "Run an automated validation step before export to catch non-compliant elements.",
-          "status": "todo"
+          "status": "complete"
         }
       ]
     },

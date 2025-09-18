@@ -278,6 +278,14 @@ def init(app):
     try:
       ctx = _collect_context()
       html = render_bulletin_html(ctx)
+      # Validate non-blocking
+      try:
+        from bulletin_builder.app_core.sanitize import validate_email_html
+        issues = validate_email_html(html)
+        if issues and hasattr(app, 'show_status_message'):
+          app.show_status_message(f'Export HTML: {len(issues)} formatting warnings')
+      except Exception:
+        pass
       default = f"{ctx.get('title','bulletin').replace(' ','_')}.html"
       path = filedialog.asksaveasfilename(defaultextension='.html', initialfile=default, title='Export Bulletin HTML', parent=app)
       if not path:
@@ -303,6 +311,14 @@ def init(app):
     try:
       ctx = _collect_context()
       html = render_email_html(ctx)
+      # Validate non-blocking; show a brief status if available
+      try:
+        from bulletin_builder.app_core.sanitize import validate_email_html
+        issues = validate_email_html(html)
+        if issues and hasattr(app, 'show_status_message'):
+          app.show_status_message(f'Email HTML has {len(issues)} formatting warnings')
+      except Exception:
+        pass
       # Copy to clipboard if app root has clipboard methods, else write to temp file and open
       if hasattr(app, 'clipboard_clear') and hasattr(app, 'clipboard_append'):
         app.clipboard_clear()

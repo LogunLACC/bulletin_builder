@@ -77,3 +77,63 @@ def sanitize_email_html(html: str) -> str:
     return html
 
 
+def validate_email_html(html: str) -> list[str]:
+    """
+    Lightweight validator for email HTML compliance. Returns a list of
+    human-readable issues (warnings) without mutating input.
+    """
+    issues: list[str] = []
+
+    # 1) Forbidden wrappers/elements
+    if re.search(r'(?is)<\/?(html|head|style|script|link|iframe|svg|form)\b', html):
+        issues.append("Forbidden wrapper or element present (html/head/style/script/link/iframe/svg/form).")
+
+    # 2) Anchors must have margin:0; padding:0; at least somewhere
+    for m in re.finditer(r'(?is)<a\b([^>]*)>', html):
+        attrs = m.group(1)
+        st = re.search(r'(?is)style\s*=\s*"([^"]*)"', attrs)
+        if not st:
+            issues.append("<a> missing style attribute.")
+        else:
+            s = st.group(1).replace(" ", "")
+            if not ("margin:0;" in s and "padding:0;" in s):
+                issues.append("<a> style missing margin:0; padding:0;.")
+
+    # 3) Images: absolute URLs and resets
+    for m in re.finditer(r'(?is)<img\b([^>]*)>', html):
+        attrs = m.group(1)
+        src = re.search(r'(?is)\bsrc\s*=\s*"([^"]*)"', attrs)
+        if not src or not re.match(r'(?i)^https?://', src.group(1) or ""):
+            issues.append("<img> src should be absolute http(s) URL.")
+        st = re.search(r'(?is)style\s*=\s*"([^"]*)"', attrs)
+        if not st:
+            issues.append("<img> missing style attribute.")
+        else:
+            s = st.group(1).replace(" ", "")
+            if not ("margin:0;" in s and "padding:0;" in s):
+                issues.append("<img> style missing margin:0; padding:0;.")
+
+    # 4) Tables/td basics
+    for m in re.finditer(r'(?is)<table\b([^>]*)>', html):
+        attrs = m.group(1)
+        st = re.search(r'(?is)style\s*=\s*"([^"]*)"', attrs)
+        if not st or "border-collapse:collapse" not in (st.group(1) or ""):
+            issues.append("<table> style should include border-collapse:collapse.")
+    for m in re.finditer(r'(?is)<td\b([^>]*)>', html):
+        attrs = m.group(1)
+        st = re.search(r'(?is)style\s*=\s*"([^"]*)"', attrs)
+        if not st or "border:none" not in (st.group(1) or ""):
+            issues.append("<td> style should include border:none.")
+
+    # 5) Absolute hrefs
+    for m in re.finditer(r'(?is)\bhref\s*=\s*"([^"]*)"', html):
+        url = m.group(1) or ""
+        if url.startswith("#"):
+            # Internal anchors are acceptable but may be discouraged for paste-in editors
+            continue
+        if not re.match(r'(?i)^https?://', url):
+            issues.append("href should be absolute http(s) URL.")
+
+    return issues
+
+
