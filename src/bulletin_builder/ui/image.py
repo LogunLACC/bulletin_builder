@@ -11,7 +11,7 @@ class ImageFrame(ctk.CTkFrame):
     def __init__(self, parent, section_data: dict, refresh_callback: callable):
         if DEBUG:
             print(f"[DEBUG] ImageFrame __init__ called. parent={parent}, section_data={section_data}")
-        self._init_args = (parent, section_data, refresh_callback, save_component_callback)
+        self._init_args = (parent, section_data, refresh_callback)
         try:
             super().__init__(parent, fg_color="#ccccff")  # Debug: blue background
             self.section_data = section_data
@@ -58,6 +58,13 @@ class ImageFrame(ctk.CTkFrame):
         self.section_data['title'] = self.title_entry.get()
         self.section_data['src'] = self.image_url_entry.get()
         self.section_data['alt'] = self.alt_text_entry.get()
+        # Propagate to app model
+        try:
+            app = self.winfo_toplevel()
+            from bulletin_builder.app_core.sections import update_section_data
+            update_section_data(app, {'title': self.section_data['title'], 'content': {'src': self.section_data['src'], 'alt': self.section_data['alt']}})
+        except Exception:
+            pass
         self.refresh_callback()
 
     def _on_save_component(self):

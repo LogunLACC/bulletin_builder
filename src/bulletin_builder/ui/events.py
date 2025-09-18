@@ -13,7 +13,7 @@ class EventsFrame(ctk.CTkFrame):
     def __init__(self, parent, section_data: dict, refresh_callback: callable):
         if DEBUG:
             print(f"[DEBUG] EventsFrame __init__ called. parent={parent}, section_data={section_data}")
-        self._init_args = (parent, section_data, refresh_callback, save_component_callback)
+        self._init_args = (parent, section_data, refresh_callback)
         try:
             super().__init__(parent, fg_color="transparent")
             self.section_data = section_data
@@ -178,6 +178,13 @@ class EventsFrame(ctk.CTkFrame):
 
     def _on_data_change(self, event=None):
         self.section_data['title'] = self.title_entry.get()
+        # Propagate to app model and refresh
+        try:
+            app = self.winfo_toplevel()
+            from bulletin_builder.app_core.sections import update_section_data
+            update_section_data(app, {'title': self.section_data['title'], 'content': self.section_data['content'], 'layout_style': self.section_data.get('layout_style', 'Card')})
+        except Exception:
+            pass
         self.refresh_callback()
         
     def _on_save_component(self):

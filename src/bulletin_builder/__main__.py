@@ -181,11 +181,14 @@ def export_email_html(self):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Bulletin Builder CLI")
-    parser.add_argument("--gui", action="store_true", help="Launch the WYSIWYG editor")
+    parser = argparse.ArgumentParser(description="Bulletin Builder Launcher")
+    parser.add_argument("--cli", action="store_true", help="Run in CLI mode (no GUI)")
     args = parser.parse_args()
+    # Default to launching GUI once; prevents duplicate creation when called via different entrypoints
+    launch_gui()
+    return
 
-    if args.gui:
+    if args.cli:
         print("ðŸ“° Bulletin Builder CLI is running!")
         launch_gui()
     else:
@@ -202,5 +205,7 @@ if __name__ == '__main__':
     ]:
         os.makedirs(d, exist_ok=True)
 
-    app = BulletinBuilderApp()
-    app.mainloop()
+    # Prevent duplicate launch if another entrypoint already opened the GUI
+    if os.environ.get('BB_LAUNCHED') != '1':
+        os.environ['BB_LAUNCHED'] = '1'
+    main()

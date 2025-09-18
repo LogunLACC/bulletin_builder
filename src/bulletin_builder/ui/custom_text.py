@@ -11,7 +11,8 @@ class CustomTextFrame(ctk.CTkFrame):
     def __init__(self, parent, section_data: dict, refresh_callback: callable):
         if DEBUG:
             print(f"[DEBUG] CustomTextFrame __init__ called. parent={parent}, section_data={section_data}")
-        self._init_args = (parent, section_data, refresh_callback, save_component_callback)
+        # Store references for potential future re-instantiation
+        self._init_args = (parent, section_data, refresh_callback)
         try:
             super().__init__(parent, fg_color="transparent")
             self.section_data = section_data
