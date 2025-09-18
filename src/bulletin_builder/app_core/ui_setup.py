@@ -90,6 +90,7 @@ def init(app):
         export_menu = tk.Menu(file_menu, tearoff=0)
         export_menu.add_command(label="Bulletin HTML...", command=getattr(app, "export_bulletin_html", lambda: None))
         export_menu.add_command(label="Email HTML...", command=getattr(app, "export_email_html", lambda: None))
+        export_menu.add_command(label="Email Package (.zip)...", command=getattr(app, "on_export_email_package_clicked", lambda: None))
         file_menu.add_cascade(label="Export", menu=export_menu)
 
         menubar.add_cascade(label="File", menu=file_menu)

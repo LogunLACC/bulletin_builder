@@ -127,6 +127,39 @@ def _render_section_email(section: dict) -> str:
       text = content.get("text", "")
     return header_html + f'<div style="font-size:15px;line-height:1.7;">{escape(text)}</div>'
 
+  elif stype == "elements":
+    items = section.get("content", []) or []
+    parts: list[str] = []
+    def style_text(size: int, color: str) -> str:
+      return f"font-family: Arial, Helvetica, sans-serif; font-weight:bold; font-size:{int(size)}px; line-height:1.3; color:{escape(color or '#103040')};"
+    for it in items:
+      t = (it.get('type') or 'p').lower()
+      if t in ("h1","h2","p"):
+        text = escape(it.get('text',''))
+        color = it.get('color', '#506070')
+        size = int(it.get('size') or (24 if t=='h1' else 20 if t=='h2' else 16))
+        tag = 'h1' if t=='h1' else ('h2' if t=='h2' else 'p')
+        style = style_text(size, color) if t!='p' else f"font-family: Arial, Helvetica, sans-serif; font-size:{size}px; line-height:1.5; color:{escape(color)};"
+        parts.append(f'<{tag} style="{style}">{text}</{tag}>')
+      elif t == 'img':
+        src = escape(it.get('src',''))
+        alt = escape(it.get('alt',''))
+        parts.append(f'<img src="{src}" alt="{alt}" style="margin:0; padding:0; border:none; display:block; max-width:100%; height:auto;">')
+      elif t in ("row2","row3"):
+        cells = it.get('cells') or []
+        n = 2 if t=='row2' else 3
+        # Simple multi-column table
+        parts.append('<table cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse; border-spacing:0;">')
+        parts.append('<tr>')
+        for i in range(n):
+          cell = cells[i] if i < len(cells) else {}
+          text = escape(cell.get('text',''))
+          parts.append(f'<td style="border:none; padding:6px 8px; vertical-align:top; width:{int(100/n)}%;">{text}</td>')
+        parts.append('</tr></table>')
+      else:
+        parts.append('<div style="opacity:.7;font-size:14px;">Unsupported element.</div>')
+    return header_html + ''.join(parts)
+
   else:
     return header_html + '<div style="opacity:.7;font-size:14px;">No content available.</div>'
 
@@ -213,6 +246,28 @@ def render_bulletin_html(ctx: dict) -> str:
           body = escape(a.get("body", ""))
           inner.append(f"<div><strong>{at}</strong><div>{body}</div></div>")
         return header + ("".join(inner) if inner else "<div>No announcements.</div>")
+      elif stype == "elements":
+        items = section.get("content", []) or []
+        parts = []
+        for it in items:
+          t = (it.get('type') or 'p').lower()
+          if t in ("h1","h2","p"):
+            text = escape(it.get('text',''))
+            parts.append(f"<{t}>{text}</{t}>")
+          elif t == 'img':
+            src = escape(it.get('src',''))
+            alt = escape(it.get('alt',''))
+            parts.append(f'<img src="{src}" alt="{alt}">')
+          elif t in ("row2","row3"):
+            cells = it.get('cells') or []
+            n = 2 if t=='row2' else 3
+            parts.append('<table><tr>')
+            for i in range(n):
+              cell = cells[i] if i < len(cells) else {}
+              text = escape(cell.get('text',''))
+              parts.append(f'<td>{text}</td>')
+            parts.append('</tr></table>')
+        return header + ''.join(parts)
       else:
         return header
 
@@ -478,4 +533,27 @@ def init(app):
 
   app.export_bulletin_html = _export_bulletin_html
   app.export_email_html = _export_email_html
+  
+  # Export Email Package (.zip)
+  def on_export_email_package_clicked():
+    try:
+      ctx = _collect_context()
+      html = render_email_html(ctx)
+      default = f"{ctx.get('title','bulletin').replace(' ','_')}_email_package.zip"
+      path = filedialog.asksaveasfilename(defaultextension='.zip', initialfile=default, title='Export Email Package (.zip)', parent=app)
+      if not path:
+        return
+      import zipfile, json
+      with zipfile.ZipFile(path, 'w', compression=zipfile.ZIP_DEFLATED) as z:
+        z.writestr('email.html', html)
+        z.writestr('manifest.json', json.dumps({'title': ctx.get('title',''), 'date': ctx.get('date','')}, ensure_ascii=False))
+      if hasattr(app, 'show_status_message'):
+        app.show_status_message(f'Exported email package: {path}')
+    except Exception as e:
+      try:
+        messagebox.showerror('Export Error', str(e), parent=app)
+      except Exception:
+        print('Export Error', e)
+
+  app.on_export_email_package_clicked = on_export_email_package_clicked
   return None

@@ -105,6 +105,8 @@ def validate_email_html(html: str) -> list[str]:
         src = re.search(r'(?is)\bsrc\s*=\s*"([^"]*)"', attrs)
         if not src or not re.match(r'(?i)^https?://', src.group(1) or ""):
             issues.append("<img> src should be absolute http(s) URL.")
+        if not re.search(r'(?is)\balt\s*=', attrs):
+            issues.append("<img> missing alt attribute (accessibility).")
         st = re.search(r'(?is)style\s*=\s*"([^"]*)"', attrs)
         if not st:
             issues.append("<img> missing style attribute.")
