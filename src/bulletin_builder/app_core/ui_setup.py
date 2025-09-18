@@ -2,6 +2,7 @@ import customtkinter as ctk
 import tkinter as tk
 from tkhtmlview import HTMLLabel
 from ..ui.settings import SettingsFrame
+from bulletin_builder.ui.tooltip import add_tooltip
 
 def init(app):
     """Construct the main UI elements on the provided app instance.
@@ -290,9 +291,11 @@ def init(app):
                 app.update_preview()
         except Exception:
             pass
-    ctk.CTkOptionMenu(controls, variable=app.device_var,
-                      values=["Desktop", "Tablet", "Mobile"],
-                      command=_on_device_change).grid(row=0, column=0, padx=(0, 8))
+    device_menu = ctk.CTkOptionMenu(controls, variable=app.device_var,
+                                    values=["Desktop", "Tablet", "Mobile"],
+                                    command=_on_device_change)
+    device_menu.grid(row=0, column=0, padx=(0, 8))
+    add_tooltip(device_menu, "Preview width: Desktop/Tablet/Mobile")
 
     app.preview_mode_var = tk.StringVar(value="Code")
     def on_preview_mode_change(choice):
@@ -303,13 +306,21 @@ def init(app):
             app.rendered_preview.grid(row=1, column=0, sticky="nsew")
             app.code_preview.grid_forget()
 
-    ctk.CTkOptionMenu(controls, variable=app.preview_mode_var,
-                      values=["Code", "Rendered"],
-                      command=on_preview_mode_change).grid(row=0, column=1, padx=(0, 8))
-    ctk.CTkButton(controls, text="Update",
-                  command=getattr(app, "update_preview", lambda: None)).grid(row=0, column=2, padx=(0, 8))
-    ctk.CTkButton(controls, text="View in Browser",
-                  command=getattr(app, "open_in_browser", lambda: None)).grid(row=0, column=3, sticky="e")
+    mode_menu = ctk.CTkOptionMenu(controls, variable=app.preview_mode_var,
+                                  values=["Code", "Rendered"],
+                                  command=on_preview_mode_change)
+    mode_menu.grid(row=0, column=1, padx=(0, 8))
+    add_tooltip(mode_menu, "Switch between raw HTML and rendered preview")
+
+    update_btn = ctk.CTkButton(controls, text="Update",
+                               command=getattr(app, "update_preview", lambda: None))
+    update_btn.grid(row=0, column=2, padx=(0, 8))
+    add_tooltip(update_btn, "Re-render preview (Ctrl+U)")
+
+    view_btn = ctk.CTkButton(controls, text="View in Browser",
+                             command=getattr(app, "open_in_browser", lambda: None))
+    view_btn.grid(row=0, column=3, sticky="e")
+    add_tooltip(view_btn, "Open current preview in your browser")
 
     # Expose a preview area reference for device width tweaks
     app.preview_area = preview_view
