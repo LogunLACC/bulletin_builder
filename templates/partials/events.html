@@ -4,10 +4,11 @@
 {% endif %}
 
 {% if section.content %}
-    {% for tag_group in section.content | group_events_by_tag %}
-        <h3>{{ tag_group.header }}</h3>
-        {% for group in tag_group.events | group_events(settings.bulletin_date) %}
+    {% set _events = section.content %}
+    {% for group in _events | group_events(settings.bulletin_date) %}
+        {% if group.header %}
             <h4>{{ group.header }}</h4>
+        {% endif %}
         {% if section.layout_style == 'Grid' %}
         <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse; border-spacing:0; font-size: 0;">
             {% for row in group.events|batch(2) %}
@@ -151,7 +152,6 @@
         </table>
         {% endif %}
         {% endfor %}
-    {% endfor %}
 {% else %}
     <p>No events scheduled.</p>
 {% endif %}

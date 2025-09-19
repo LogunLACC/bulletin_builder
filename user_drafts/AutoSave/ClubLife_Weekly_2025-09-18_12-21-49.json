@@ -1,0 +1,136 @@
+{
+  "sections": [
+    {
+      "title": "Official Logo - Designed by Logun (Your Welcome)",
+      "type": "image",
+      "content": {
+        "src": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/05/EmailHeader.png",
+        "alt": "Lake Almanor Country Club Logo"
+      },
+      "src": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/05/EmailHeader.png",
+      "alt": "Lake Almanor Country Club Logo"
+    },
+    {
+      "title": "Club Announcements",
+      "type": "announcements",
+      "content": [
+        {
+          "title": "\ud83d\udea4 Boat Launch Closure at Rec 1 \u2022 Closed to Members",
+          "body": "<p>\nTo allow tournament competitors to launch and trailer their boats, the Boat Launch at Rec 1 will be closed to members during the following times:\n<ul>\n<strong>Friday, Sept 19 2025</strong>\n<li>5:00 am \u2013 6:30 am</li>\n<li>2:00 pm \u2013 4:30 pm</li>\n\n<strong>Saturday, Sept 20 2025</strong>\n<li>5:00 am \u2013 6:30 am</li>\n<li>2:00 pm \u2013 4:30 pm</li>\n\n<strong>Sunday, Sept 21 2025</strong>\n<li>5:00 am \u2013 6:30 am</li>\n<li>2:00 pm \u2013 4:30 pm</li>\n</ul>\n\nWe appreciate your understanding as we support our tournament participants.<br>\nPlease plan your lake time accordingly. \ud83c\udf0a</p>\n\n",
+          "link": "",
+          "link_text": ""
+        }
+      ]
+    },
+    {
+      "title": "Club Events",
+      "type": "lacc_events",
+      "content": [
+        {
+          "date": "Saturday, Oct 4",
+          "time": "3:00 \u2014 5:00 PM",
+          "description": "Paint & Wine with Lacy Wilson",
+          "image_url": "https://lakealmanorcountryclub.com/wp-content/uploads/sites/2434/2025/09/Unleash-Your-Inner-Artist-Flyer-3.jpg",
+          "link": "https://square.link/u/2aQy7yS6",
+          "map_link": ""
+        }
+      ],
+      "layout_style": "Card"
+    },
+    {
+      "title": "Community Events",
+      "type": "community_events",
+      "content": [
+        {
+          "date": "Wed, 17 Sep 2025",
+          "time": "",
+          "description": "Chester Rotary Meeting - All welcome",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czIvYmFubmVycy9jNmNkNTNjMjljODI2Mjg0YzU3NmIxNDY3MzZmOWM1ZmYwODE3M2YzZWYwYzRlYzYxZjE3YjkyYWViNTEyYWQwLXJpbWctdzEyMDAtaDEyMDAtZGNmZmZmZmYtZ21pcj92PTE3NTY5NzMzMTg.avif",
+          "tags": [],
+          "link": "https://allevents.in/chester/chester-rotary-meeting-all-welcome/200028793716038",
+          "map_link": ""
+        },
+        {
+          "date": "Sat, 20 Sep 2025",
+          "time": "",
+          "description": "September Saturday Night",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czMvYmFubmVycy83M2Y0ZTk5MWE4ODVhYmIwMGU0YTU2ZmNjNjBlYWYzY2NmNWM5M2YyODhjYjhhZWY1YTA1ZTY2YzRkY2U4NTFjLXJpbWctdzExNTktaDIwNDgtZGM2NWEyZmUtZ21pcj92PTE3NTM5MTU2NjY.avif",
+          "tags": [],
+          "link": "https://allevents.in/quincy/september-saturday-night/200028383803339",
+          "map_link": ""
+        },
+        {
+          "date": "Sat, 20 Sep 2025",
+          "time": "",
+          "description": "Pirates!",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy85NzYzNGVlZGEyNjE5NGMxMTQ3NTc5MjI4MjJhZGNiMjU3OTMwM2I0NmU0NzM4MTQ5ODIzYTE5MTI4YmUzNWUzLXJpbWctdzEyMDAtaDE1NTItZGNmZmZmZmYtZ21pcj92PTE3NTY2ODUwNTg.avif",
+          "tags": [],
+          "link": "https://allevents.in/susanville/pirates/200028774106119",
+          "map_link": ""
+        },
+        {
+          "date": "Mon, 22 Sep 2025",
+          "time": "",
+          "description": "Chamber Town Hall (4th Mondays)",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czIvYmFubmVycy9hZDk2Y2NjYzIxMTE2YjllZTgwYzkzM2YwNTUzMWZjYTZhOGE2MmE5NmQ0YmFjMzc5NTk0NjE4NzFiYmFjNDQ3LXJpbWctdzEyMDAtaDE1NTMtZGNmZmZmZmYtZ21pcj92PTE3NTY5NzMzMTA.avif",
+          "tags": [],
+          "link": "https://allevents.in/chester/chamber-town-hall-4th-mondays/200028746693255",
+          "map_link": ""
+        },
+        {
+          "date": "Sat, 27 Sep 2025",
+          "time": "",
+          "description": "Lake Almanor Ducks Unlimited Annual Banquet 2025",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czUvYmFubmVycy80NDM5MzRjMTU2MGZkNDcxMDUzYWQ5MGQyODQzNGYxNTA0YmI4ZmUzNDMxZmNiZDZlMzZiZDhiZGIxZDhlYzZjLXJpbWctdzgwMC1oMTAzNS1kY2Y0ZWVlNi1nbWlyP3Y9MTc1Mzc0NTE0MA.avif",
+          "tags": [],
+          "link": "https://allevents.in/chester/lake-almanor-ducks-unlimited-annual-banquet-2025/200028581090441",
+          "map_link": ""
+        },
+        {
+          "date": "Sat, 27 Sep 2025",
+          "time": "",
+          "description": "Rocking in the Mountains",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czgvYmFubmVycy9kNGE4YTA0M2RhZGQ2ZDUwNzFkZDE5NGFkY2NlZjAzYjk2NzJjYTQ5MGVlMDhjZWQxMWFjZTYyNzYwMjk4ODE5LXJpbWctdzEyMDAtaDE4NTUtZGMxMjE5MWItZ21pcj92PTE3NTY3OTg3NjM.avif",
+          "tags": [],
+          "link": "https://allevents.in/susanville/rocking-in-the-mountains/200028645268426",
+          "map_link": ""
+        },
+        {
+          "date": "Sat, 27 Sep 2025",
+          "time": "",
+          "description": "Bowling for Babies!",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czcvYmFubmVycy9lNTFiYzA3OGY4ODg5NDNmOTBiOTY0OGViNzVlMGEyM2YyMmMyMWFhNDZjMDdmNTdhMDAzYmNkYWFiN2UxMTU0LXJpbWctdzEyMDAtaDE1NTMtZGNhMTI1MjUtZ21pcj92PTE3NTY3OTg3Njc.avif",
+          "tags": [],
+          "link": "https://allevents.in/quincy/bowling-for-babies/200028568630424",
+          "map_link": ""
+        },
+        {
+          "date": "Mon, 29 Sep 2025",
+          "time": "",
+          "description": "Chamber/Community Mixer - Almanor Center for Well Being",
+          "image_url": "https://cdn-ip.allevents.in/s/rs:fill:500:250/g:sm/sh:100/aHR0cHM6Ly9jZG4tYXouYWxsZXZlbnRzLmluL2V2ZW50czYvYmFubmVycy9jYWYzMjJkODE3M2JhNmZlZjQ4MWU2MGU1YmI0M2NmNThhY2YyY2FiOGQyNGQ3N2FmZDkyNDFmMGNkN2ZiY2M4LXJpbWctdzEwODAtaDEwODAtZGNmZWZmZmEtZ21pcj92PTE3NTY1MTY3MDQ.avif",
+          "tags": [],
+          "link": "https://allevents.in/chester/chamber-community-mixer-almanor-center-for-well-being/200028764008725",
+          "map_link": ""
+        }
+      ],
+      "layout_style": "Grid"
+    }
+  ],
+  "settings": {
+    "bulletin_title": "ClubLife Weekly",
+    "bulletin_date": "Friday, September 19, 2025",
+    "theme_css": "default.css",
+    "colors": {
+      "primary": "#576e79",
+      "secondary": "#a7afb7"
+    },
+    "google_api_key": "\"REPLACE_ME_GOOGLE_API_KEY\"",
+    "openai_api_key": "\"REPLACE_ME_OPENAI_API_KEY\"",
+    "events_feed_url": "https://raw.githubusercontent.com/LogunLACC/bulletin_builder/refs/heads/main/events.json",
+    "auto_import_events": false,
+    "appearance_mode": "Dark",
+    "events_window_days": 14
+  },
+  "template_name": "main_layout.html"
+}

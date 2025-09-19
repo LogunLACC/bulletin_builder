@@ -132,14 +132,15 @@ class BulletinRenderer:
         return None
 
     def _group_events(self, events: List[Dict[str, str]], bulletin_date: str = "") -> List[Dict[str, object]]:
-        """Return events sorted and grouped by week relative to bulletin_date."""
+        """Group events by week relative to bulletin_date while preserving input order.
+
+        Note: We no longer sort here so manual ordering in the UI is respected.
+        """
         base = self._parse_date(bulletin_date, datetime.today().year) or date.today()
         parsed = []
         for ev in events:
             ev_date = self._parse_date(ev.get("date", ""), base.year)
             parsed.append((ev_date, ev))
-
-        parsed.sort(key=lambda t: t[0] or date.max)
 
         groups: OrderedDict[str, Dict[str, object]] = OrderedDict()
         for ev_date, ev in parsed:

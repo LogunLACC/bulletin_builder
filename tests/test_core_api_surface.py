@@ -1,5 +1,4 @@
 import importlib.util
-import pytest
 
 
 def test_core_api_surface():

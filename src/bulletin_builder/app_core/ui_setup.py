@@ -74,24 +74,14 @@ def init(app):
         file_menu.add_command(label="Save As...", command=lambda: getattr(app, 'save_draft', lambda save_as=False: None)(save_as=True))
         file_menu.add_separator()
 
-        add("Export HTML & Text...", "on_export_html_text_clicked")
-        add("Copy Email-Ready HTML", "on_copy_for_email_clicked")
-        add("Copy FrontSteps HTML", "on_copy_for_frontsteps_clicked")
+        add("Export Bulletin (FrontSteps)", "on_export_frontsteps_clicked")
         add("Open in Browser", "open_in_browser")
         file_menu.add_separator()
         add("Import Announcements CSV...", "import_announcements_csv")
         file_menu.add_separator()
-        add("Export Calendar (.ics)...", "on_export_ics_clicked")
-        add("Send Test Email...", "on_send_test_email_clicked")
-        file_menu.add_separator()
         file_menu.add_command(label="Exit", command=app.destroy)
 
-        # --- Export submenu ---
-        export_menu = tk.Menu(file_menu, tearoff=0)
-        export_menu.add_command(label="Bulletin HTML...", command=getattr(app, "export_bulletin_html", lambda: None))
-        export_menu.add_command(label="Email HTML...", command=getattr(app, "export_email_html", lambda: None))
-        export_menu.add_command(label="Email Package (.zip)...", command=getattr(app, "on_export_email_package_clicked", lambda: None))
-        file_menu.add_cascade(label="Export", menu=export_menu)
+        # Removed legacy Export submenu; only FrontSteps export remains
 
         menubar.add_cascade(label="File", menu=file_menu)
 
@@ -114,7 +104,7 @@ def init(app):
 
     # ---------- window + base grid ----------
     app.title("LACC Bulletin Builder")
-    app.geometry("1200x800")
+    # Do not force geometry here; respect the startup state (often maximized)
     app.grid_rowconfigure(0, weight=1)
     app.grid_columnconfigure(0, weight=1)
 
@@ -223,6 +213,17 @@ def init(app):
     for i, sec in enumerate(getattr(app, "sections_data", [])):
         app.section_listbox.insert(tk.END, f"{i+1}. {sec.get('title','Untitled')}")
 
+    # Smart Suggestions panel (optional)
+    try:
+        if hasattr(app, "build_suggestions_panel"):
+            _sug_frame = app.build_suggestions_panel(left)
+            _sug_frame.grid(row=2, column=0, sticky="nsew", pady=(0, 10))
+            # Populate suggestions once UI exists
+            if hasattr(app, "compute_suggestions"):
+                app.after(100, app.compute_suggestions)
+    except Exception:
+        pass
+
     # Actions under the editor
     actions = ctk.CTkFrame(app.editor_container, fg_color="transparent")
     actions.grid(row=1, column=0, sticky="ew", pady=(8, 0))
@@ -281,7 +282,7 @@ def init(app):
 
     controls = ctk.CTkFrame(preview_view)
     controls.grid(row=0, column=0, sticky="ew", padx=0, pady=(0, 8))
-    for i in range(4): controls.grid_columnconfigure(i, weight=(1 if i == 3 else 0))
+    for i in range(5): controls.grid_columnconfigure(i, weight=(1 if i == 4 else 0))
 
     app.device_var = tk.StringVar(value="Desktop")
     def _on_device_change(choice):
@@ -320,8 +321,13 @@ def init(app):
 
     view_btn = ctk.CTkButton(controls, text="View in Browser",
                              command=getattr(app, "open_in_browser", lambda: None))
-    view_btn.grid(row=0, column=3, sticky="e")
+    view_btn.grid(row=0, column=3, padx=(0, 8))
     add_tooltip(view_btn, "Open current preview in your browser")
+
+    export_btn = ctk.CTkButton(controls, text="Export (FrontSteps)",
+                               command=getattr(app, "on_export_frontsteps_clicked", lambda: None))
+    export_btn.grid(row=0, column=4, sticky="e")
+    add_tooltip(export_btn, "Export body-only HTML for FrontSteps")
 
     # Expose a preview area reference for device width tweaks
     app.preview_area = preview_view

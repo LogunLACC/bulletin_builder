@@ -99,6 +99,12 @@ def add_section_dialog(app):
         app.section_listbox.see(idx)
         # Trigger the selection event to show the editor
         app.on_section_select()
+        # Recompute suggestions after structure changes
+        try:
+            if hasattr(app, 'compute_suggestions'):
+                app.compute_suggestions()
+        except Exception:
+            pass
 
 def remove_section(app):
     sel = app.section_listbox.curselection()
@@ -108,6 +114,12 @@ def remove_section(app):
     del app.sections_data[idx]
     app.refresh_listbox_titles()
     app.show_placeholder()
+    # Recompute suggestions after structure changes
+    try:
+        if hasattr(app, 'compute_suggestions'):
+            app.compute_suggestions()
+    except Exception:
+        pass
 
 def init(app):
     # Bind methods to the application instance only during initialization.
@@ -153,6 +165,12 @@ def update_section_data(app, updated):
         app.sections_data[app.active_editor_index].update(updated)
         if hasattr(app, 'update_preview'):
             app.update_preview()
+        # Content edits may affect suggestion categories
+        try:
+            if hasattr(app, 'compute_suggestions'):
+                app.compute_suggestions()
+        except Exception:
+            pass
 
 # --- Refresh Listbox Titles ---
 def refresh_listbox_titles(app, event=None):

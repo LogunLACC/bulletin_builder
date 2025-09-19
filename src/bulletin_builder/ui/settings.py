@@ -143,6 +143,32 @@ class SettingsFrame(ctk.CTkFrame):
         )
         self.events_window_menu.grid(row=10, column=1, sticky="ew", pady=(0,5))
 
+        # Close behavior toggles (Confirm/Autosave)
+        try:
+            self.confirm_close_var = ctk.BooleanVar(value=True)
+            self.autosave_close_var = ctk.BooleanVar(value=True)
+        except Exception:
+            import tkinter as tk
+            self.confirm_close_var = tk.BooleanVar(value=True)
+            self.autosave_close_var = tk.BooleanVar(value=True)
+        self.confirm_close_switch = ctk.CTkSwitch(
+            content,
+            text="Confirm on Close",
+            variable=self.confirm_close_var,
+            command=self._on_confirm_close_toggled,
+        )
+        self.confirm_close_switch.grid(row=11, column=1, sticky="w", pady=(0,5))
+        add_tooltip(self.confirm_close_switch, "Show OK/Cancel dialog on exit")
+
+        self.autosave_close_switch = ctk.CTkSwitch(
+            content,
+            text="Autosave Draft on Close",
+            variable=self.autosave_close_var,
+            command=self._on_autosave_close_toggled,
+        )
+        self.autosave_close_switch.grid(row=12, column=1, sticky="w", pady=(0,5))
+        add_tooltip(self.autosave_close_switch, "Save a timestamped copy to user_drafts/AutoSave on exit")
+
         content.grid_columnconfigure(1, weight=1)
 
     def load_data(self, settings_data: dict, google_key: str, openai_key: str, events_url: str):
@@ -236,6 +262,15 @@ class SettingsFrame(ctk.CTkFrame):
             self.events_auto_import_var.set(bool(load_events_auto_import()))
         except Exception:
             self.events_auto_import_var.set(False)
+
+        # Confirm/Autosave flags from config
+        try:
+            from bulletin_builder.app_core.config import load_confirm_on_close, load_autosave_on_close
+            self.confirm_close_var.set(bool(load_confirm_on_close(True)))
+            self.autosave_close_var.set(bool(load_autosave_on_close(True)))
+        except Exception:
+            self.confirm_close_var.set(True)
+            self.autosave_close_var.set(True)
 
         # Events Window selection
         default_events_window_days = None  # All
@@ -372,6 +407,20 @@ class SettingsFrame(ctk.CTkFrame):
         try:
             from bulletin_builder.app_core.config import save_events_auto_import
             save_events_auto_import(bool(self.events_auto_import_var.get()))
+        except Exception:
+            pass
+
+    def _on_confirm_close_toggled(self):
+        try:
+            from bulletin_builder.app_core.config import save_confirm_on_close
+            save_confirm_on_close(bool(self.confirm_close_var.get()))
+        except Exception:
+            pass
+
+    def _on_autosave_close_toggled(self):
+        try:
+            from bulletin_builder.app_core.config import save_autosave_on_close
+            save_autosave_on_close(bool(self.autosave_close_var.get()))
         except Exception:
             pass
 

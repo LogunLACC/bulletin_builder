@@ -151,6 +151,11 @@ def import_csv_file(app):
             app.show_placeholder()
         if hasattr(app, "update_preview"):
             app.update_preview()
+        try:
+            if hasattr(app, 'compute_suggestions'):
+                app.compute_suggestions()
+        except Exception:
+            pass
         if hasattr(app, "show_status_message"):
             app.show_status_message(f"Imported {len(announcements)} announcements")
     except Exception as e:
@@ -254,6 +259,11 @@ def import_events_feed(app, url: str | None = None):
                     app.show_placeholder()
                 if hasattr(app, "update_preview"):
                     app.update_preview()
+                try:
+                    if hasattr(app, 'compute_suggestions'):
+                        app.compute_suggestions()
+                except Exception:
+                    pass
                 if hasattr(app, "show_status_message"):
                     app.show_status_message(f"Imported {len(events)} events")
             # Warn if outdated events were present
@@ -304,5 +314,10 @@ def _apply_announcements_to_app(app, announcements):
         app.show_placeholder()
     if hasattr(app, "update_preview"):
         app.update_preview()
+    try:
+        if hasattr(app, 'compute_suggestions'):
+            app.compute_suggestions()
+    except Exception:
+        pass
     if hasattr(app, "show_status_message"):
         app.show_status_message(f"Imported {len(announcements)} announcements")

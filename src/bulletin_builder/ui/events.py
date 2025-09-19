@@ -103,19 +103,26 @@ class EventsFrame(ctk.CTkFrame):
         date_entry.grid(row=0, column=0, padx=5, pady=5)
         date_entry.insert(0, event_item_data.get("date", ""))
         date_entry.bind("<KeyRelease>", lambda e, i=index: self.update_event_data(i, "date", e.widget.get()))
+        date_entry.bind("<FocusOut>", lambda e, i=index: self.update_event_data(i, "date", e.widget.get()))
 
         time_entry = ctk.CTkEntry(text_frame, placeholder_text="Time (e.g., 7:00 PM)")
         time_entry.grid(row=0, column=1, padx=5, pady=5)
         time_entry.insert(0, event_item_data.get("time", ""))
         time_entry.bind("<KeyRelease>", lambda e, i=index: self.update_event_data(i, "time", e.widget.get()))
+        time_entry.bind("<FocusOut>", lambda e, i=index: self.update_event_data(i, "time", e.widget.get()))
 
         desc_entry = ctk.CTkEntry(text_frame, placeholder_text="Event Description")
         desc_entry.grid(row=0, column=2, padx=5, pady=5, sticky="ew")
         desc_entry.insert(0, event_item_data.get("description", ""))
         desc_entry.bind("<KeyRelease>", lambda e, i=index: self.update_event_data(i, "description", e.widget.get()))
+        desc_entry.bind("<FocusOut>", lambda e, i=index: self.update_event_data(i, "description", e.widget.get()))
 
         remove_button = ctk.CTkButton(text_frame, text="X", width=30, command=lambda i=index: self.remove_event_item(i))
         remove_button.grid(row=0, column=3, padx=5, pady=5)
+        up_button = ctk.CTkButton(text_frame, text="↑", width=30, command=lambda i=index: self.move_event_item(i, -1))
+        up_button.grid(row=0, column=4, padx=2, pady=5)
+        down_button = ctk.CTkButton(text_frame, text="↓", width=30, command=lambda i=index: self.move_event_item(i, +1))
+        down_button.grid(row=0, column=5, padx=2, pady=5)
         
         image_url_frame = ctk.CTkFrame(entry_frame, fg_color="transparent")
         image_url_frame.grid(row=1, column=0, sticky="ew", pady=5)
@@ -125,6 +132,7 @@ class EventsFrame(ctk.CTkFrame):
         image_url_entry.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
         image_url_entry.insert(0, event_item_data.get("image_url", ""))
         image_url_entry.bind("<KeyRelease>", lambda e, i=index: self.update_event_data(i, "image_url", e.widget.get()))
+        image_url_entry.bind("<FocusOut>", lambda e, i=index: self.update_event_data(i, "image_url", e.widget.get()))
 
         link_frame = ctk.CTkFrame(entry_frame, fg_color="transparent")
         link_frame.grid(row=2, column=0, sticky="ew", pady=5)
@@ -134,11 +142,13 @@ class EventsFrame(ctk.CTkFrame):
         link_entry.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
         link_entry.insert(0, event_item_data.get("link", ""))
         link_entry.bind("<KeyRelease>", lambda e, i=index: self.update_event_data(i, "link", e.widget.get()))
+        link_entry.bind("<FocusOut>", lambda e, i=index: self.update_event_data(i, "link", e.widget.get()))
 
         map_entry = ctk.CTkEntry(link_frame, placeholder_text="Map Link (optional)")
         map_entry.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
         map_entry.insert(0, event_item_data.get("map_link", ""))
         map_entry.bind("<KeyRelease>", lambda e, i=index: self.update_event_data(i, "map_link", e.widget.get()))
+        map_entry.bind("<FocusOut>", lambda e, i=index: self.update_event_data(i, "map_link", e.widget.get()))
         try:
             # Nudge placeholder drawing shortly after creation
             self.after(5, self._refresh_placeholders)
@@ -169,6 +179,15 @@ class EventsFrame(ctk.CTkFrame):
             self.after(10, self._refresh_placeholders)
         except Exception:
             pass
+
+    def move_event_item(self, index: int, delta: int):
+        new_index = index + delta
+        if new_index < 0 or new_index >= len(self.section_data['content']):
+            return
+        a = self.section_data['content']
+        a[index], a[new_index] = a[new_index], a[index]
+        self.rebuild_event_list()
+        self._on_data_change()
 
     def update_event_data(self, index, key, value):
         while len(self.section_data['content']) <= index:

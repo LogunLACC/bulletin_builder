@@ -106,7 +106,8 @@ def load_window_state() -> tuple[str, str]:
     geometry: standard Tk geometry string like 'WxH+X+Y' or ''
     state: one of '', 'zoomed', 'normal', 'iconic'
     """
-    import configparser, os
+    import configparser
+    import os
     cfg = configparser.ConfigParser()
     if os.path.exists(CONFIG_FILE):
         cfg.read(CONFIG_FILE)
@@ -127,5 +128,56 @@ def save_window_state(geometry: str, state: str) -> None:
         cfg["window"]["geometry"] = geometry
     if state:
         cfg["window"]["state"] = state
+    with open(CONFIG_FILE, "w") as f:
+        cfg.write(f)
+
+
+# -------- Close behavior toggles -------------------------------------------
+def load_confirm_on_close(default: bool = True) -> bool:
+    import configparser
+    import os
+    cfg = configparser.ConfigParser()
+    if os.path.exists(CONFIG_FILE):
+        cfg.read(CONFIG_FILE)
+        try:
+            return cfg.getboolean("window", "confirm_on_close", fallback=default)
+        except Exception:
+            return default
+    return default
+
+
+def save_confirm_on_close(enabled: bool) -> None:
+    import configparser
+    cfg = configparser.ConfigParser()
+    if os.path.exists(CONFIG_FILE):
+        cfg.read(CONFIG_FILE)
+    if "window" not in cfg:
+        cfg["window"] = {}
+    cfg["window"]["confirm_on_close"] = "true" if enabled else "false"
+    with open(CONFIG_FILE, "w") as f:
+        cfg.write(f)
+
+
+def load_autosave_on_close(default: bool = True) -> bool:
+    import configparser
+    import os
+    cfg = configparser.ConfigParser()
+    if os.path.exists(CONFIG_FILE):
+        cfg.read(CONFIG_FILE)
+        try:
+            return cfg.getboolean("window", "autosave_on_close", fallback=default)
+        except Exception:
+            return default
+    return default
+
+
+def save_autosave_on_close(enabled: bool) -> None:
+    import configparser
+    cfg = configparser.ConfigParser()
+    if os.path.exists(CONFIG_FILE):
+        cfg.read(CONFIG_FILE)
+    if "window" not in cfg:
+        cfg["window"] = {}
+    cfg["window"]["autosave_on_close"] = "true" if enabled else "false"
     with open(CONFIG_FILE, "w") as f:
         cfg.write(f)

@@ -101,3 +101,15 @@ def init(app):
             return []
 
     app.generate_subject_lines = generate_subject_lines
+
+    # --- Status message helper ---
+    def show_status_message(msg: str, duration_ms: int = 2000):
+        try:
+            if hasattr(app, "status_bar"):
+                app.status_bar.configure(text=msg or "")
+                if duration_ms and duration_ms > 0:
+                    app.after(duration_ms, lambda: app.status_bar.configure(text=""))
+        except Exception:
+            pass
+
+    app.show_status_message = show_status_message

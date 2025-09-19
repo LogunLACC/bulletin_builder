@@ -26,6 +26,7 @@ class ImageFrame(ctk.CTkFrame):
             self.title_entry.grid(row=0, column=1, padx=0, pady=(0, 10), sticky="ew")
             self.title_entry.insert(0, self.section_data.get("title", "Image"))
             self.title_entry.bind("<KeyRelease>", self._on_data_change)
+            self.title_entry.bind("<FocusOut>", self._on_data_change)
 
             image_label = ctk.CTkLabel(self, text="Image URL")
             image_label.grid(row=1, column=0, padx=(0, 10), pady=(0, 10), sticky="w")
@@ -34,6 +35,7 @@ class ImageFrame(ctk.CTkFrame):
             self.image_url_entry.grid(row=1, column=1, sticky="ew")
             self.image_url_entry.insert(0, self.section_data.get("src", ""))
             self.image_url_entry.bind("<KeyRelease>", self._on_data_change)
+            self.image_url_entry.bind("<FocusOut>", self._on_data_change)
 
             alt_text_label = ctk.CTkLabel(self, text="Alt Text")
             alt_text_label.grid(row=2, column=0, padx=(0, 10), pady=(0, 10), sticky="w")
@@ -42,6 +44,7 @@ class ImageFrame(ctk.CTkFrame):
             self.alt_text_entry.grid(row=2, column=1, sticky="ew")
             self.alt_text_entry.insert(0, self.section_data.get("alt", ""))
             self.alt_text_entry.bind("<KeyRelease>", self._on_data_change)
+            self.alt_text_entry.bind("<FocusOut>", self._on_data_change)
 
             
             # Layout fix: ensure frame expands and grid works

@@ -49,7 +49,7 @@ def _event_card_email(ev: dict) -> str:
   )
 
 
-def _event_card_email_rich(ev: dict) -> str:
+def _event_card_email_rich(ev: dict, primary_color: str = "#103040") -> str:
   img = (ev.get("image_url") or ev.get("image") or "").strip()
   link = (ev.get("link") or ev.get("url") or "").strip()
   title = escape((ev.get("title") or ev.get("description") or ev.get("name") or ev.get("event") or "").strip())
@@ -68,24 +68,30 @@ def _event_card_email_rich(ev: dict) -> str:
       '</td>'
       '</tr>'
     )
-  btn_html = f'<a href="{escape(link)}" style="display:inline-block; background-color:#103040; color:#fff; padding:6px 12px; border-radius:4px; text-decoration:none;">More Info</a>' if link else ""
+  btn_html = (
+    f'<a href="{escape(link)}" style="display:inline-block; background-color:{escape(primary_color)}; color:#fff; padding:6px 12px; border-radius:4px; text-decoration:none;">More Info</a>'
+    if link else ""
+  )
   return (
     '<table cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse; border:1px solid #ddd; border-radius:8px; margin:0 0 12px 0;">'
     f'{img_html}'
     '<tr><td style="border:none; padding:20px;">'
     f'<strong style="font-size:1.1em; color:#333;">{title}</strong><br>'
-    f'<span style="font-size:1em; color:#103040; font-weight:bold;">{when}</span>'
+    f'<span style="font-size:1em; color:{escape(primary_color)}; font-weight:bold;">{when}</span>'
     '</td></tr>'
     f'<tr><td style="border:none; padding:0 20px 20px 20px; text-align:center;">{btn_html}</td></tr>'
     '</table>'
   )
 
 
-def _render_section_email(section: dict) -> str:
+def _render_section_email(section: dict, *, primary_color: str = "#103040") -> str:
   stype = section.get("type", "")
   title = (section.get("title") or "").strip()
   slug = _slug(title) if title else ""
-  header_html = f'<div id="{slug}" style="margin:0; padding:0"><h2>{escape(title)}</h2></div>' if title else ""
+  header_html = (
+    f'<div id="{slug}" style="margin:0; padding:0"><h2 style="font-family: Arial, Helvetica, sans-serif; font-weight:bold; font-size:20px; line-height:1.3; color:{escape(primary_color)};">{escape(title)}</h2></div>'
+    if title else ""
+  )
 
   if stype == "announcements":
     items = section.get("content", []) or []
@@ -115,7 +121,7 @@ def _render_section_email(section: dict) -> str:
   elif stype in ("events", "community_events", "lacc_events"):
     events = section.get("content", []) or []
     if events:
-      cards = "".join(_event_card_email_rich(ev) for ev in events)
+      cards = "".join(_event_card_email_rich(ev, primary_color) for ev in events)
     else:
       cards = '<div style="opacity:.7;font-size:14px;">No events available.</div>'
     return header_html + f'<div class="event-cards">{cards}</div>'
@@ -174,11 +180,16 @@ def render_email_html(ctx: dict) -> str:
     title = ctx.get("title", "Bulletin")
     date = ctx.get("date", "")
     sections = ctx.get("sections", [])
+    settings = ctx.get("settings", {}) or {}
+    try:
+      primary_color = (settings.get("colors", {}) or {}).get("primary") or "#103040"
+    except Exception:
+      primary_color = "#103040"
 
     sections_html = ""
     for s in sections:
       try:
-        sections_html += _render_section_email(s)
+        sections_html += _render_section_email(s, primary_color=primary_color)
       except Exception as exc:
         sections_html += f"<div style='color:red;'><b>Section error:</b> {escape(str(exc))}</div>"
 
@@ -198,7 +209,7 @@ def render_email_html(ctx: dict) -> str:
       '<tr><td align="center">'
       '<table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;margin:32px 0 48px 0;padding:0 24px 24px 24px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.04);font-family:Arial,Helvetica,sans-serif;border-collapse:collapse;border:none;">'
       '<tr><td style="padding:32px 0 0 0;text-align:center;">'
-      f'<h1 style="font-size:2em;margin:0 0 8px 0;">{escape(title)}</h1>'
+      f'<h1 style="font-size:2em;margin:0 0 8px 0; color:{escape(primary_color)};">{escape(title)}</h1>'
       f'<div style="color:#555;font-size:1.1em;margin-bottom:12px;">{escape(date)}</div>'
       '<hr style="margin:18px 0 24px 0;border:0;border-top:1px solid #e5e7eb;">'
       f'{toc}'
@@ -401,28 +412,19 @@ def init(app):
     produce a body-only fragment with inline-safe styles and absolute URLs.
     """
     try:
-      # Collect context then render email‑friendly HTML (table layout + inline styles)
+      # Collect context then render email-friendly HTML (table layout + inline styles)
       ctx = _collect_context()
       html = render_email_html(ctx)
 
-      # Upgrade URLs (HTTPS + AVIF->JPG where possible)
+      # Build FrontSteps body-only HTML using the new exporter
       try:
-        from bulletin_builder.app_core.url_upgrade import upgrade_http_to_https
-        html = upgrade_http_to_https(html, convert_avif=True)
+        from src.exporters.frontsteps_exporter import build_frontsteps_html
+        html = build_frontsteps_html(html)
       except Exception:
-        pass
-
-      # Apply FrontSteps postprocessing: strip wrappers, enforce style starts, absolute URLs, etc.
-      try:
-        from bulletin_builder.postprocess import process_frontsteps_html
-        html = process_frontsteps_html(html)
-      except Exception:
-        # Fall back to the email HTML body content if FS processing fails
+        # Fallback to previous postprocess if available
         try:
-          import re as _re
-          m = _re.search(r"(?is)<body[^>]*>(.*?)</body>", html)
-          if m:
-            html = m.group(1)
+          from bulletin_builder.postprocess import process_frontsteps_html
+          html = process_frontsteps_html(html)
         except Exception:
           pass
 
@@ -443,6 +445,35 @@ def init(app):
         messagebox.showerror('Copy Error', str(e), parent=app)
       except Exception:
         print('Copy FrontSteps Error', e)
+
+  def on_export_frontsteps_clicked():
+    """Single export action: build FrontSteps HTML and save/copy."""
+    try:
+      ctx = _collect_context()
+      html = render_email_html(ctx)
+      try:
+        from src.exporters.frontsteps_exporter import build_frontsteps_html
+        body = build_frontsteps_html(html)
+      except Exception:
+        from bulletin_builder.postprocess import process_frontsteps_html
+        body = process_frontsteps_html(html)
+      # Offer to save
+      default = f"{ctx.get('title','Bulletin').replace(' ','_')}_frontsteps.html"
+      path = filedialog.asksaveasfilename(defaultextension='.html', initialfile=default, title='Export Bulletin (FrontSteps)', parent=app)
+      if path:
+        with open(path, 'w', encoding='utf-8') as f:
+          f.write(body)
+      # Copy to clipboard
+      if hasattr(app, 'clipboard_clear') and hasattr(app, 'clipboard_append'):
+        app.clipboard_clear()
+        app.clipboard_append(body)
+      if hasattr(app, 'show_status_message'):
+        app.show_status_message('FrontSteps HTML exported' + (f": {path}" if path else ' and copied'))
+    except Exception as e:
+      try:
+        messagebox.showerror('Export Error', str(e), parent=app)
+      except Exception:
+        print('Export FrontSteps Error', e)
 
   def on_export_ics_clicked():
     try:
@@ -503,6 +534,7 @@ def init(app):
   app.on_copy_for_frontsteps_clicked = on_copy_for_frontsteps_clicked
   app.on_export_ics_clicked = on_export_ics_clicked
   app.on_send_test_email_clicked = on_send_test_email_clicked
+  app.on_export_frontsteps_clicked = on_export_frontsteps_clicked
   
   # Optional explicit exports used by UI export submenu
   def _export_bulletin_html():
@@ -543,7 +575,8 @@ def init(app):
       path = filedialog.asksaveasfilename(defaultextension='.zip', initialfile=default, title='Export Email Package (.zip)', parent=app)
       if not path:
         return
-      import zipfile, json
+      import zipfile
+      import json
       with zipfile.ZipFile(path, 'w', compression=zipfile.ZIP_DEFLATED) as z:
         z.writestr('email.html', html)
         z.writestr('manifest.json', json.dumps({'title': ctx.get('title',''), 'date': ctx.get('date','')}, ensure_ascii=False))

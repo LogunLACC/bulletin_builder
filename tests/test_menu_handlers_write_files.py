@@ -1,5 +1,3 @@
-import os
-import tempfile
 import tkinter as tk
 import pytest
 

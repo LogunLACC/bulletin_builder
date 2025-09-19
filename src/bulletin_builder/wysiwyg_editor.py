@@ -484,7 +484,30 @@ class WysiwygEditor(ctk.CTkToplevel):
 
 def launch_gui():
     import os
+    import socket
+    import atexit
     from .__main__ import BulletinBuilderApp
+    # Guard against duplicate launch in the same process
+    if os.environ.get('BB_LAUNCHED') == '1':
+        return
+    os.environ['BB_LAUNCHED'] = '1'
+
+    # Cross-process single-instance lock (best-effort)
+    _lock_sock = None
+    try:
+        _lock_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        _lock_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        _lock_sock.bind(('127.0.0.1', 51283))
+        _lock_sock.listen(1)
+        atexit.register(_lock_sock.close)
+    except Exception:
+        # Another instance likely holds the lock; exit silently
+        try:
+            if _lock_sock:
+                _lock_sock.close()
+        except Exception:
+            pass
+        return
 
     # ✅ Ensure required directories exist
     for d in [

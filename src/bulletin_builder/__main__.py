@@ -6,7 +6,6 @@ from bulletin_builder.app_core.config import (
     save_api_key,
     save_openai_key,
     save_events_feed_url,
-    load_window_state,
     save_window_state,
 )
 from tkinter import filedialog, messagebox
@@ -17,7 +16,8 @@ import bulletin_builder.app_core.importer  # noqa: F401
 import bulletin_builder.app_core.suggestions  # noqa: F401
 
 import argparse
-from bulletin_builder.wysiwyg_editor import launch_gui
+import socket
+import atexit
 
 
 class BulletinBuilderApp(ctk.CTk):
@@ -32,21 +32,13 @@ class BulletinBuilderApp(ctk.CTk):
             self.title("LACC Bulletin Builder")
         except Exception:
             pass
-        # Restore last window placement/state; default to maximized
+        # Always start maximized; ignore saved geometry to prevent bounce/snap
         self._desired_start_state = 'zoomed'
         try:
-            geo, st = load_window_state()
-            if geo:
-                self.geometry(geo)
-            if st:
-                self._desired_start_state = st
-            # Apply desired state now, but also re-assert after UI builds
-            self.state(self._desired_start_state)
+            self.state('zoomed')
+            self.update_idletasks()
         except Exception:
-            try:
-                self.state('zoomed')
-            except Exception:
-                pass
+            pass
         # Expose config savers for SettingsFrame
         self.save_api_key_to_config = save_api_key
         self.save_openai_key_to_config = save_openai_key
@@ -57,23 +49,89 @@ class BulletinBuilderApp(ctk.CTk):
         core_init(self)
         init_app(self)
 
-        # Persist window state on close
+        # Intercept close: confirm, optional autosave, then persist window state
         try:
             def _on_close():
+                from bulletin_builder.app_core.config import (
+                    load_confirm_on_close, load_autosave_on_close,
+                )
+                # Determine behavior from UI switches or config
                 try:
-                    # If maximized, still save geometry from normal state
-                    st = self.state()
-                    if st == 'zoomed':
-                        # Temporarily de-maximize to read geometry, then restore
-                        self.state('normal')
-                        geo = self.geometry()
-                        save_window_state(geo, st)
-                        self.state('zoomed')
-                    else:
-                        save_window_state(self.geometry(), st)
+                    confirm = bool(self.settings_frame.confirm_close_var.get())
                 except Exception:
-                    pass
-                self.destroy()
+                    confirm = load_confirm_on_close(True)
+                try:
+                    autosave_enabled = bool(self.settings_frame.autosave_close_var.get())
+                except Exception:
+                    autosave_enabled = load_autosave_on_close(True)
+
+                # Confirm dialog (OK/Cancel)
+                if confirm:
+                    try:
+                        from tkinter import messagebox
+                        ok = messagebox.askokcancel(
+                            "Exit",
+                            "Close the application?\nA copy of your current draft will be auto-saved to 'user_drafts/AutoSave'.",
+                            parent=self,
+                        )
+                    except Exception:
+                        ok = True
+                    if not ok:
+                        return
+
+                autosave_path = None
+                if autosave_enabled:
+                    try:
+                        from datetime import datetime
+                        from pathlib import Path
+                        autosave_dir = Path('user_drafts') / 'AutoSave'
+                        autosave_dir.mkdir(parents=True, exist_ok=True)
+                        ts = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+                        title = 'Draft'
+                        try:
+                            title = self.settings_frame.title_entry.get().strip() or 'Draft'
+                        except Exception:
+                            pass
+                        safe_title = ''.join(c for c in title if c.isalnum() or c in (' ','-','_')).rstrip()
+                        filename = f"{safe_title.replace(' ','_')}_{ts}.json"
+                        autosave_path = str(autosave_dir / filename)
+                        prev = getattr(self, 'current_draft_path', None)
+                        try:
+                            self.current_draft_path = autosave_path
+                            if hasattr(self, 'save_draft'):
+                                self.save_draft(save_as=False)
+                        finally:
+                            self.current_draft_path = prev
+                    except Exception:
+                        autosave_path = None
+
+                # Status toast then close
+                if autosave_path and hasattr(self, 'show_status_message'):
+                    try:
+                        self.show_status_message(f"Autosaved to {autosave_path}", duration_ms=800)
+                    except Exception:
+                        pass
+
+                def _finalize_close():
+                    try:
+                        st = self.state()
+                        if st == 'zoomed':
+                            self.state('normal')
+                            geo = self.geometry()
+                            save_window_state(geo, st)
+                            self.state('zoomed')
+                        else:
+                            save_window_state(self.geometry(), st)
+                    except Exception:
+                        pass
+                    self.destroy()
+
+                # Delay slightly if we showed a toast
+                try:
+                    delay = 800 if autosave_path else 0
+                    self.after(delay, _finalize_close)
+                except Exception:
+                    _finalize_close()
             self.protocol("WM_DELETE_WINDOW", _on_close)
         except Exception:
             pass
@@ -86,10 +144,16 @@ class BulletinBuilderApp(ctk.CTk):
             self._build_menus = self._build_menus_fallback  # expose for consistency
             self._build_menus()
 
-        # Some widget creation paths can reset the window out of maximized.
-        # Re-assert desired state once idle to keep fullscreen/maximized.
+        # Re-assert maximized state after widgets map (prevents snap-to-small)
+        def _ensure_maximized():
+            try:
+                if self.state() != 'zoomed':
+                    self.state('zoomed')
+            except Exception:
+                pass
         try:
-            self.after(200, lambda: self.state(self._desired_start_state))
+            self.after_idle(_ensure_maximized)
+            self.after(300, _ensure_maximized)
         except Exception:
             pass
 
@@ -107,23 +171,15 @@ class BulletinBuilderApp(ctk.CTk):
             if hasattr(self, attr):
                 file_menu.add_command(label=label, command=getattr(self, attr))
 
-        add("Export HTML & Text...", "on_export_html_text_clicked")
-        add("Copy Email-Ready HTML", "on_copy_for_email_clicked")
-        add("Copy FrontSteps HTML", "on_copy_for_frontsteps_clicked")
+        add("Export Bulletin (FrontSteps)", "on_export_frontsteps_clicked")
         add("Open in Browser", "open_in_browser")
         file_menu.add_separator()
         add("Import Announcements CSV...", "import_announcements_csv")
         file_menu.add_separator()
-        add("Export Calendar (.ics)...", "on_export_ics_clicked")
-        add("Send Test Email...", "on_send_test_email_clicked")
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.destroy)
 
-        # --- Export submenu ---
-        export_menu = tk.Menu(file_menu, tearoff=0)
-        export_menu.add_command(label="Bulletin HTML...", command=self.export_bulletin_html)
-        export_menu.add_command(label="Email HTML...", command=self.export_email_html)
-        file_menu.add_cascade(label="Export", menu=export_menu)
+        # Removed legacy Export submenu; only FrontSteps export remains
 
         menubar.add_cascade(label="File", menu=file_menu)
         self.configure(menu=menubar)
@@ -180,12 +236,48 @@ def export_email_html(self):
         messagebox.showerror("Export Error", str(e), parent=self)
 
 
+def run_gui():
+    """Launch the main GUI with a per-process and per-machine single-instance guard."""
+    # Process-level guard
+    if os.environ.get('BB_LAUNCHED') == '1':
+        return
+    os.environ['BB_LAUNCHED'] = '1'
+
+    # Cross-process guard (best-effort): bind localhost port
+    lock_sock = None
+    try:
+        lock_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        lock_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        lock_sock.bind(('127.0.0.1', 51283))
+        lock_sock.listen(1)
+        atexit.register(lambda: lock_sock and lock_sock.close())
+    except Exception:
+        try:
+            if lock_sock:
+                lock_sock.close()
+        except Exception:
+            pass
+        return
+
+    # Ensure required directories exist
+    for d in [
+        'templates/partials',
+        'templates/themes',
+        'user_drafts',
+        'assets'
+    ]:
+        os.makedirs(d, exist_ok=True)
+
+    app = BulletinBuilderApp()
+    app.mainloop()
+
+
 def main():
     parser = argparse.ArgumentParser(description="Bulletin Builder Launcher")
     parser.add_argument("--cli", action="store_true", help="Run in CLI mode (no GUI)")
     args = parser.parse_args()
     # Default to launching GUI once; prevents duplicate creation when called via different entrypoints
-    launch_gui()
+    run_gui()
     return
 
     if args.cli:
@@ -205,7 +297,5 @@ if __name__ == '__main__':
     ]:
         os.makedirs(d, exist_ok=True)
 
-    # Prevent duplicate launch if another entrypoint already opened the GUI
-    if os.environ.get('BB_LAUNCHED') != '1':
-        os.environ['BB_LAUNCHED'] = '1'
+    # Delegate to main(); launch_gui() enforces single-instance per process
     main()

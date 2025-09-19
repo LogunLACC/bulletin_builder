@@ -1,4 +1,3 @@
-import tkinter as tk
 
 def _add_if(app, menu, label, attr):
     if hasattr(app, attr):

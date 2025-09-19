@@ -64,6 +64,15 @@ class AnnouncementsFrame(ctk.CTkFrame):
             self.after(60, self._refresh_placeholders)
         except Exception:
             pass
+        # Autosave on blur for primary fields
+        try:
+            self.title_entry.bind("<FocusOut>", lambda e: self._save_current_if_any())
+            self.link_text_entry.bind("<FocusOut>", lambda e: self._save_current_if_any())
+            self.link_url_entry.bind("<FocusOut>", lambda e: self._save_current_if_any())
+            if hasattr(self, 'body_text'):
+                self.body_text.bind("<FocusOut>", lambda e: self._save_current_if_any())
+        except Exception:
+            pass
 
     def set_section(self, section: Dict[str, Any]):
         self.section = section or {}
