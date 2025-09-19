@@ -110,7 +110,7 @@ def process_html(html: str) -> str:
 
         for a in final_soup.find_all("a"):
             # preserve href
-            href = a.get("href")
+            a.get("href")
             a_style = a.get("style", "")
             a["style"] = ensure_reset_prefix(a_style)
 

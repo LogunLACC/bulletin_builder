@@ -1,4 +1,3 @@
-from bulletin_builder.postprocess import process_html
 import os
 import customtkinter as ctk
 from bulletin_builder.app_core.loader import init_app
@@ -8,8 +7,6 @@ from bulletin_builder.app_core.config import (
     save_events_feed_url,
     save_window_state,
 )
-from tkinter import filedialog, messagebox
-from bulletin_builder.app_core.exporter import collect_context, render_bulletin_html, render_email_html
 
 # Force PyInstaller to include these dynamically-imported modules
 import bulletin_builder.app_core.importer  # noqa: F401
@@ -188,53 +185,6 @@ class BulletinBuilderApp(ctk.CTk):
         """Fallback implementation replaced during init_app."""
         pass
 
-def export_bulletin_html(self):
-    try:
-        ctx = collect_context(self)
-        html = render_bulletin_html(ctx)
-        default = f'{ctx["title"].replace(" ","_")}_{ctx["date"].replace(",","").replace(" ","_")}.html'
-        path = filedialog.asksaveasfilename(
-            defaultextension=".html",
-            initialfile=default,
-            filetypes=[("HTML", "*.html")],
-            title="Export Bulletin HTML",
-            parent=self,
-        )
-        if not path: return
-        html = process_html(html)
-        with open(path, "w", encoding="utf-8") as f:
-            f.write(html)
-        if hasattr(self, "show_status_message"):
-            self.show_status_message(f"Exported Bulletin HTML: {path}")
-        else:
-            messagebox.showinfo("Export", f"Saved: {path}", parent=self)
-    except Exception as e:
-        messagebox.showerror("Export Error", str(e), parent=self)
-
-def export_email_html(self):
-    from bulletin_builder.postprocess import process_html
-    try:
-        ctx = collect_context(self)
-        html = render_email_html(ctx)
-        html = process_html(html)
-        default = f'{ctx["title"].replace(" ","_")}_{ctx["date"].replace(",","").replace(" ","_")}_email.html'
-        path = filedialog.asksaveasfilename(
-            defaultextension=".html",
-            initialfile=default,
-            filetypes=[("HTML", "*.html")],
-            title="Export Email HTML",
-            parent=self,
-        )
-        if not path: return
-        with open(path, "w", encoding="utf-8") as f:
-            f.write(html)
-        if hasattr(self, "show_status_message"):
-            self.show_status_message(f"Exported Email HTML  {path}")
-        else:
-            messagebox.showinfo("Export", f"Saved: {path}", parent=self)
-    except Exception as e:
-        messagebox.showerror("Export Error", str(e), parent=self)
-
 
 def run_gui():
     """Launch the main GUI with a per-process and per-machine single-instance guard."""
@@ -275,27 +225,7 @@ def run_gui():
 def main():
     parser = argparse.ArgumentParser(description="Bulletin Builder Launcher")
     parser.add_argument("--cli", action="store_true", help="Run in CLI mode (no GUI)")
-    args = parser.parse_args()
+    parser.parse_args()
     # Default to launching GUI once; prevents duplicate creation when called via different entrypoints
     run_gui()
-    return
-
-    if args.cli:
-        print("ðŸ“° Bulletin Builder CLI is running!")
-        launch_gui()
-    else:
-        print("ðŸ“° CLI mode coming soon! Use '--gui' to launch the editor.")
-
-
-if __name__ == '__main__':
-    # Ensure required directories exist
-    for d in [
-        'templates/partials',
-        'templates/themes',
-        'user_drafts',
-        'assets'
-    ]:
-        os.makedirs(d, exist_ok=True)
-
-    # Delegate to main(); launch_gui() enforces single-instance per process
-    main()
+    return

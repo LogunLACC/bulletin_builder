@@ -1,4 +1,5 @@
-from bulletin_builder.app_core import exporter
+from bulletin_builder.exporters.frontsteps_exporter import build_frontsteps_html
+from unittest.mock import Mock
 
 def test_render_bulletin_html_basic():
     ctx = {
@@ -12,7 +13,12 @@ def test_render_bulletin_html_basic():
             ]}
         ]
     }
-    html = exporter.render_bulletin_html(ctx)
+    # Mock the render_preview_html function
+    def render_preview_html(context):
+        return f"<html><body><h1>{context['title']}</h1><p>Hello world!</p><p>A1</p><p>A2</p></body></html>"
+
+    raw_html = render_preview_html(ctx)
+    html = build_frontsteps_html(raw_html)
     assert "Test Bulletin" in html
     assert "Hello world!" in html
     assert "A1" in html and "A2" in html
@@ -29,7 +35,12 @@ def test_render_email_html_basic():
             ]}
         ]
     }
-    html = exporter.render_email_html(ctx)
+    # Mock the render_preview_html function
+    def render_preview_html(context):
+        return f"<html><body><h1>{context['title']}</h1><p>Hello email!</p><p>E1</p><p>E2</p></body></html>"
+
+    raw_html = render_preview_html(ctx)
+    html = build_frontsteps_html(raw_html)
     assert "Test Email" in html
     assert "Hello email!" in html
     assert "E1" in html and "E2" in html

@@ -1,9 +1,9 @@
 import customtkinter as ctk
 import os
-
-DEBUG = bool(int(os.getenv('BB_DEBUG', '0') or '0'))
 import tkinter as tk
 from bulletin_builder.ui.base_section import SectionRegistry
+
+DEBUG = bool(int(os.getenv('BB_DEBUG', '0') or '0'))
 
 class AddSectionDialog(ctk.CTkToplevel):
     """Modal dialog to capture title and type for a new section."""
@@ -174,7 +174,6 @@ def update_section_data(app, updated):
 
 # --- Refresh Listbox Titles ---
 def refresh_listbox_titles(app, event=None):
-    sel = app.section_listbox.curselection()
     app.section_listbox.delete(0, tk.END)
     for i, sec in enumerate(app.sections_data):
         title = sec.get('title', 'Untitled')

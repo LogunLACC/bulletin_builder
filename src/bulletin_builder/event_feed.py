@@ -67,7 +67,96 @@ def fetch_events(url: str) -> List[Dict[str, str]]:
         if event["description"] or event["date"]:
             events.append(event)
 
+    import csv
+import io
+import json
+import urllib.request
+import calendar
+import re
+from datetime import datetime, timedelta, time, timezone, date as date_cls
+from functools import lru_cache
+from typing import List, Dict, Iterable
+
+
+def _normalize_tags(raw: Iterable | str | None) -> list[str]:
+    """Return a list of lowercase tags from a variety of inputs."""
+    if not raw:
+        return []
+    if isinstance(raw, str):
+        parts = [p.strip() for p in raw.split(',')]
+    else:
+        try:
+            parts = [str(p).strip() for p in raw]
+        except TypeError:
+            parts = []
+    return [p.lower() for p in parts if p]
+
+def _fetch_from_csv(text: str) -> List[Dict[str, str]]:
+    """Fetch events from a CSV string."""
+    events: List[Dict[str, str]] = []
+    reader = csv.DictReader(io.StringIO(text))
+    for row in reader:
+        events.append(
+            {
+                "date": row.get("date", ""),
+                "time": row.get("time", ""),
+                "description": row.get("title") or row.get("description", ""),
+                "image_url": row.get("image") or row.get("image_url", ""),
+                "tags": _normalize_tags(row.get("tags") or row.get("categories") or row.get("labels") or row.get("tag")),
+                "link": row.get("link") or row.get("url", ""),
+                "map_link": row.get("map") or row.get("map_link", ""),
+            }
+        )
+    return [e for e in events if any(e.values())]
+
+def fetch_events(url: str) -> List[Dict[str, str]]:
+    """Fetch and adapt events from any JSON structure."""
+    with urllib.request.urlopen(url) as resp:
+        text = resp.read().decode("utf-8")
+
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError:
+        # Try CSV fallback
+        return _fetch_from_csv(text)
+
+    # Drill into list if wrapped in common keys
+    if isinstance(data, dict):
+        for key in ["events", "items", "data", "results", "records"]:
+            if key in data and isinstance(data[key], list):
+                data = data[key]
+                break
+        if not isinstance(data, list):
+            return []
+
+    events = []
+    for item in data:
+        event = {}
+
+        def find(key_opts):
+            for k in key_opts:
+                val = item.get(k)
+                if val:
+                    return val
+            return ""
+
+        event["date"] = find(["date", "event_date", "start_date"])
+        event["time"] = find(["time", "event_time", "start_time"])
+        event["description"] = find(["description", "title", "name", "event"])
+        event["image_url"] = find(["image_url", "image", "img", "cover"])
+        event["tags"] = _normalize_tags(
+            item.get("tags") or item.get("categories") or item.get("labels") or item.get("tag")
+        )
+        event["link"] = find(["link", "url", "event_url"])
+        event["map_link"] = find(["map", "map_link", "location_url"])
+
+        # Only keep it if it has at least a date or description
+        if event["description"] or event["date"]:
+            events.append(event)
+
     events.sort(key=lambda e: _parse_event_date(e.get("date", "")))               
+
+    return events               
 
     return events
 

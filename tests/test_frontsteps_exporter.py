@@ -1,5 +1,5 @@
 import re
-from src.exporters.frontsteps_exporter import build_frontsteps_html
+from bulletin_builder.exporters.frontsteps_exporter import build_frontsteps_html
 
 MOCK_HTML = """
 <!DOCTYPE html>
@@ -7,7 +7,8 @@ MOCK_HTML = """
 <head><title>Test</title></head>
 <body>
   <section><article><p>Hello</p></article></section>
-  <a href='#'>link</a>
+  <a href='#'>toc</a>
+  <a href='https://example.com'>ext</a>
   <img src='x.jpg'>
   <table><tr><td>cell</td></tr></table>
   <picture><img src='x.jpg'></picture>
@@ -40,4 +41,3 @@ def test_export_rules():
 
     # No escaped tags
     assert '&lt;p&gt;' not in html
-

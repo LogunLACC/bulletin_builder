@@ -25,8 +25,10 @@ def init(app):
             for child in app.editor_container.winfo_children():
                 if child is new_frame:
                     continue
-                try: child.grid_forget()
-                except Exception: pass
+                try:
+                    child.grid_forget()
+                except Exception:
+                    pass
                 child.destroy()
             # Ensure it's created with the correct parent
             if new_frame.master is not parent:
@@ -238,7 +240,8 @@ def init(app):
     # Always pass a callable for refresh_callback, not the app instance
     refresh_cb = getattr(app, "refresh_callback", None)
     if not callable(refresh_cb):
-        refresh_cb = lambda: None
+        def refresh_cb():
+            return None
     # Create the settings view container if not already created
     settings_view = ctk.CTkFrame(view_container)
     settings_view.grid(row=0, column=0, sticky="nsew")
@@ -282,7 +285,8 @@ def init(app):
 
     controls = ctk.CTkFrame(preview_view)
     controls.grid(row=0, column=0, sticky="ew", padx=0, pady=(0, 8))
-    for i in range(5): controls.grid_columnconfigure(i, weight=(1 if i == 4 else 0))
+    for i in range(5):
+        controls.grid_columnconfigure(i, weight=(1 if i == 4 else 0))
 
     app.device_var = tk.StringVar(value="Desktop")
     def _on_device_change(choice):
@@ -348,20 +352,26 @@ def init(app):
         if name == "Content":
             app.editor_container.grid(row=0, column=1, sticky="nsew", padx=0, pady=0)
             for child in app.editor_container.winfo_children():
-                try: child.grid_forget()
+                try:
+                    child.grid_forget()
                 except Exception:
-                    try: child.pack_forget()
-                    except Exception: pass
+                    try:
+                        child.pack_forget()
+                    except Exception:
+                        pass
                 child.destroy()
             if hasattr(app, "show_section_editor"):
                 app.show_section_editor()
         else:
             app.editor_container.grid_forget()
             for child in app.editor_container.winfo_children():
-                try: child.grid_forget()
+                try:
+                    child.grid_forget()
                 except Exception:
-                    try: child.pack_forget()
-                    except Exception: pass
+                    try:
+                        child.pack_forget()
+                    except Exception:
+                        pass
                 child.destroy()
         all_views[name].grid(row=0, column=0, sticky="nsew")
 

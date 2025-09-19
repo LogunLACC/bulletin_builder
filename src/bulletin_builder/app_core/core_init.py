@@ -95,7 +95,7 @@ def init(app):
                 temperature=0.7,
             )
             text = resp.choices[0].message.content.strip()
-            lines = [l.strip("-•* ") for l in text.splitlines() if l.strip()]
+            lines = [line.strip("-•* ") for line in text.splitlines() if line.strip()]
             return lines
         except Exception:
             return []

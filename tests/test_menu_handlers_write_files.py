@@ -13,7 +13,7 @@ def _ensure_minimal_ctx(app):
     app.sections_data = getattr(app, 'sections_data', [])
 
 
-def test_export_html_text_writes_files(monkeypatch, tmp_path):
+def test_export_frontsteps_writes_file_and_copies(monkeypatch, tmp_path):
     try:
         root = tk.Tk()
     except Exception as e:
@@ -24,7 +24,7 @@ def test_export_html_text_writes_files(monkeypatch, tmp_path):
         _ensure_minimal_ctx(root)
 
         html_path = tmp_path / 'out.html'
-        txt_path = tmp_path / 'out.txt'
+        tmp_path / 'out.txt'
 
         import tkinter.filedialog as fd
         import tkinter.messagebox as mb
@@ -32,10 +32,21 @@ def test_export_html_text_writes_files(monkeypatch, tmp_path):
         monkeypatch.setattr(mb, 'showinfo', lambda *a, **kw: None)
         monkeypatch.setattr(mb, 'showerror', lambda *a, **kw: None)
 
-        root.on_export_html_text_clicked()
+        # Wire FrontSteps exporter and save path
+        from bulletin_builder.app_core import exporter
+        exporter.init(root)
+        _ensure_minimal_ctx(root)
+        frontsteps_path = tmp_path / 'out_frontsteps.html'
 
-        assert html_path.exists()
-        assert txt_path.exists()
+        import tkinter.filedialog as fd
+        import tkinter.messagebox as mb
+        monkeypatch.setattr(fd, 'asksaveasfilename', lambda **kw: str(frontsteps_path))
+        monkeypatch.setattr(mb, 'showinfo', lambda *a, **kw: None)
+        monkeypatch.setattr(mb, 'showerror', lambda *a, **kw: None)
+
+        root.on_export_frontsteps_clicked()
+
+        assert frontsteps_path.exists()
     finally:
         try:
             root.destroy()
@@ -43,7 +54,7 @@ def test_export_html_text_writes_files(monkeypatch, tmp_path):
             pass
 
 
-def test_export_ics_writes_file(monkeypatch, tmp_path):
+def test_no_ics_export_handler(monkeypatch):
     try:
         root = tk.Tk()
     except Exception as e:
@@ -51,27 +62,7 @@ def test_export_ics_writes_file(monkeypatch, tmp_path):
     try:
         from bulletin_builder.app_core import exporter
         exporter.init(root)
-        _ensure_minimal_ctx(root)
-
-        # Provide one events section
-        root.sections_data = [{
-            'type': 'events',
-            'content': [ {'title': 'Event A'} ]
-        }]
-
-        ics_path = tmp_path / 'events.ics'
-        import tkinter.filedialog as fd
-        import tkinter.messagebox as mb
-        monkeypatch.setattr(fd, 'asksaveasfilename', lambda **kw: str(ics_path))
-        monkeypatch.setattr(mb, 'showinfo', lambda *a, **kw: None)
-        monkeypatch.setattr(mb, 'showerror', lambda *a, **kw: None)
-
-        root.on_export_ics_clicked()
-
-        assert ics_path.exists()
-        text = ics_path.read_text(encoding='utf-8')
-        assert 'BEGIN:VCALENDAR' in text
-        assert 'SUMMARY:Event A' in text
+        assert not hasattr(root, 'on_export_ics_clicked')
     finally:
         try:
             root.destroy()

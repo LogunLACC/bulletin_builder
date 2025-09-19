@@ -35,7 +35,8 @@ def init(app):
             defaultextension='.json', filetypes=[('Drafts','*.json')],
             initialdir='./user_drafts', title='Open Draft', parent=app
         )
-        if not path: return
+        if not path:
+            return
         try:
             data = json.loads(Path(path).read_text(encoding='utf-8'))
         except Exception:
@@ -61,7 +62,8 @@ def init(app):
                 defaultextension='.json', filetypes=[('Drafts','*.json')],
                 initialdir='./user_drafts', title='Save Draft As', parent=app
             )
-            if not path: return
+            if not path:
+                return
             app.current_draft_path = path
         payload = {
             'sections': app.sections_data,

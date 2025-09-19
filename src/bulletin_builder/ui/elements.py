@@ -163,11 +163,16 @@ class ElementsFrame(ctk.CTkFrame):
     def _load_into_editor(self, idx: int):
         item = self.section["content"][idx]
         self.type_var.set(item.get("type", ""))
-        self.text_entry.delete(0, "end"); self.text_entry.insert(0, item.get("text", ""))
-        self.color_entry.delete(0, "end"); self.color_entry.insert(0, item.get("color", ""))
-        self.size_entry.delete(0, "end"); self.size_entry.insert(0, str(item.get("size", "")))
-        self.src_entry.delete(0, "end"); self.src_entry.insert(0, item.get("src", ""))
-        self.alt_entry.delete(0, "end"); self.alt_entry.insert(0, item.get("alt", ""))
+        self.text_entry.delete(0, "end")
+        self.text_entry.insert(0, item.get("text", ""))
+        self.color_entry.delete(0, "end")
+        self.color_entry.insert(0, item.get("color", ""))
+        self.size_entry.delete(0, "end")
+        self.size_entry.insert(0, str(item.get("size", "")))
+        self.src_entry.delete(0, "end")
+        self.src_entry.insert(0, item.get("src", ""))
+        self.alt_entry.delete(0, "end")
+        self.alt_entry.insert(0, item.get("alt", ""))
 
     def _save_current(self):
         idx = self._selected_index()

@@ -407,7 +407,7 @@ class WysiwygEditor(ctk.CTkToplevel):
                 opt_path = optimize_image(path)
                 pil_img = Image.open(opt_path)
                 return (opt_path, pil_img)
-            except Exception:
+            except Exception as e:
                 return (None, str(e))
 
         def on_image_ready(future):

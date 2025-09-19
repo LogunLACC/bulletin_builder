@@ -47,14 +47,13 @@ def test_no_https_alert_strings_anywhere():
 def test_secure_context_guards_present():
     """Test that secure context checks are present where needed"""
     # Check for clipboard usage with secure context guard
-    clipboard_found = False
     secure_check_found = False
 
     for p in pathlib.Path("src").rglob("*.py"):
         try:
             txt = p.read_text("utf-8", errors="ignore")
             if "clipboard" in txt.lower():
-                clipboard_found = True
+                pass
             if "is_secure_context" in txt.lower() or "secure_context" in txt.lower():
                 secure_check_found = True
         except:

@@ -128,7 +128,6 @@ class Rewriter(HTMLParser):
     def handle_charref(self, name): self.out.append(f"&#{name};")
 
     def _localize(self, url: str, alt: str | None) -> str | None:
-        original = url
         # only touch external images
         if not is_external(url):
             return None

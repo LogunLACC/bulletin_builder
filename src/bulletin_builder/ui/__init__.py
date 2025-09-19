@@ -1,4 +1,4 @@
-from .announcements import AnnouncementsFrame
+
 
 # This file can be left empty.
 # Its presence tells Python that the 'ui' directory should be treated as a package,

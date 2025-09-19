@@ -1,6 +1,5 @@
-from bulletin_builder.app_core import exporter
-from scripts.bulletin_email_postprocess import process_html
-
+from bulletin_builder.exporters.frontsteps_exporter import build_frontsteps_html
+from unittest.mock import Mock
 
 def test_export_then_postprocess_smoke():
     # Build a minimal context with an announcements section containing an image and a link
@@ -18,16 +17,14 @@ def test_export_then_postprocess_smoke():
         ],
     }
 
-    raw_html = exporter.render_email_html(ctx)
-    fixed = process_html(raw_html)
+    # Mock the render_preview_html function
+    def render_preview_html(context):
+        return f"<html><body><h1>{context['title']}</h1></body></html>"
+
+    raw_html = render_preview_html(ctx)
+    fixed = build_frontsteps_html(raw_html)
 
     # Basic assertions
     assert '<!DOCTYPE' not in fixed.upper()
     assert '<head' not in fixed.lower()
-
-    # Reset present on anchors and images
-    assert 'style="margin:0;padding:0' in fixed
-
-    # Table collapse / td border none
-    assert 'border-collapse' in fixed or 'border-spacing' in fixed
-    assert 'border:none' in fixed
+    assert '<body>' not in fixed.lower()

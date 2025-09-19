@@ -5,7 +5,8 @@ Email HTML sanitizer for LACC formatting rules.
 import re
 
 _WS_SEMI = re.compile(r'\s*;\s*')
-_LOWER = lambda s: (s or "").strip().lower()
+def _LOWER(s):
+    return (s or "").strip().lower()
 
 def _prepend_rule(style: str, rule: str) -> str:
     """Ensure `rule` is the very first declaration; remove later duplicates by property name."""

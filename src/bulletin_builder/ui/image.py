@@ -1,7 +1,8 @@
 import customtkinter as ctk
 import os
-DEBUG = bool(int(os.getenv('BB_DEBUG', '0') or '0'))
 from .base_section import SectionRegistry
+
+DEBUG = bool(int(os.getenv('BB_DEBUG', '0') or '0'))
 
 @SectionRegistry.register("image")
 class ImageFrame(ctk.CTkFrame):

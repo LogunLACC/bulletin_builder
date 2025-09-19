@@ -40,7 +40,7 @@ class ToolTip:
         try:
             x, y, cx, cy = self.widget.bbox("insert") or (0, 0, 0, 0)
         except Exception:
-            x, y, cx, cy = (0, 0, 0, 0)
+            x, y, _cx, _cy = (0, 0, 0, 0)
         x += self.widget.winfo_rootx() + 20
         y += self.widget.winfo_rooty() + 20
 

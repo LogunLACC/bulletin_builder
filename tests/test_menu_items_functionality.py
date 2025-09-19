@@ -21,12 +21,7 @@ def test_menu_items_are_bound_and_callable():
 
         # Check essential callbacks
         for name in (
-            'on_export_html_text_clicked',
-            'on_copy_for_email_clicked',
-            'on_export_ics_clicked',
-            'on_send_test_email_clicked',
-            'export_bulletin_html',
-            'export_email_html',
+            'on_export_frontsteps_clicked',
             'open_in_browser',
             'import_announcements_csv',
             'import_events_feed',

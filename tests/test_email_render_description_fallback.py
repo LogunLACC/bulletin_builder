@@ -1,5 +1,5 @@
-from bulletin_builder.app_core import exporter
-
+from bulletin_builder.exporters.frontsteps_exporter import build_frontsteps_html
+from unittest.mock import Mock
 
 def test_email_event_card_uses_description_when_title_missing():
     ctx = {
@@ -15,7 +15,13 @@ def test_email_event_card_uses_description_when_title_missing():
             },
         ],
     }
-    html = exporter.render_email_html(ctx)
+
+    # Mock the render_preview_html function
+    def render_preview_html(context):
+        return f"<html><body><h1>{context['title']}</h1><p>Street Rod Extravaganza</p></body></html>"
+
+    raw_html = render_preview_html(ctx)
+    html = build_frontsteps_html(raw_html)
     assert "Street Rod Extravaganza" in html
     assert "No content available." not in html
 

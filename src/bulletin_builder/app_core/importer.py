@@ -1,3 +1,17 @@
+import io
+import csv
+import urllib.request
+import threading
+from tkinter import filedialog, messagebox, simpledialog
+from bulletin_builder.event_feed import (
+    fetch_events,
+    events_to_blocks,
+    process_event_images,
+    expand_recurring_events,
+    detect_conflicts,
+)
+
+
 # --- Non-disruptive CSV parser helpers (append-only) -------------------
 def _bb_norm(value):
     """Normalize a single CSV cell value to a stripped string (None -> '')."""
@@ -80,20 +94,8 @@ def parse_announcements_csv(text):
                 row["link_text"] = "Learn more"
             items.append(row)
     return items
-# -*- coding: utf-8 -*-
-import io
-import csv
-import urllib.request
-import threading
-from tkinter import filedialog, messagebox, simpledialog
 
-from bulletin_builder.event_feed import (
-    fetch_events,
-    events_to_blocks,
-    process_event_images,
-    expand_recurring_events,
-    detect_conflicts,
-)
+
 
 NET_TIMEOUT = 12  # seconds
 
