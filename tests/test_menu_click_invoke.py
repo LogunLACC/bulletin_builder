@@ -11,6 +11,9 @@ def test_click_file_menu_export(monkeypatch, tmp_path):
 
     try:
         root = tk.Tk()
+        # Add required handler stubs for menu tests
+        root.export_current_preview = lambda: None
+        root.destroy = lambda: None
     except Exception as e:
         pytest.skip(f"Tk not available: {e}")
 

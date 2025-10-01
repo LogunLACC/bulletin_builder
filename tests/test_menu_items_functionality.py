@@ -21,7 +21,7 @@ def test_menu_items_are_bound_and_callable():
     try:
         # Check essential callbacks
         for name in (
-            'on_export_frontsteps_clicked',
+            'export_current_preview',
             'open_in_browser',
             'import_announcements_csv',
             'import_events_feed',

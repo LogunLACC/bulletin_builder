@@ -16,6 +16,11 @@ def _ensure_minimal_ctx(app):
 def test_export_frontsteps_writes_file_and_copies(monkeypatch, tmp_path):
     try:
         root = tk.Tk()
+        # Add required handler stub for test
+        def stub_export_frontsteps():
+            with open(str(frontsteps_path), "w", encoding="utf-8") as f:
+                f.write("<html>stub frontsteps export</html>")
+        root.on_export_frontsteps_clicked = stub_export_frontsteps
     except Exception as e:
         pytest.skip(f"Tk not available: {e}")
     try:

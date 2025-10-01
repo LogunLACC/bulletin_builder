@@ -50,7 +50,9 @@ def test_img_table_td_a_rules_and_body_only():
     """
     out = frontsteps_pipeline(html)
     assert '<!DOCTYPE' not in out and '<head' not in out and '<body' not in out
-    assert re.search(r'<a[^>]*style="margin:0; padding:0;', out)
+    # For non-absolute href, anchor becomes span with style
+    # Flexible regex: allow any whitespace, attribute order, and additional styles
+    assert re.search(r'<span[^>]*style="margin:0;\s*padding:0;[^>]*text-decoration:underline;?', out)
     assert re.search(r'<img[^>]*style="margin:0; padding:0;', out)
     assert 'border-collapse:collapse' in out and 'border-spacing:0' in out
     assert 'border:none;' in out

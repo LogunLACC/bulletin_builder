@@ -7,15 +7,15 @@
       "name": "Email Excellence & Deliverability",
       "goal": "Ensure bulletins are not just compatible, but beautiful, robust, and reliably delivered in real-world email workflows.",
       "tasks": [
-        {"description": "Improve email deliverability: Add DKIM/SPF/DMARC guidance and export options for ready-to-send packages.", "status": "todo"},
-        {"description": "Implement advanced email preview: Simulate rendering in major clients (Gmail, Outlook, Apple Mail, mobile).", "status": "todo"},
-        {"description": "Add export validation for accessibility (WCAG, alt text, color contrast) and spam triggers.", "status": "todo"},
-        {"description": "Enhance template editor: Live HTML/CSS linting for email-safe code, with warnings for risky constructs.", "status": "todo"},
-        {"description": "Add export-to-PDF for compliance and archiving.", "status": "todo"},
-        {"description": "Integrate analytics: Track open/click rates via optional pixel or link tracking (opt-in, privacy-respecting).", "status": "todo"},
-        {"description": "Provide user guidance: Add a 'Best Practices for Email' wizard/checklist before export.", "status": "todo"},
-        {"description": "Automate image optimization: Inline, compress, and convert images for email safety.", "status": "todo"},
-        {"description": "Add batch send and scheduling (with rate limiting and error recovery).", "status": "todo"}
+        {"description": "Add DKIM/SPF/DMARC guidance to educate users on improving email deliverability.", "status": "todo"},
+        {"description": "Implement an advanced email preview feature to simulate rendering in major clients like Gmail, Outlook, and mobile.", "status": "todo"},
+        {"description": "Create an export validation step to check for accessibility issues (WCAG) and potential spam triggers.", "status": "todo"},
+        {"description": "Enhance the template editor with live HTML/CSS linting for email-safe code.", "status": "todo"},
+        {"description": "Add an 'Export to PDF' feature for compliance and archiving purposes.", "status": "todo"},
+        {"description": "Integrate optional, privacy-respecting analytics for open/click tracking.", "status": "todo"},
+        {"description": "Provide a 'Best Practices for Email' checklist or wizard to guide users before export.", "status": "todo"},
+        {"description": "Automate image optimization during export to inline, compress, and convert images for email safety.", "status": "todo"},
+        {"description": "Implement a batch send and scheduling feature with rate limiting and error recovery.", "status": "todo"}
       ]
     },
     {
@@ -53,7 +53,7 @@
           "status": "complete"
         },
         {
-          "description": "Redesign the layout for better section navigation â€” left panel for sections, right panel for editor, status bar at bottom.",
+          "description": "Redesign the layout for better section navigation — left panel for sections, right panel for editor, status bar at bottom.",
           "status": "complete"
         },
         {

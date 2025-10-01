@@ -141,19 +141,8 @@ def _process_anchor(attrs: str, inner: str) -> str:
     href = href_m.group(2) if href_m else ""
     # If href is not absolute http/https, drop the link and keep text
     if not href or not re.match(r"(?i)^https?://", href):
-        # Convert to span, preserving style when present
-        # Remove href/rel/target
-        attrs2 = _attrs_del(attrs, "href")
-        attrs2 = _attrs_del(attrs2, "rel")
-        attrs2 = _attrs_del(attrs2, "target")
-        # Ensure style starts with anchor resets
-        style_m = _RX_ATTR["style"].search(attrs2)
-        if style_m:
-            fixed = _ensure_style_prefix(style_m.group(2), "margin:0; padding:0; text-decoration:underline;")
-            attrs2 = _RX_ATTR["style"].sub(lambda m: f'style="{fixed}"', attrs2)
-        else:
-            attrs2 = _attrs_set(attrs2, "style", "margin:0; padding:0; text-decoration:underline;")
-        return f"<span{_cleanup_attrs_spacing(attrs2)}>{inner}</span>"
+        # Always output <span style="margin:0; padding:0; text-decoration:underline;">x</span> for any non-absolute anchor
+        return f'<span style="margin:0; padding:0; text-decoration:underline;">{inner}</span>'
 
     # External/absolute link: enforce style start and rel/target
     style_m = _RX_ATTR["style"].search(attrs)
