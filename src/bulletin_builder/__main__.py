@@ -226,6 +226,18 @@ def main():
     parser = argparse.ArgumentParser(description="Bulletin Builder Launcher")
     parser.add_argument("--cli", action="store_true", help="Run in CLI mode (no GUI)")
     parser.parse_args()
+
     # Default to launching GUI once; prevents duplicate creation when called via different entrypoints
-    run_gui()
-    return
+    try:
+        run_gui()
+    except Exception as e:
+        import traceback
+        with open("error.log", "w", encoding="utf-8") as f:
+            f.write(traceback.format_exc())
+        try:
+            import tkinter.messagebox as mb
+            mb.showerror("Error", str(e))
+        except Exception:
+            pass
+    return
+
