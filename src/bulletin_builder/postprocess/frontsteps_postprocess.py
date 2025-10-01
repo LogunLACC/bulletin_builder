@@ -149,19 +149,19 @@ def _process_anchor(attrs: str, inner: str) -> str:
         # Ensure style starts with anchor resets
         style_m = _RX_ATTR["style"].search(attrs2)
         if style_m:
-            fixed = _ensure_style_prefix(style_m.group(2), "margin:0; padding:0;")
+            fixed = _ensure_style_prefix(style_m.group(2), "margin:0; padding:0; text-decoration:underline;")
             attrs2 = _RX_ATTR["style"].sub(lambda m: f'style="{fixed}"', attrs2)
         else:
-            attrs2 = _attrs_set(attrs2, "style", "margin:0; padding:0;")
+            attrs2 = _attrs_set(attrs2, "style", "margin:0; padding:0; text-decoration:underline;")
         return f"<span{_cleanup_attrs_spacing(attrs2)}>{inner}</span>"
 
     # External/absolute link: enforce style start and rel/target
     style_m = _RX_ATTR["style"].search(attrs)
     if style_m:
-        fixed = _ensure_style_prefix(style_m.group(2), "margin:0; padding:0;")
+        fixed = _ensure_style_prefix(style_m.group(2), "margin:0; padding:0; text-decoration:underline;")
         attrs = _RX_ATTR["style"].sub(lambda m: f'style="{fixed}"', attrs)
     else:
-        attrs = _attrs_set(attrs, "style", "margin:0; padding:0;")
+        attrs = _attrs_set(attrs, "style", "margin:0; padding:0; text-decoration:underline;")
     # Add rel/target safety
     attrs = _attrs_set(attrs, "rel", "noopener noreferrer")
     attrs = _attrs_set(attrs, "target", "_blank")

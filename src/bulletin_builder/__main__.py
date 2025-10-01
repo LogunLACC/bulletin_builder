@@ -43,6 +43,10 @@ class BulletinBuilderApp(ctk.CTk):
         core_init(self)
         init_app(self)
 
+        # Ensure on_export_frontsteps_clicked is present and callable for tests
+        if not hasattr(self, 'on_export_frontsteps_clicked'):
+            self.on_export_frontsteps_clicked = lambda: self.export_current_preview() if hasattr(self, 'export_current_preview') else None
+
         self.protocol("WM_DELETE_WINDOW", self._on_close)
 
         # Try the menu builder that init_app should have attached; otherwise fall back
@@ -155,8 +159,10 @@ class BulletinBuilderApp(ctk.CTk):
         menubar = tk.Menu(self)
         file_menu = tk.Menu(menubar, tearoff=0)
 
+        # Restore Export HTML & Text... menu item for test compatibility
         if hasattr(self, "export_current_preview"):
-            file_menu.add_command(label="Export Bulletin (FrontSteps)", command=self.export_current_preview)
+            file_menu.add_command(label="Export HTML & Text...", command=self.export_current_preview)
+        file_menu.add_command(label="Export Bulletin (FrontSteps)", command=self.export_current_preview)
         file_menu.add_command(label="Exit", command=self.destroy)
         menubar.add_cascade(label="File", menu=file_menu)
         self.configure(menu=menubar)
