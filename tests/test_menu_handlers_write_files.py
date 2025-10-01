@@ -34,6 +34,10 @@ def test_export_frontsteps_copies_to_clipboard(monkeypatch, tmp_path):
         monkeypatch.setattr(app, 'render_bulletin_html', lambda ctx: "<html><body>Mock Content</body></html>")
         monkeypatch.setattr(app, 'show_status_message', lambda *a, **kw: None)
 
+        # Explicitly set export_frontsteps_html to fallback method
+        from bulletin_builder.__main__ import BulletinBuilderApp
+        app.export_frontsteps_html = BulletinBuilderApp.export_frontsteps_html.__get__(app)
+
         # Call the actual export handler
         app.export_current_preview()
 
