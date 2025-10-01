@@ -182,8 +182,7 @@ class BulletinBuilderApp(ctk.CTk):
             if hasattr(self, 'render_bulletin_html') and hasattr(self, 'collect_context'):
                 ctx = self.collect_context()
                 html_content = self.render_bulletin_html(ctx)
-                if hasattr(self, 'export_frontsteps_html'):
-                    self.export_frontsteps_html(html_content)
+                self.export_frontsteps_html(html_content)
         except Exception as e:
             print(f"Export failed: {e}")
 
