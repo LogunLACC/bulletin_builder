@@ -21,12 +21,8 @@ class BulletinBuilderApp(ctk.CTk):
         from bulletin_builder.postprocess import process_frontsteps_html
         processed = process_frontsteps_html(html_content)
         print(f"[DEBUG] processed HTML: {processed[:60]}...")
-        if hasattr(self, 'clipboard_clear'):
-            print("[DEBUG] clipboard_clear called")
-            self.clipboard_clear()
-        if hasattr(self, 'clipboard_append'):
-            print(f"[DEBUG] clipboard_append called with: {processed[:60]}...")
-            self.clipboard_append(processed)
+        self.clipboard_clear()
+        self.clipboard_append(processed)
         if hasattr(self, 'show_status_message'):
             print("[DEBUG] show_status_message called")
             self.show_status_message("FrontSteps HTML copied to clipboard.", duration_ms=800)
