@@ -155,11 +155,22 @@ class BulletinBuilderApp(ctk.CTk):
         menubar = tk.Menu(self)
         file_menu = tk.Menu(menubar, tearoff=0)
 
-        if hasattr(self, "on_export_frontsteps_clicked"):
-            file_menu.add_command(label="Export Bulletin (FrontSteps)", command=self.on_export_frontsteps_clicked)
+        if hasattr(self, "export_current_preview"):
+            file_menu.add_command(label="Export Bulletin (FrontSteps)", command=self.export_current_preview)
         file_menu.add_command(label="Exit", command=self.destroy)
         menubar.add_cascade(label="File", menu=file_menu)
         self.configure(menu=menubar)
+
+    def export_current_preview(self):
+        """Renders the current bulletin state and passes it to the exporter."""
+        try:
+            if hasattr(self, 'render_bulletin_html') and hasattr(self, 'collect_context'):
+                ctx = self.collect_context()
+                html_content = self.render_bulletin_html(ctx)
+                if hasattr(self, 'export_frontsteps_html'):
+                    self.export_frontsteps_html(html_content)
+        except Exception as e:
+            print(f"Export failed: {e}")
 
     def refresh_listbox_titles(self):
         """Fallback implementation replaced during init_app."""

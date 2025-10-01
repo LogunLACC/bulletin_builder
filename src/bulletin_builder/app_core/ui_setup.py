@@ -83,7 +83,7 @@ def init(app):
         file_menu.add_command(label="Save As...", command=lambda: getattr(app, 'save_draft', lambda save_as=False: None)(save_as=True))
         file_menu.add_separator()
 
-        add("Export Bulletin (FrontSteps)", "on_export_frontsteps_clicked")
+        add("Export Bulletin (FrontSteps)", "export_current_preview")
         add("Open in Browser", "open_in_browser")
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=app.destroy)
@@ -334,7 +334,7 @@ def init(app):
     add_tooltip(view_btn, "Open current preview in your browser")
 
     export_btn = ctk.CTkButton(controls, text="Export (FrontSteps)",
-                               command=getattr(app, "on_export_frontsteps_clicked", lambda: None))
+                               command=getattr(app, "export_current_preview", lambda: None))
     export_btn.grid(row=0, column=4, sticky="e")
     add_tooltip(export_btn, "Export body-only HTML for FrontSteps")
 
