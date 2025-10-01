@@ -22,12 +22,13 @@ def test_export_frontsteps_copies_to_clipboard(monkeypatch, tmp_path):
     try:
         _ensure_minimal_ctx(app)
 
-        # Mock clipboard and renderer
-        clipboard_content = []
+        # Use a temp file instead of clipboard
+        export_file = tmp_path / "exported_frontsteps.html"
         def mock_clipboard_clear():
-            clipboard_content.clear()
+            pass
         def mock_clipboard_append(text):
-            clipboard_content.append(text)
+            with open(export_file, "w", encoding="utf-8") as f:
+                f.write(text)
 
         monkeypatch.setattr(app, 'clipboard_clear', mock_clipboard_clear)
         monkeypatch.setattr(app, 'clipboard_append', mock_clipboard_append)
@@ -41,10 +42,11 @@ def test_export_frontsteps_copies_to_clipboard(monkeypatch, tmp_path):
         # Call the actual export handler
         app.export_current_preview()
 
-        # Verify clipboard content
-        assert len(clipboard_content) == 1
-        assert "Mock Content" in clipboard_content[0]
-        assert "<html>" not in clipboard_content[0] # Exporter should strip wrappers
+        # Verify file contents
+        assert export_file.exists()
+        contents = export_file.read_text(encoding="utf-8")
+        assert "Mock Content" in contents
+        assert "<html>" not in contents # Exporter should strip wrappers
     finally:
         try:
             app.destroy()
