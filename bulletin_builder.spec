@@ -9,7 +9,13 @@ a = Analysis([
 ],
     pathex=[str(Path(".").resolve())],
     binaries=[],
-    datas=[('src/bulletin_builder/templates', 'bulletin_builder/templates')],
+    datas=[
+        ('src/bulletin_builder/templates/partials', 'bulletin_builder/templates/partials'),
+        ('src/bulletin_builder/templates/themes', 'bulletin_builder/templates/themes'),
+        ('assets', 'assets'),
+        ('user_drafts', 'user_drafts'),
+        ('config.ini', '.'),
+    ],
     hiddenimports=[
         'bulletin_builder.app_core.core_init',
         'bulletin_builder.app_core.handlers',
