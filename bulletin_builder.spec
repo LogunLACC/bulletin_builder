@@ -1,57 +1,41 @@
 # -*- mode: python ; coding: utf-8 -*-
-import sys
-from pathlib import Path
+from PyInstaller.utils.hooks import collect_submodules
+import os
 
 block_cipher = None
 
-a = Analysis([
-    'src/bulletin_builder/__main__.py'
-],
-    pathex=[str(Path(".").resolve())],
+hiddenimports = collect_submodules('bulletin_builder')
+
+a = Analysis(
+    ['src/bulletin_builder/__main__.py'],
+    pathex=[],
     binaries=[],
     datas=[
-        ('src/bulletin_builder/templates/partials', 'bulletin_builder/templates/partials'),
-        ('src/bulletin_builder/templates/themes', 'bulletin_builder/templates/themes'),
+        ('src/bulletin_builder/templates', 'bulletin_builder/templates'),
         ('assets', 'assets'),
-        ('user_drafts', 'user_drafts'),
-        ('config.ini', '.'),
+        ('config.ini.default', '.'),
     ],
-    hiddenimports=[
-        'bulletin_builder.app_core.core_init',
-        'bulletin_builder.app_core.handlers',
-        'bulletin_builder.app_core.drafts',
-        'bulletin_builder.app_core.sections',
-        'bulletin_builder.app_core.suggestions',
-        'bulletin_builder.app_core.menu',
-        'bulletin_builder.app_core.importer',
-        'bulletin_builder.app_core.exporter',
-        'bulletin_builder.app_core.preview',
-        'bulletin_builder.app_core.ui_setup',
-    ],
+    hiddenimports=hiddenimports,
     hookspath=[],
-    hooksconfig={},
     runtime_hooks=[],
     excludes=[],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
 )
-
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
-
 exe = EXE(
     pyz,
     a.scripts,
     [],
     exclude_binaries=True,
-    name='bulletin_builder',
-    debug=True,
+    name='bulletin',
+    debug=False,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
-    console=True,
+    console=False,
 )
-
 coll = COLLECT(
     exe,
     a.binaries,
@@ -59,5 +43,6 @@ coll = COLLECT(
     a.datas,
     strip=False,
     upx=True,
-    name='bulletin_builder'
+    upx_exclude=[],
+    name='bulletin',
 )

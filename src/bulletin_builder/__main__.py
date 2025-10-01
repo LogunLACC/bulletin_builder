@@ -1,4 +1,5 @@
 import os
+import sys
 import customtkinter as ctk
 from bulletin_builder.app_core.loader import init_app
 from bulletin_builder.app_core.config import (
@@ -209,14 +210,13 @@ def run_gui():
             pass
         return
 
-    # Ensure required directories exist
-    for d in [
-        'templates/partials',
-        'templates/themes',
-        'user_drafts',
-        'assets'
-    ]:
-        os.makedirs(d, exist_ok=True)
+    # When frozen, change CWD to the user's app data directory
+    if getattr(sys, 'frozen', False):
+        app_data_dir = os.path.join(os.getenv('APPDATA'), 'BulletinBuilder')
+        os.makedirs(app_data_dir, exist_ok=True)
+        os.chdir(app_data_dir)
+
+    os.makedirs('user_drafts', exist_ok=True)
 
     app = BulletinBuilderApp()
     app.mainloop()
@@ -240,4 +240,3 @@ def main():
         except Exception:
             pass
     return
-
