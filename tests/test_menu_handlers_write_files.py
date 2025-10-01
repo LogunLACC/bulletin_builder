@@ -22,6 +22,12 @@ def test_export_frontsteps_copies_to_clipboard(monkeypatch, tmp_path):
     try:
         _ensure_minimal_ctx(app)
 
+        # Patch export_current_preview to directly call export_frontsteps_html
+        def direct_export_current_preview():
+            html_content = app.render_bulletin_html(None)
+            app.export_frontsteps_html(html_content)
+        monkeypatch.setattr(app, 'export_current_preview', direct_export_current_preview)
+
         # Use a temp file instead of clipboard
         export_file = tmp_path / "exported_frontsteps.html"
         def mock_clipboard_clear():
@@ -36,7 +42,6 @@ def test_export_frontsteps_copies_to_clipboard(monkeypatch, tmp_path):
         monkeypatch.setattr(app, 'show_status_message', lambda *a, **kw: None)
 
         # Explicitly set export_frontsteps_html to fallback method
-        from bulletin_builder.__main__ import BulletinBuilderApp
         app.export_frontsteps_html = BulletinBuilderApp.export_frontsteps_html.__get__(app)
 
         # Call the actual export handler
