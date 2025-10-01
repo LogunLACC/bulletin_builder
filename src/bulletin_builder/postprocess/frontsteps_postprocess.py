@@ -254,10 +254,10 @@ def process_frontsteps_html(html: str) -> str:
     # Extract body and remove forbidden wrappers/comments
     out = _strip_wrappers_and_extract_body(html)
 
-    # 1) Normalize anchors
+
+    # 1) Normalize anchors (repeat after table/td normalization to catch nested anchors)
     def _fix_a(m):
         return _process_anchor(m.group(1) or "", m.group(2) or "")
-
     out = _RX_TAG["a"].sub(_fix_a, out)
 
     # 2) Normalize images
@@ -275,6 +275,9 @@ def process_frontsteps_html(html: str) -> str:
 
     out = _RX_TAG["table"].sub(_fix_table, out)
     out = _RX_TAG["td"].sub(_fix_td, out)
+
+    # 1b) Normalize anchors again to catch any anchors introduced or moved by table/td normalization
+    out = _RX_TAG["a"].sub(_fix_a, out)
 
     # 4) Headings (h1–h4) explicit typography
     for tag in ("h1", "h2", "h3", "h4"):

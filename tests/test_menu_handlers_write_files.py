@@ -1,7 +1,6 @@
 import tkinter as tk
 import pytest
 
-
 def _ensure_minimal_ctx(app):
     class _Settings:
         def dump(self):
@@ -13,48 +12,38 @@ def _ensure_minimal_ctx(app):
     app.sections_data = getattr(app, 'sections_data', [])
 
 
-def test_export_frontsteps_writes_file_and_copies(monkeypatch, tmp_path):
+def test_export_frontsteps_copies_to_clipboard(monkeypatch, tmp_path):
+    from bulletin_builder.__main__ import BulletinBuilderApp
     try:
-        root = tk.Tk()
-        # Add required handler stub for test
-        def stub_export_frontsteps():
-            with open(str(frontsteps_path), "w", encoding="utf-8") as f:
-                f.write("<html>stub frontsteps export</html>")
-        root.on_export_frontsteps_clicked = stub_export_frontsteps
+        app = BulletinBuilderApp()
     except Exception as e:
         pytest.skip(f"Tk not available: {e}")
+
     try:
-        from bulletin_builder.app_core import exporter
-        exporter.init(root)
-        _ensure_minimal_ctx(root)
+        _ensure_minimal_ctx(app)
 
-        html_path = tmp_path / 'out.html'
-        tmp_path / 'out.txt'
+        # Mock clipboard and renderer
+        clipboard_content = []
+        def mock_clipboard_clear():
+            clipboard_content.clear()
+        def mock_clipboard_append(text):
+            clipboard_content.append(text)
 
-        import tkinter.filedialog as fd
-        import tkinter.messagebox as mb
-        monkeypatch.setattr(fd, 'asksaveasfilename', lambda **kw: str(html_path))
-        monkeypatch.setattr(mb, 'showinfo', lambda *a, **kw: None)
-        monkeypatch.setattr(mb, 'showerror', lambda *a, **kw: None)
+        monkeypatch.setattr(app, 'clipboard_clear', mock_clipboard_clear)
+        monkeypatch.setattr(app, 'clipboard_append', mock_clipboard_append)
+        monkeypatch.setattr(app, 'render_bulletin_html', lambda ctx: "<html><body>Mock Content</body></html>")
+        monkeypatch.setattr(app, 'show_status_message', lambda *a, **kw: None)
 
-        # Wire FrontSteps exporter and save path
-        from bulletin_builder.app_core import exporter
-        exporter.init(root)
-        _ensure_minimal_ctx(root)
-        frontsteps_path = tmp_path / 'out_frontsteps.html'
+        # Call the actual export handler
+        app.export_current_preview()
 
-        import tkinter.filedialog as fd
-        import tkinter.messagebox as mb
-        monkeypatch.setattr(fd, 'asksaveasfilename', lambda **kw: str(frontsteps_path))
-        monkeypatch.setattr(mb, 'showinfo', lambda *a, **kw: None)
-        monkeypatch.setattr(mb, 'showerror', lambda *a, **kw: None)
-
-        root.on_export_frontsteps_clicked()
-
-        assert frontsteps_path.exists()
+        # Verify clipboard content
+        assert len(clipboard_content) == 1
+        assert "Mock Content" in clipboard_content[0]
+        assert "<html>" not in clipboard_content[0] # Exporter should strip wrappers
     finally:
         try:
-            root.destroy()
+            app.destroy()
         except Exception:
             pass
 

@@ -157,7 +157,6 @@ class BulletinBuilderApp(ctk.CTk):
 
         # Restore Export HTML & Text... menu item for test compatibility
         if hasattr(self, "export_current_preview"):
-            file_menu.add_command(label="Export HTML & Text...", command=self.export_current_preview)
             file_menu.add_command(label="Export Bulletin (FrontSteps)", command=self.export_current_preview)
         if hasattr(self, "destroy"):
             file_menu.add_command(label="Exit", command=self.destroy)
