@@ -4,6 +4,21 @@
   "overview": "Full overhaul of the Bulletin Builder application including UI/UX redesign, performance improvements, code cleanup, bug fixes, and major feature expansions to enable element-based email building while preserving strict email export rules.",
   "phases": [
     {
+      "name": "Email Excellence & Deliverability",
+      "goal": "Ensure bulletins are not just compatible, but beautiful, robust, and reliably delivered in real-world email workflows.",
+      "tasks": [
+        {"description": "Improve email deliverability: Add DKIM/SPF/DMARC guidance and export options for ready-to-send packages.", "status": "todo"},
+        {"description": "Implement advanced email preview: Simulate rendering in major clients (Gmail, Outlook, Apple Mail, mobile).", "status": "todo"},
+        {"description": "Add export validation for accessibility (WCAG, alt text, color contrast) and spam triggers.", "status": "todo"},
+        {"description": "Enhance template editor: Live HTML/CSS linting for email-safe code, with warnings for risky constructs.", "status": "todo"},
+        {"description": "Add export-to-PDF for compliance and archiving.", "status": "todo"},
+        {"description": "Integrate analytics: Track open/click rates via optional pixel or link tracking (opt-in, privacy-respecting).", "status": "todo"},
+        {"description": "Provide user guidance: Add a 'Best Practices for Email' wizard/checklist before export.", "status": "todo"},
+        {"description": "Automate image optimization: Inline, compress, and convert images for email safety.", "status": "todo"},
+        {"description": "Add batch send and scheduling (with rate limiting and error recovery).", "status": "todo"}
+      ]
+    },
+    {
       "name": "Codebase Cleanup & Stability",
       "goal": "Remove unused files, reorganize modules, and ensure all imports are valid with no missing dependencies.",
       "tasks": [
@@ -194,6 +209,7 @@
     "Email exports must always follow strict compatibility rules unless explicitly overridden.",
     "UI must remain responsive and usable at all supported screen sizes.",
     "No breaking changes to saved bulletin files unless migration logic is provided."
-  ]
+  ],
+  "agent_instruction": "All changes must be mapped to explicit tasks in roadmap.json before implementation. Do not add features, refactor, or change scope unless a corresponding 'todo' item exists in the roadmap. If a new requirement arises, update the roadmap first, get approval, then proceed. Every commit must reference the relevant roadmap task. Reject or defer any work that is not directly tied to a roadmap item. Regularly review completed tasks and update their status; do not mark tasks complete without verification. Prevent scope creep by strictly enforcing roadmap boundaries and requiring explicit approval for any expansion."
 }
 
