@@ -86,8 +86,6 @@ def init(app):
         add("Export Bulletin (FrontSteps)", "on_export_frontsteps_clicked")
         add("Open in Browser", "open_in_browser")
         file_menu.add_separator()
-        add("Import Announcements CSV...", "import_announcements_csv")
-        file_menu.add_separator()
         file_menu.add_command(label="Exit", command=app.destroy)
 
         # Removed legacy Export submenu; only FrontSteps export remains

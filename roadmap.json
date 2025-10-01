@@ -182,12 +182,12 @@
       "name": "Application Lifecycle & Polish",
       "goal": "Improve application startup, shutdown, and overall robustness by refining entry points and core behaviors.",
       "tasks": [
-        {"description": "Unify application entry points by having __main__.py delegate to cli.py to eliminate code duplication.", "status": "todo"},
-        {"description": "Refactor the complex _on_close method into smaller, single-responsibility helper functions for clarity and maintenance.", "status": "todo"},
-        {"description": "Create a dedicated autosave method to avoid the fragile manipulation of self.current_draft_path during shutdown.", "status": "todo"},
-        {"description": "Enhance the single-instance guard to notify the user and focus the existing window instead of silently exiting.", "status": "todo"},
-        {"description": "Remove the unused _build_menus_fallback method and other dead code from __main__.py.", "status": "todo"},
-        {"description": "Improve the socket lock mechanism to be more robust and provide clearer feedback to the user on second launch.", "status": "todo"},
+        {"description": "Unify application entry points by having __main__.py delegate to cli.py to eliminate code duplication.", "status": "complete"},
+        {"description": "Refactor the complex _on_close method into smaller, single-responsibility helper functions for clarity and maintenance.", "status": "complete"},
+        {"description": "Create a dedicated autosave method to avoid the fragile manipulation of self.current_draft_path during shutdown.", "status": "complete"},
+        {"description": "Enhance the single-instance guard to notify the user and focus the existing window instead of silently exiting.", "status": "complete"},
+        {"description": "Remove the unused _build_menus_fallback method and other dead code from __main__.py.", "status": "complete"},
+        {"description": "Improve the socket lock mechanism to be more robust and provide clearer feedback to the user on second launch.", "status": "complete"},
         {"description": "Simplify the main() function in __main__.py to be a clean, single call to the primary GUI launcher.", "status": "complete"},
         {"description": "Protect application entry point with `if __name__ == '__main__'` to prevent test freezes and import-time side effects.", "status": "complete"},
         {"description": "Make menu handlers raise errors during tests to ensure all callbacks are correctly wired up.", "status": "complete"}

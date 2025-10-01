@@ -99,15 +99,15 @@ def init(app):
     except Exception:
       return {'title': 'Bulletin', 'date': '', 'sections': getattr(app,'sections_data',[]), 'settings': {}}
 
-  def on_copy_for_frontsteps_clicked():
+  def on_export_frontsteps_clicked():
     """Copy FrontSteps-safe body-only HTML to clipboard."""
     try:
       ctx = _collect_context()
       # build_frontsteps_html expects a string of HTML, not a context dict.
       # I need to render the bulletin to HTML first.
-      # I'll use the existing render_bulletin_html function for this.
-      from bulletin_builder.app_core.preview import render_preview_html
-      html = render_preview_html(ctx)
+      # I'll use the existing render_bulletin_html function from the preview module.
+      from bulletin_builder.app_core.preview import render_bulletin_html
+      html = render_bulletin_html(ctx)
       
       frontsteps_html = build_frontsteps_html(html)
 
@@ -130,4 +130,4 @@ def init(app):
 
   app.on_export_html_text_clicked = lambda: None
   app.on_copy_for_email_clicked = lambda: None
-  app.on_copy_for_frontsteps_clicked = on_copy_for_frontsteps_clicked
+  app.on_export_frontsteps_clicked = on_export_frontsteps_clicked

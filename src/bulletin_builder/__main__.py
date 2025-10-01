@@ -146,6 +146,21 @@ class BulletinBuilderApp(ctk.CTk):
         finally:
             self.destroy()
 
+    def _build_menus_fallback(self):
+        """
+        Minimal, safe menu bar that wires only the known handlers if present.
+        This serves as a fallback to prevent crashes if the main UI setup fails.
+        """
+        import tkinter as tk
+        menubar = tk.Menu(self)
+        file_menu = tk.Menu(menubar, tearoff=0)
+
+        if hasattr(self, "on_export_frontsteps_clicked"):
+            file_menu.add_command(label="Export Bulletin (FrontSteps)", command=self.on_export_frontsteps_clicked)
+        file_menu.add_command(label="Exit", command=self.destroy)
+        menubar.add_cascade(label="File", menu=file_menu)
+        self.configure(menu=menubar)
+
     def refresh_listbox_titles(self):
         """Fallback implementation replaced during init_app."""
         pass
