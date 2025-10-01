@@ -59,8 +59,11 @@ def enforce_inline_rules(html: str) -> str:
 def normalize_lists(html: str) -> str:
     soup = _soup(html)
     body = soup.body or soup
-    # Find <strong> immediately followed by <ul>, then wrap them in <li><ul>
-    for strong in body.find_all('strong'):
+    processed_strongs = []
+    while True:
+        strong = body.find('strong')
+        if not strong or strong in processed_strongs:
+            break
         if strong.next_sibling and strong.next_sibling.name == 'ul':
             ul = strong.next_sibling
             li = soup.new_tag('li')
@@ -69,6 +72,7 @@ def normalize_lists(html: str) -> str:
             new_ul = soup.new_tag('ul')
             new_ul.append(li)
             ul.replace_with(new_ul)
+        processed_strongs.append(strong)
     return str(soup)
 
 def simplify_buttons(html: str) -> str:
