@@ -7,7 +7,7 @@ block_cipher = None
 hiddenimports = collect_submodules('bulletin_builder')
 
 a = Analysis(
-    ['src/bulletin_builder/__main__.py'],
+    ['src/bulletin_builder/cli.py'],
     pathex=[],
     binaries=[],
     datas=[

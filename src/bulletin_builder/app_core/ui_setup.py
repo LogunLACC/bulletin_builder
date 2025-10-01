@@ -57,11 +57,18 @@ def init(app):
             app._file_menu = file_menu
         except Exception:
             pass
+        
+        # In test mode, we want missing handlers to raise an error.
+        # In production, we want silent failure to prevent crashes.
+        is_test_mode = hasattr(app, "_is_test_mode") and app._is_test_mode
 
         def add(label, attr):
             # Defer resolution of handler until the menu item is invoked so
             # the menu shows even if the handler is attached later during init.
             def _cmd():
+                if is_test_mode and not hasattr(app, attr):
+                    raise AttributeError(f"Test failed: Menu handler '{attr}' not found on app instance.")
+
                 fn = getattr(app, attr, None)
                 if callable(fn):
                     return fn()

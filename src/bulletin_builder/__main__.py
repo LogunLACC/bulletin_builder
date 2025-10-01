@@ -1,5 +1,6 @@
 import os
 import sys
+import atexit
 import customtkinter as ctk
 from bulletin_builder.app_core.loader import init_app
 from bulletin_builder.app_core.config import (
@@ -7,15 +8,10 @@ from bulletin_builder.app_core.config import (
     save_openai_key,
     save_events_feed_url,
     save_window_state,
+    load_confirm_on_close,
+    load_autosave_on_close,
 )
-
-# Force PyInstaller to include these dynamically-imported modules
-import bulletin_builder.app_core.importer  # noqa: F401
-import bulletin_builder.app_core.suggestions  # noqa: F401
-
-import argparse
 import socket
-import atexit
 
 
 class BulletinBuilderApp(ctk.CTk):
@@ -47,92 +43,7 @@ class BulletinBuilderApp(ctk.CTk):
         core_init(self)
         init_app(self)
 
-        # Intercept close: confirm, optional autosave, then persist window state
-        try:
-            def _on_close():
-                from bulletin_builder.app_core.config import (
-                    load_confirm_on_close, load_autosave_on_close,
-                )
-                # Determine behavior from UI switches or config
-                try:
-                    confirm = bool(self.settings_frame.confirm_close_var.get())
-                except Exception:
-                    confirm = load_confirm_on_close(True)
-                try:
-                    autosave_enabled = bool(self.settings_frame.autosave_close_var.get())
-                except Exception:
-                    autosave_enabled = load_autosave_on_close(True)
-
-                # Confirm dialog (OK/Cancel)
-                if confirm:
-                    try:
-                        from tkinter import messagebox
-                        ok = messagebox.askokcancel(
-                            "Exit",
-                            "Close the application?\nA copy of your current draft will be auto-saved to 'user_drafts/AutoSave'.",
-                            parent=self,
-                        )
-                    except Exception:
-                        ok = True
-                    if not ok:
-                        return
-
-                autosave_path = None
-                if autosave_enabled:
-                    try:
-                        from datetime import datetime
-                        from pathlib import Path
-                        autosave_dir = Path('user_drafts') / 'AutoSave'
-                        autosave_dir.mkdir(parents=True, exist_ok=True)
-                        ts = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-                        title = 'Draft'
-                        try:
-                            title = self.settings_frame.title_entry.get().strip() or 'Draft'
-                        except Exception:
-                            pass
-                        safe_title = ''.join(c for c in title if c.isalnum() or c in (' ','-','_')).rstrip()
-                        filename = f"{safe_title.replace(' ','_')}_{ts}.json"
-                        autosave_path = str(autosave_dir / filename)
-                        prev = getattr(self, 'current_draft_path', None)
-                        try:
-                            self.current_draft_path = autosave_path
-                            if hasattr(self, 'save_draft'):
-                                self.save_draft(save_as=False)
-                        finally:
-                            self.current_draft_path = prev
-                    except Exception:
-                        autosave_path = None
-
-                # Status toast then close
-                if autosave_path and hasattr(self, 'show_status_message'):
-                    try:
-                        self.show_status_message(f"Autosaved to {autosave_path}", duration_ms=800)
-                    except Exception:
-                        pass
-
-                def _finalize_close():
-                    try:
-                        st = self.state()
-                        if st == 'zoomed':
-                            self.state('normal')
-                            geo = self.geometry()
-                            save_window_state(geo, st)
-                            self.state('zoomed')
-                        else:
-                            save_window_state(self.geometry(), st)
-                    except Exception:
-                        pass
-                    self.destroy()
-
-                # Delay slightly if we showed a toast
-                try:
-                    delay = 800 if autosave_path else 0
-                    self.after(delay, _finalize_close)
-                except Exception:
-                    _finalize_close()
-            self.protocol("WM_DELETE_WINDOW", _on_close)
-        except Exception:
-            pass
+        self.protocol("WM_DELETE_WINDOW", self._on_close)
 
         # Try the menu builder that init_app should have attached; otherwise fall back
         if hasattr(self, "_build_menus"):
@@ -155,32 +66,85 @@ class BulletinBuilderApp(ctk.CTk):
         except Exception:
             pass
 
-    def _build_menus_fallback(self):
-        """
-        Minimal, safe menu bar that wires only the known handlers if present.
-        Won't reference PDF. Runs entirely in main thread.
-        """
-        import tkinter as tk  # local import to keep this file clean
-        menubar = tk.Menu(self)
-        file_menu = tk.Menu(menubar, tearoff=0)
+    def _on_close(self):
+        """Handle the window close event."""
+        # 1. Check if user wants to cancel the close operation
+        if self._confirm_close_is_denied():
+            return
 
-        # Helper: add a menu item only if the handler exists
-        def add(label, attr):
-            if hasattr(self, attr):
-                file_menu.add_command(label=label, command=getattr(self, attr))
+        # 2. Perform autosave if enabled
+        autosave_path = self._perform_autosave()
 
-        add("Export Bulletin (FrontSteps)", "on_export_frontsteps_clicked")
-        add("Open in Browser", "open_in_browser")
-        file_menu.add_separator()
-        add("Import Announcements CSV...", "import_announcements_csv")
-        file_menu.add_separator()
-        file_menu.add_separator()
-        file_menu.add_command(label="Exit", command=self.destroy)
+        # 3. Show a status message if a save occurred
+        if autosave_path and hasattr(self, 'show_status_message'):
+            self.show_status_message(f"Autosaved to {autosave_path}", duration_ms=800)
 
-        # Removed legacy Export submenu; only FrontSteps export remains
+        # 4. Finalize the closing process (with a delay for the toast)
+        delay = 800 if autosave_path else 0
+        self.after(delay, self._finalize_close)
 
-        menubar.add_cascade(label="File", menu=file_menu)
-        self.configure(menu=menubar)
+    def _confirm_close_is_denied(self) -> bool:
+        """Show a confirmation dialog if configured. Return True if user cancels."""
+        try:
+            confirm = bool(self.settings_frame.confirm_close_var.get())
+        except Exception:
+            confirm = load_confirm_on_close(True)
+
+        if not confirm:
+            return False
+
+        from tkinter import messagebox
+        ok = messagebox.askokcancel(
+            "Exit",
+            "Close the application?\nA copy of your current draft will be auto-saved to 'user_drafts/AutoSave'.",
+            parent=self,
+        )
+        return not ok
+
+    def _perform_autosave(self) -> str | None:
+        """Saves a timestamped draft if autosave is enabled. Returns the path if saved."""
+        try:
+            autosave_enabled = bool(self.settings_frame.autosave_close_var.get())
+        except Exception:
+            autosave_enabled = load_autosave_on_close(True)
+
+        if not autosave_enabled:
+            return None
+
+        try:
+            from datetime import datetime
+            from pathlib import Path
+            autosave_dir = Path('user_drafts') / 'AutoSave'
+            autosave_dir.mkdir(parents=True, exist_ok=True)
+            ts = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+            title = (self.settings_frame.title_entry.get().strip() or 'Draft')
+            safe_title = ''.join(c for c in title if c.isalnum() or c in (' ','-','_')).rstrip()
+            filename = f"{safe_title.replace(' ','_')}_{ts}.json"
+            autosave_path = str(autosave_dir / filename)
+
+            # Use a dedicated autosave method if available, otherwise fallback
+            if hasattr(self, 'autosave_draft'):
+                self.autosave_draft(autosave_path)
+            else: # Fallback to the old, fragile way
+                prev = getattr(self, 'current_draft_path', None)
+                self.current_draft_path = autosave_path
+                self.save_draft(save_as=False)
+                self.current_draft_path = prev
+            return autosave_path
+        except Exception:
+            return None
+
+    def _finalize_close(self):
+        """Save window state and destroy the window."""
+        try:
+            st = self.state()
+            geo = self.geometry()
+            if st == 'zoomed':
+                self.state('normal') # Get geometry from normal state
+                geo = self.geometry()
+            save_window_state(geo, st)
+        finally:
+            self.destroy()
 
     def refresh_listbox_titles(self):
         """Fallback implementation replaced during init_app."""
@@ -189,26 +153,23 @@ class BulletinBuilderApp(ctk.CTk):
 
 def run_gui():
     """Launch the main GUI with a per-process and per-machine single-instance guard."""
-    # Process-level guard
-    if os.environ.get('BB_LAUNCHED') == '1':
-        return
-    os.environ['BB_LAUNCHED'] = '1'
-
     # Cross-process guard (best-effort): bind localhost port
     lock_sock = None
     try:
         lock_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         lock_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         lock_sock.bind(('127.0.0.1', 51283))
-        lock_sock.listen(1)
-        atexit.register(lambda: lock_sock and lock_sock.close())
-    except Exception:
-        try:
-            if lock_sock:
-                lock_sock.close()
-        except Exception:
-            pass
+    except OSError:
+        # Port is already in use, another instance is likely running.
+        # In a future task, we can send a message to the existing instance to focus it.
+        from tkinter import messagebox
+        messagebox.showinfo(
+            "Already Running",
+            "An instance of Bulletin Builder is already running.",
+            icon="info"
+        )
         return
+    atexit.register(lock_sock.close)
 
     # When frozen, change CWD to the user's app data directory
     if getattr(sys, 'frozen', False):
@@ -223,20 +184,18 @@ def run_gui():
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Bulletin Builder Launcher")
-    parser.add_argument("--cli", action="store_true", help="Run in CLI mode (no GUI)")
-    parser.parse_args()
-
-    # Default to launching GUI once; prevents duplicate creation when called via different entrypoints
+    """Primary application entry point."""
     try:
-        run_gui()
+        from bulletin_builder.cli import main as cli_main
+        # Delegate to the primary CLI entry point.
+        # __main__ is for `python -m bulletin_builder`, which should behave like the installed script.
+        cli_main()
     except Exception as e:
         import traceback
         with open("error.log", "w", encoding="utf-8") as f:
             f.write(traceback.format_exc())
-        try:
-            import tkinter.messagebox as mb
-            mb.showerror("Error", str(e))
-        except Exception:
-            pass
-    return
+        from tkinter import messagebox
+        messagebox.showerror("Fatal Error", f"A fatal error occurred:\n\n{e}\n\nSee error.log for details.")
+
+if __name__ == "__main__":
+    main()
