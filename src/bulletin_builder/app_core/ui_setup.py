@@ -5,6 +5,51 @@ from tkhtmlview import HTMLLabel
 from ..ui.settings import SettingsFrame
 from bulletin_builder.ui.tooltip import add_tooltip
 
+# Modern Design System - 2025 Aesthetic
+DESIGN = {
+    # Color Palette - Modern, Professional
+    "primary": "#2563eb",      # Modern blue
+    "primary_hover": "#1d4ed8", # Darker blue on hover
+    "secondary": "#6366f1",     # Indigo accent
+    "success": "#10b981",       # Green for positive actions
+    "danger": "#ef4444",        # Red for destructive actions
+    "warning": "#f59e0b",       # Amber for warnings
+    
+    # Backgrounds
+    "bg_main": "#ffffff",       # Main background (light mode)
+    "bg_surface": "#f8fafc",    # Slightly elevated surfaces
+    "bg_sidebar": "#1e293b",    # Dark sidebar
+    "bg_card": "#ffffff",       # Card/panel background
+    
+    # Text
+    "text_primary": "#0f172a",  # Main text
+    "text_secondary": "#64748b", # Secondary text
+    "text_light": "#ffffff",    # Light text (on dark bg)
+    
+    # Borders & Dividers
+    "border": "#e2e8f0",
+    "border_hover": "#cbd5e1",
+    
+    # Spacing (consistent scale)
+    "space_xs": 4,
+    "space_sm": 8,
+    "space_md": 12,
+    "space_lg": 16,
+    "space_xl": 24,
+    
+    # Border Radius
+    "radius_sm": 6,
+    "radius_md": 8,
+    "radius_lg": 12,
+    
+    # Typography
+    "font_family": "Segoe UI",
+    "font_size_sm": 12,
+    "font_size_base": 14,
+    "font_size_lg": 16,
+    "font_size_xl": 18,
+}
+
 def _show_about_dialog(app):
     """Display a simple About dialog with app version and info."""
     messagebox.showinfo(
@@ -148,43 +193,75 @@ def init(app):
         app.right_panel.grid_rowconfigure(0, weight=1)
         app.right_panel.grid_columnconfigure(0, weight=1)
 
-    tab_bar = ctk.CTkFrame(app.right_panel, fg_color="#e5e5e5")
+    # Modern Tab Bar with clean design
+    tab_bar = ctk.CTkFrame(app.right_panel, fg_color=DESIGN["bg_surface"], height=56)
     tab_bar.grid(row=0, column=0, sticky="ew")
-    view_container = ctk.CTkFrame(app.right_panel, fg_color="#f4f4f4")
+    tab_bar.grid_propagate(False)
+    
+    view_container = ctk.CTkFrame(app.right_panel, fg_color=DESIGN["bg_main"])
     view_container.grid(row=1, column=0, sticky="nsew")
     app.right_panel.grid_rowconfigure(0, weight=0)
     app.right_panel.grid_rowconfigure(1, weight=1)
     app.right_panel.grid_columnconfigure(0, weight=1)
-    tab_bar.grid(row=0, column=0, sticky="ew")
-    view_container.grid(row=1, column=0, sticky="nsew")
     view_container.grid_rowconfigure(0, weight=1)
     view_container.grid_columnconfigure(0, weight=1)
 
     tab_names = ["Content", "Settings", "Preview"]
     app._tab_buttons = {}
+    
     def on_tab_click(name: str):
         for n, b in app._tab_buttons.items():
-            b.configure(state=("disabled" if n == name else "normal"))
+            if n == name:
+                # Active tab - solid primary color
+                b.configure(
+                    fg_color=DESIGN["primary"],
+                    hover_color=DESIGN["primary"],
+                    text_color=DESIGN["text_light"],
+                    border_width=0
+                )
+            else:
+                # Inactive tabs - transparent with subtle hover
+                b.configure(
+                    fg_color="transparent",
+                    hover_color=DESIGN["bg_card"],
+                    text_color=DESIGN["text_secondary"],
+                    border_width=0
+                )
         show_view(name)
 
     for i, name in enumerate(tab_names):
-        btn = ctk.CTkButton(tab_bar, text=name, width=110, command=lambda n=name: on_tab_click(n))
-        btn.grid(row=0, column=i, padx=4, pady=4)
+        btn = ctk.CTkButton(
+            tab_bar,
+            text=name,
+            width=120,
+            height=40,
+            corner_radius=DESIGN["radius_md"],
+            font=(DESIGN["font_family"], DESIGN["font_size_lg"], "normal"),
+            fg_color="transparent",
+            hover_color=DESIGN["bg_card"],
+            text_color=DESIGN["text_secondary"],
+            border_width=0,
+            command=lambda n=name: on_tab_click(n)
+        )
+        btn.grid(row=0, column=i, padx=DESIGN["space_sm"], pady=DESIGN["space_sm"])
         app._tab_buttons[name] = btn
+    
+    # Set first tab as active
+    on_tab_click("Content")
 
     # ---------- view container ----------
     all_views = {}
 
     # =========================
-    # CONTENT VIEW (2 columns)
+    # CONTENT VIEW (2 columns) - Modern Layout
     # =========================
-    # --- Parent grid (Content page) ---
-    content_view = ctk.CTkFrame(view_container)
+    content_view = ctk.CTkFrame(view_container, fg_color=DESIGN["bg_main"])
     content_view.grid(row=0, column=0, sticky="nsew")
     content_view.grid_rowconfigure(0, weight=1)
-    content_view.grid_columnconfigure(0, weight=0)                 # left nav fixed
-    content_view.grid_columnconfigure(1, weight=1)                 # editor grows
-    # Nuke any stray widgets in unexpected columns (prevents pink wall)
+    content_view.grid_columnconfigure(0, weight=0)  # left nav fixed
+    content_view.grid_columnconfigure(1, weight=1)  # editor grows
+    
+    # Clean up any stray widgets
     for w in content_view.grid_slaves():
         if int(w.grid_info().get("column", 0)) >= 2:
             w.grid_forget()
@@ -192,46 +269,82 @@ def init(app):
     all_views["Content"] = content_view
     app.content_view = content_view
 
-    # Editor container (this is where AnnouncementsFrame lives)
-    app.editor_container = ctk.CTkFrame(content_view)
-    app.editor_container.grid(row=0, column=1, sticky="nsew", padx=(0,12), pady=(8,8))
+    # Modern Editor Container with subtle border
+    app.editor_container = ctk.CTkFrame(
+        content_view,
+        fg_color=DESIGN["bg_card"],
+        corner_radius=DESIGN["radius_lg"],
+        border_width=1,
+        border_color=DESIGN["border"]
+    )
+    app.editor_container.grid(row=0, column=1, sticky="nsew", padx=DESIGN["space_lg"], pady=DESIGN["space_lg"])
     app.editor_container.grid_rowconfigure(0, weight=1)
     app.editor_container.grid_columnconfigure(0, weight=1)
 
-    # Left navigation container
-    left = ctk.CTkFrame(content_view, fg_color="#232b36")
-    left.grid(row=0, column=0, sticky="nsew", padx=(12,8), pady=(8,8))
-    # Give the left column a sane width but don't overgrow
-    content_view.grid_columnconfigure(0, minsize=360)
+    # Modern Left Sidebar with dark theme
+    left = ctk.CTkFrame(
+        content_view,
+        fg_color=DESIGN["bg_sidebar"],
+        corner_radius=DESIGN["radius_lg"]
+    )
+    left.grid(row=0, column=0, sticky="nsew", padx=(DESIGN["space_lg"], DESIGN["space_sm"]), pady=DESIGN["space_lg"])
+    content_view.grid_columnconfigure(0, minsize=340)
     left.grid_rowconfigure(1, weight=1)
 
+    # Modern Button Group
     button_frame = ctk.CTkFrame(left, fg_color="transparent")
-    button_frame.grid(row=0, column=0, sticky="ew", pady=8)
+    button_frame.grid(row=0, column=0, sticky="ew", padx=DESIGN["space_md"], pady=DESIGN["space_md"])
+    
+    # Evenly space buttons
+    for col in range(4):
+        button_frame.grid_columnconfigure(col, weight=1)
 
-    btn_style = dict(font=("Segoe UI", 14, "bold"), height=40,
-                     corner_radius=10, fg_color="#1F6AA5",
-                     hover_color="#155a8a", text_color="#FFFFFF")
-    for label, cmd, col in [
-        ("Add", getattr(app, "add_section_dialog", lambda: None), 0),
-        ("Remove", getattr(app, "remove_section", lambda: None), 1),
-        ("Move Up", getattr(app, "move_section_up", lambda: None), 2),
-        ("Move Down", getattr(app, "move_section_down", lambda: None), 3),
-    ]:
-        b = ctk.CTkButton(button_frame, text=label, command=cmd, **btn_style)
-        b.grid(row=0, column=col, padx=4, pady=2, sticky="ew")
-        b.configure(border_width=2, border_color="#FFD700")
+    # Modern button style
+    modern_btn_style = {
+        "font": (DESIGN["font_family"], DESIGN["font_size_base"], "normal"),
+        "height": 36,
+        "corner_radius": DESIGN["radius_md"],
+        "fg_color": DESIGN["primary"],
+        "hover_color": DESIGN["primary_hover"],
+        "text_color": DESIGN["text_light"],
+        "border_width": 0
+    }
+    
+    button_configs = [
+        ("+ Add", getattr(app, "add_section_dialog", lambda: None), 0, DESIGN["success"]),
+        ("Remove", getattr(app, "remove_section", lambda: None), 1, DESIGN["danger"]),
+        ("↑ Up", getattr(app, "move_section_up", lambda: None), 2, DESIGN["primary"]),
+        ("↓ Down", getattr(app, "move_section_down", lambda: None), 3, DESIGN["primary"]),
+    ]
+    
+    for label, cmd, col, color in button_configs:
+        b = ctk.CTkButton(
+            button_frame,
+            text=label,
+            command=cmd,
+            **{**modern_btn_style, "fg_color": color, "hover_color": color}
+        )
+        b.grid(row=0, column=col, padx=2, pady=0, sticky="ew")
 
-    # Listbox
+    # Modern Listbox with better styling
     if hasattr(app, "section_listbox"):
         app.section_listbox.destroy()
     app.section_listbox = tk.Listbox(
-        left, bg="#232b36", fg="#FFFFFF",
-        selectbackground="#1F6AA5", selectforeground="#FFFFFF",
-        borderwidth=0, highlightthickness=2, font=("Segoe UI", 14),
-        relief="flat", highlightbackground="#1F6AA5",
-        highlightcolor="#FFD700", activestyle="none", takefocus=True,
+        left,
+        bg=DESIGN["bg_sidebar"],
+        fg=DESIGN["text_light"],
+        selectbackground=DESIGN["primary"],
+        selectforeground=DESIGN["text_light"],
+        borderwidth=0,
+        highlightthickness=1,
+        highlightbackground=DESIGN["border"],
+        highlightcolor=DESIGN["primary"],
+        font=(DESIGN["font_family"], DESIGN["font_size_base"]),
+        relief="flat",
+        activestyle="none",
+        takefocus=True,
     )
-    app.section_listbox.grid(row=1, column=0, sticky="nsew", pady=(6, 10))
+    app.section_listbox.grid(row=1, column=0, sticky="nsew", padx=DESIGN["space_md"], pady=(DESIGN["space_sm"], DESIGN["space_md"]))
     app.section_listbox.bind(
         "<<ListboxSelect>>",
         lambda e: getattr(app, "on_section_select", lambda *_: None)(e)
@@ -252,22 +365,14 @@ def init(app):
     except Exception:
         pass
 
-    # Actions under the editor
-    actions = ctk.CTkFrame(app.editor_container, fg_color="transparent")
-    actions.grid(row=1, column=0, sticky="ew", pady=(8, 0))
-    actions.grid_columnconfigure(0, weight=1)
-
-    def _mk(btn_text, cb_attr):
-        return ctk.CTkButton(
-            actions, text=btn_text, **btn_style,
-            command=getattr(app, cb_attr, lambda: None)
-        )
-
-    # Always pass a callable for refresh_callback, not the app instance
+    # Actions under the editor - removed (not currently used)
+    
+    # Refresh callback for settings
     refresh_cb = getattr(app, "refresh_callback", None)
     if not callable(refresh_cb):
         def refresh_cb():
             return None
+    
     # Create the settings view container if not already created
     settings_view = ctk.CTkFrame(view_container)
     settings_view.grid(row=0, column=0, sticky="nsew")
@@ -300,19 +405,47 @@ def init(app):
     _settings_load_defaults()
 
     # =========================
-    # PREVIEW VIEW (single column)
+    # PREVIEW VIEW - Modern Clean Design
     # =========================
-    preview_view = ctk.CTkFrame(view_container)
+    preview_view = ctk.CTkFrame(view_container, fg_color=DESIGN["bg_main"])
     preview_view.grid(row=0, column=0, sticky="nsew")
     preview_view.grid_rowconfigure(1, weight=1)
     preview_view.grid_columnconfigure(0, weight=1)
     all_views["Preview"] = preview_view
     app.preview_view = preview_view
 
-    controls = ctk.CTkFrame(preview_view)
-    controls.grid(row=0, column=0, sticky="ew", padx=0, pady=(0, 8))
+    # Modern Controls Bar with better spacing
+    controls = ctk.CTkFrame(
+        preview_view,
+        fg_color=DESIGN["bg_surface"],
+        corner_radius=DESIGN["radius_md"],
+        height=52
+    )
+    controls.grid(row=0, column=0, sticky="ew", padx=DESIGN["space_lg"], pady=(DESIGN["space_lg"], DESIGN["space_md"]))
+    controls.grid_propagate(False)
     for i in range(7):
-        controls.grid_columnconfigure(i, weight=(1 if i == 6 else 0))
+        controls.grid_columnconfigure(i, weight=(1 if i == 6 else 0), pad=DESIGN["space_sm"])
+
+    # Modern dropdown style
+    dropdown_style = {
+        "corner_radius": DESIGN["radius_md"],
+        "fg_color": DESIGN["bg_card"],
+        "button_color": DESIGN["primary"],
+        "button_hover_color": DESIGN["primary_hover"],
+        "dropdown_fg_color": DESIGN["bg_card"],
+        "font": (DESIGN["font_family"], DESIGN["font_size_base"]),
+        "height": 36
+    }
+    
+    # Modern button style for controls
+    control_btn_style = {
+        "corner_radius": DESIGN["radius_md"],
+        "fg_color": DESIGN["primary"],
+        "hover_color": DESIGN["primary_hover"],
+        "font": (DESIGN["font_family"], DESIGN["font_size_base"]),
+        "height": 36,
+        "border_width": 0
+    }
 
     app.device_var = tk.StringVar(value="Desktop")
     def _on_device_change(choice):
@@ -323,10 +456,15 @@ def init(app):
                 app.update_preview()
         except Exception:
             pass
-    device_menu = ctk.CTkOptionMenu(controls, variable=app.device_var,
-                                    values=["Desktop", "Tablet", "Mobile"],
-                                    command=_on_device_change)
-    device_menu.grid(row=0, column=0, padx=(0, 8))
+    
+    device_menu = ctk.CTkOptionMenu(
+        controls,
+        variable=app.device_var,
+        values=["Desktop", "Tablet", "Mobile"],
+        command=_on_device_change,
+        **dropdown_style
+    )
+    device_menu.grid(row=0, column=0, padx=DESIGN["space_sm"], pady=DESIGN["space_sm"], sticky="ew")
     add_tooltip(device_menu, "Preview width: Desktop/Tablet/Mobile")
 
     # Email client simulation selector
@@ -344,19 +482,21 @@ def init(app):
         controls,
         variable=app.email_client_var,
         values=["Standard", "Gmail", "Outlook", "Apple Mail", "Mobile"],
-        command=_on_client_change
+        command=_on_client_change,
+        **dropdown_style
     )
-    client_menu.grid(row=0, column=1, padx=(0, 8))
+    client_menu.grid(row=0, column=1, padx=DESIGN["space_sm"], pady=DESIGN["space_sm"], sticky="ew")
     add_tooltip(client_menu, "Simulate email client rendering")
     
     # Info button for client details
     info_btn = ctk.CTkButton(
         controls,
         text="ℹ",
-        width=30,
+        width=36,
+        **{**control_btn_style, "fg_color": DESIGN["secondary"], "hover_color": DESIGN["secondary"]},
         command=lambda: getattr(app, 'show_email_client_info', lambda: None)()
     )
-    info_btn.grid(row=0, column=2, padx=(0, 8))
+    info_btn.grid(row=0, column=2, padx=DESIGN["space_sm"], pady=DESIGN["space_sm"])
     add_tooltip(info_btn, "Show email client rendering details")
 
     app.preview_mode_var = tk.StringVar(value="Code")
@@ -368,33 +508,66 @@ def init(app):
             app.rendered_preview.grid(row=1, column=0, sticky="nsew")
             app.code_preview.grid_forget()
 
-    mode_menu = ctk.CTkOptionMenu(controls, variable=app.preview_mode_var,
-                                  values=["Code", "Rendered"],
-                                  command=on_preview_mode_change)
-    mode_menu.grid(row=0, column=3, padx=(0, 8))
+    mode_menu = ctk.CTkOptionMenu(
+        controls,
+        variable=app.preview_mode_var,
+        values=["Code", "Rendered"],
+        command=on_preview_mode_change,
+        **dropdown_style
+    )
+    mode_menu.grid(row=0, column=3, padx=DESIGN["space_sm"], pady=DESIGN["space_sm"], sticky="ew")
     add_tooltip(mode_menu, "Switch between raw HTML and rendered preview")
 
-    update_btn = ctk.CTkButton(controls, text="Update",
-                               command=getattr(app, "update_preview", lambda: None))
-    update_btn.grid(row=0, column=4, padx=(0, 8))
+    update_btn = ctk.CTkButton(
+        controls,
+        text="↻ Update",
+        **control_btn_style,
+        command=getattr(app, "update_preview", lambda: None)
+    )
+    update_btn.grid(row=0, column=4, padx=DESIGN["space_sm"], pady=DESIGN["space_sm"], sticky="ew")
     add_tooltip(update_btn, "Re-render preview (Ctrl+U)")
 
-    view_btn = ctk.CTkButton(controls, text="View in Browser",
-                             command=getattr(app, "open_in_browser", lambda: None))
-    view_btn.grid(row=0, column=5, padx=(0, 8))
+    view_btn = ctk.CTkButton(
+        controls,
+        text="🌐 Browser",
+        **control_btn_style,
+        command=getattr(app, "open_in_browser", lambda: None)
+    )
+    view_btn.grid(row=0, column=5, padx=DESIGN["space_sm"], pady=DESIGN["space_sm"], sticky="ew")
     add_tooltip(view_btn, "Open current preview in your browser")
 
-    export_btn = ctk.CTkButton(controls, text="Export (FrontSteps)",
-                               command=getattr(app, "export_current_preview", lambda: None))
-    export_btn.grid(row=0, column=6, sticky="e")
+    export_btn = ctk.CTkButton(
+        controls,
+        text="📤 Export",
+        **{**control_btn_style, "fg_color": DESIGN["success"], "hover_color": DESIGN["success"]},
+        command=getattr(app, "export_current_preview", lambda: None)
+    )
+    export_btn.grid(row=0, column=6, padx=DESIGN["space_sm"], pady=DESIGN["space_sm"], sticky="e")
     add_tooltip(export_btn, "Export body-only HTML for FrontSteps")
 
-    # Expose a preview area reference for device width tweaks
+    # Modern Preview Area with better styling
     app.preview_area = preview_view
-    app.rendered_preview = HTMLLabel(preview_view, html="", background="#f4f4f4")
-    app.code_preview = tk.Text(preview_view, wrap="word", bg="#f4f4f4", fg="#222", font=("Consolas", 12))
+    
+    # HTML rendered preview with modern styling
+    app.rendered_preview = HTMLLabel(preview_view, html="", background=DESIGN["bg_card"])
+    
+    # Code preview with modern monospace styling
+    app.code_preview = tk.Text(
+        preview_view,
+        wrap="word",
+        bg=DESIGN["bg_card"],
+        fg=DESIGN["text_primary"],
+        font=("Consolas", 13),
+        borderwidth=0,
+        highlightthickness=1,
+        highlightbackground=DESIGN["border"],
+        highlightcolor=DESIGN["primary"],
+        padx=DESIGN["space_md"],
+        pady=DESIGN["space_md"],
+        insertbackground=DESIGN["primary"]
+    )
     app.code_preview.insert("1.0", "Ready. Build your bulletin to preview here.")
-    app.code_preview.grid(row=1, column=0, sticky="nsew")
+    app.code_preview.grid(row=1, column=0, sticky="nsew", padx=DESIGN["space_lg"], pady=(0, DESIGN["space_lg"]))
 
     def ensure_preview_visible():
         if not app.code_preview.winfo_ismapped() and not app.rendered_preview.winfo_ismapped():
