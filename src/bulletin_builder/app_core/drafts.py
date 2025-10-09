@@ -2,13 +2,23 @@ import json
 from pathlib import Path
 from tkinter import filedialog, messagebox
 from datetime import date
+from typing import Dict, Any, Optional
 from bulletin_builder.exceptions import DraftLoadError, DraftSaveError, JSONImportError
 from bulletin_builder.app_core.logging_config import get_logger
 
 logger = get_logger(__name__)
 
-def init(app):
-    def _default_settings():
+def init(app: Any) -> None:
+    """
+    Initialize draft management functions.
+    
+    Attaches new_draft, open_draft, and save_draft functions to the app.
+    
+    Args:
+        app: The main application instance
+    """
+    def _default_settings() -> Dict[str, Any]:
+        """Get default bulletin settings."""
         return {
             'bulletin_title': 'LACC Bulletin',
             'bulletin_date': date.today().strftime('%A, %B %d, %Y'),
@@ -19,7 +29,8 @@ def init(app):
             'events_feed_url': app.events_feed_url
         }
 
-    def new_draft():
+    def new_draft() -> None:
+        """Create a new draft, discarding current content."""
         if messagebox.askyesno('New Draft','Discard current draft and start new?', parent=app):
             app.sections_data.clear()
             app.current_draft_path = None
@@ -34,7 +45,9 @@ def init(app):
             app.refresh_listbox_titles()
             app.show_placeholder()
             app.update_preview()
-    def open_draft():
+            
+    def open_draft() -> None:
+        """Open an existing draft from a JSON file."""
         path = filedialog.askopenfilename(
             defaultextension='.json', filetypes=[('Drafts','*.json')],
             initialdir='./user_drafts', title='Open Draft', parent=app
@@ -76,7 +89,14 @@ def init(app):
         app.refresh_listbox_titles()
         app.show_placeholder()
         app.update_preview()
-    def save_draft(save_as=False):
+        
+    def save_draft(save_as: bool = False) -> None:
+        """
+        Save the current draft to a JSON file.
+        
+        Args:
+            save_as: If True, always prompt for a new file location
+        """
         if not app.current_draft_path or save_as:
             path = filedialog.asksaveasfilename(
                 defaultextension='.json', filetypes=[('Drafts','*.json')],
@@ -86,7 +106,7 @@ def init(app):
                 return
             app.current_draft_path = path
         
-        payload = {
+        payload: Dict[str, Any] = {
             'sections': app.sections_data,
             'settings': app.settings_frame.dump(),
             'template_name': app.renderer.template_name

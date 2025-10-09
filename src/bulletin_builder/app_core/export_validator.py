@@ -9,7 +9,7 @@ Returns structured validation results with severity levels and recommendations.
 """
 
 import re
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 from html.parser import HTMLParser
 
 
@@ -20,16 +20,26 @@ class ValidationIssue:
     SEVERITY_WARNING = "warning"
     SEVERITY_ERROR = "error"
     
-    def __init__(self, severity: str, category: str, message: str, recommendation: str = ""):
+    def __init__(self, severity: str, category: str, message: str, recommendation: str = "") -> None:
+        """
+        Initialize a validation issue.
+        
+        Args:
+            severity: One of SEVERITY_INFO, SEVERITY_WARNING, or SEVERITY_ERROR
+            category: Category of issue (e.g., 'accessibility', 'spam', 'email_css')
+            message: Description of the issue
+            recommendation: Suggested fix or improvement
+        """
         self.severity = severity
         self.category = category
         self.message = message
         self.recommendation = recommendation
     
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"ValidationIssue({self.severity}, {self.category}: {self.message})"
     
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> Dict[str, str]:
+        """Convert issue to dictionary format."""
         return {
             "severity": self.severity,
             "category": self.category,
@@ -41,51 +51,69 @@ class ValidationIssue:
 class ValidationResult:
     """Container for all validation issues found."""
     
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize empty validation result."""
         self.issues: List[ValidationIssue] = []
     
-    def add_issue(self, severity: str, category: str, message: str, recommendation: str = ""):
+    def add_issue(self, severity: str, category: str, message: str, recommendation: str = "") -> None:
+        """
+        Add a validation issue to the result.
+        
+        Args:
+            severity: One of SEVERITY_INFO, SEVERITY_WARNING, or SEVERITY_ERROR
+            category: Category of issue (e.g., 'accessibility', 'spam', 'email_css')
+            message: Description of the issue
+            recommendation: Suggested fix or improvement
+        """
         issue = ValidationIssue(severity, category, message, recommendation)
         self.issues.append(issue)
     
     def has_errors(self) -> bool:
+        """Check if result contains any errors."""
         return any(i.severity == ValidationIssue.SEVERITY_ERROR for i in self.issues)
     
     def has_warnings(self) -> bool:
+        """Check if result contains any warnings."""
         return any(i.severity == ValidationIssue.SEVERITY_WARNING for i in self.issues)
     
     def get_by_severity(self, severity: str) -> List[ValidationIssue]:
+        """Get all issues matching the specified severity."""
         return [i for i in self.issues if i.severity == severity]
     
     def get_by_category(self, category: str) -> List[ValidationIssue]:
+        """Get all issues matching the specified category."""
         return [i for i in self.issues if i.category == category]
     
     def summary(self) -> str:
+        """Generate a summary string of issue counts."""
         errors = len(self.get_by_severity(ValidationIssue.SEVERITY_ERROR))
         warnings = len(self.get_by_severity(ValidationIssue.SEVERITY_WARNING))
         infos = len(self.get_by_severity(ValidationIssue.SEVERITY_INFO))
         return f"{errors} errors, {warnings} warnings, {infos} info"
     
-    def __bool__(self):
+    def __bool__(self) -> bool:
+        """Return True if there are any issues."""
         return len(self.issues) > 0
 
 
 class AccessibilityHTMLParser(HTMLParser):
     """Parse HTML to extract elements for accessibility validation."""
     
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize the HTML parser with tracking structures."""
         super().__init__()
-        self.images = []  # (tag, attrs)
-        self.headings = []  # (level, text)
-        self.links = []  # (href, text)
-        self.tables = []  # (has_headers, has_caption)
-        self.current_heading_level = None
-        self.current_heading_text = []
-        self.current_link_text = []
-        self.in_link = False
-        self.current_table = None
+        self.images: List[Tuple[str, Dict[str, str]]] = []  # (tag, attrs)
+        self.headings: List[Tuple[int, str]] = []  # (level, text)
+        self.links: List[Dict[str, Any]] = []  # (href, text)
+        self.tables: List[Dict[str, bool]] = []  # (has_headers, has_caption)
+        self.current_heading_level: int | None = None
+        self.current_heading_text: List[str] = []
+        self.current_link_text: List[str] = []
+        self.in_link: bool = False
+        self.current_table: Dict[str, bool] | None = None
     
-    def handle_starttag(self, tag, attrs):
+    def handle_starttag(self, tag: str, attrs: List[Tuple[str, str | None]]) -> None:
+        """Handle opening HTML tags and extract relevant attributes."""
         attrs_dict = dict(attrs)
         
         if tag == 'img':
@@ -110,7 +138,8 @@ class AccessibilityHTMLParser(HTMLParser):
         elif tag == 'caption' and self.current_table is not None:
             self.current_table['has_caption'] = True
     
-    def handle_endtag(self, tag):
+    def handle_endtag(self, tag: str) -> None:
+        """Handle closing HTML tags and finalize element data."""
         if tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
             text = ''.join(self.current_heading_text).strip()
             self.headings.append((self.current_heading_level, text))
@@ -127,7 +156,8 @@ class AccessibilityHTMLParser(HTMLParser):
             self.tables.append(self.current_table)
             self.current_table = None
     
-    def handle_data(self, data):
+    def handle_data(self, data: str) -> None:
+        """Handle text content within HTML elements."""
         if self.current_heading_level is not None:
             self.current_heading_text.append(data)
         if self.in_link:
@@ -144,6 +174,12 @@ def validate_accessibility(html: str) -> ValidationResult:
     - Link text clarity
     - Table accessibility (headers and captions)
     - Semantic HTML usage
+    
+    Args:
+        html: HTML content to validate
+        
+    Returns:
+        ValidationResult containing any accessibility issues found
     """
     result = ValidationResult()
     parser = AccessibilityHTMLParser()
@@ -286,6 +322,12 @@ def validate_spam_triggers(html: str) -> ValidationResult:
     - Too many images vs text ratio
     - Suspicious link patterns
     - HTML balance issues
+    
+    Args:
+        html: HTML content to validate
+        
+    Returns:
+        ValidationResult containing any spam trigger issues found
     """
     result = ValidationResult()
     
@@ -399,6 +441,12 @@ def validate_html_css_email_safety(html: str) -> ValidationResult:
     - Missing inline styles on key elements
     - Use of web fonts that may not render
     - Video/audio tags (limited support)
+    
+    Args:
+        html: HTML content to validate
+        
+    Returns:
+        ValidationResult containing any email compatibility issues found
     """
     result = ValidationResult()
     
@@ -571,6 +619,9 @@ def validate_export(html: str) -> Tuple[ValidationResult, ValidationResult, Vali
     """
     Run all validation checks on exported HTML.
     
+    Args:
+        html: HTML content to validate
+    
     Returns:
         Tuple of (accessibility_result, spam_result, email_css_result)
     """
@@ -584,6 +635,14 @@ def validate_export(html: str) -> Tuple[ValidationResult, ValidationResult, Vali
 def format_validation_report(accessibility_result: ValidationResult, spam_result: ValidationResult, email_css_result: ValidationResult) -> str:
     """
     Format validation results into a human-readable report.
+    
+    Args:
+        accessibility_result: Accessibility validation results
+        spam_result: Spam trigger validation results
+        email_css_result: Email compatibility validation results
+        
+    Returns:
+        Formatted string report with all validation results
     """
     lines = []
     lines.append("=" * 60)
@@ -673,11 +732,14 @@ def format_validation_report(accessibility_result: ValidationResult, spam_result
     return '\n'.join(lines)
 
 
-def init(app):
+def init(app: Any) -> None:
     """
     Initialize export validator module.
     
     Attaches validation functions to the app for use in export workflow.
+    
+    Args:
+        app: Application instance to attach validator functions to
     """
     app.validate_export = validate_export
     app.validate_accessibility = validate_accessibility
