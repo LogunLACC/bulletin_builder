@@ -218,6 +218,79 @@
           "status": "complete"
         }
       ]
+    },
+    {
+      "name": "Code Quality & Technical Debt",
+      "goal": "Remove debug code, improve error handling, and enhance maintainability.",
+      "tasks": [
+        {"description": "Remove all [DEBUG] print statements from production code in __main__.py, ui modules, and app_core modules.", "status": "todo"},
+        {"description": "Replace BB_DEBUG environment variable checks with a proper logging configuration system.", "status": "todo"},
+        {"description": "Add proper error handling and custom exception classes for common failure modes (import errors, export failures, render failures).", "status": "todo"},
+        {"description": "Remove or document all stub functions in exporter.py (batch_send_emails, optimize_email_images, etc.).", "status": "todo"},
+        {"description": "Consolidate duplicate PyInstaller spec files - remove redundant bulletin_builder.spec and src/__main__.spec, keep only packaging/bulletin_builder.spec.", "status": "todo"},
+        {"description": "Update PyInstaller spec to include all required data files (templates, assets, config.ini.default) and test the build process.", "status": "todo"},
+        {"description": "Add type hints to all public functions and methods for better IDE support and code clarity.", "status": "todo"},
+        {"description": "Document all public API functions and classes with proper docstrings.", "status": "todo"}
+      ]
+    },
+    {
+      "name": "Build & Distribution",
+      "goal": "Ensure the app can be built, packaged, and distributed reliably across platforms.",
+      "tasks": [
+        {"description": "Fix PyInstaller build to correctly bundle python313.dll and all dependencies for standalone execution.", "status": "todo"},
+        {"description": "Create a proper dist folder structure with all required runtime files (templates, assets, config).", "status": "todo"},
+        {"description": "Add build validation tests to ensure the executable runs without missing DLLs or imports.", "status": "todo"},
+        {"description": "Document platform-specific build requirements and known issues in README.md.", "status": "todo"},
+        {"description": "Create automated build scripts for Windows and macOS with dependency verification.", "status": "todo"},
+        {"description": "Add installer/setup wizard for easier end-user installation.", "status": "todo"}
+      ]
+    },
+    {
+      "name": "Documentation & Onboarding",
+      "goal": "Improve documentation for developers and end users.",
+      "tasks": [
+        {"description": "Populate DETAILED_DOCS.md with architecture overview, module descriptions, and data flow diagrams.", "status": "todo"},
+        {"description": "Add inline code examples and usage patterns to README.md for common workflows.", "status": "todo"},
+        {"description": "Create developer setup guide with environment configuration, dependency installation, and testing instructions.", "status": "todo"},
+        {"description": "Add user manual with screenshots and step-by-step guides for bulletin creation workflow.", "status": "todo"},
+        {"description": "Document all configuration options in config.ini with examples and defaults.", "status": "todo"},
+        {"description": "Create troubleshooting guide for common issues (missing DLLs, import failures, export errors).", "status": "todo"}
+      ]
+    },
+    {
+      "name": "Configuration & Settings",
+      "goal": "Improve configuration management and user settings persistence.",
+      "tasks": [
+        {"description": "Create a centralized settings manager to handle all config file I/O operations.", "status": "todo"},
+        {"description": "Add validation for all configuration values with helpful error messages.", "status": "todo"},
+        {"description": "Support environment variable overrides for all configuration options.", "status": "todo"},
+        {"description": "Add settings migration logic to handle config format changes between versions.", "status": "todo"},
+        {"description": "Create a settings validation tool to check config.ini for common errors before app launch.", "status": "todo"}
+      ]
+    },
+    {
+      "name": "Testing & CI/CD Improvements",
+      "goal": "Expand test coverage and improve continuous integration workflows.",
+      "tasks": [
+        {"description": "Add integration tests for the full bulletin creation workflow (import → edit → export).", "status": "todo"},
+        {"description": "Create end-to-end tests that validate exported HTML in major email clients (using email testing services).", "status": "todo"},
+        {"description": "Add performance benchmarks to detect regressions in render/export times.", "status": "todo"},
+        {"description": "Expand CI to test on multiple Python versions (3.9, 3.10, 3.11, 3.13) and platforms (Windows, macOS, Linux).", "status": "todo"},
+        {"description": "Add automated visual regression tests for UI components using screenshot comparison.", "status": "todo"},
+        {"description": "Create smoke tests for all menu handlers and export workflows.", "status": "todo"}
+      ]
+    },
+    {
+      "name": "Error Recovery & Resilience",
+      "goal": "Make the app more robust with better error handling and recovery mechanisms.",
+      "tasks": [
+        {"description": "Add automatic draft backup on crash or unexpected exit.", "status": "todo"},
+        {"description": "Implement draft versioning to allow rollback to previous states.", "status": "todo"},
+        {"description": "Add error reporting dialog with actionable suggestions for common failures.", "status": "todo"},
+        {"description": "Create a recovery mode that loads the last known good state if the app crashes on startup.", "status": "todo"},
+        {"description": "Add validation for all user inputs (URLs, file paths, JSON/CSV imports) with clear error messages.", "status": "todo"},
+        {"description": "Implement graceful degradation when optional features (AI, analytics) are unavailable.", "status": "todo"}
+      ]
     }
   ],
   "constraints": [

@@ -1,8 +1,19 @@
 import customtkinter as ctk
 import tkinter as tk
+from tkinter import messagebox
 from tkhtmlview import HTMLLabel
 from ..ui.settings import SettingsFrame
 from bulletin_builder.ui.tooltip import add_tooltip
+
+def _show_about_dialog(app):
+    """Display a simple About dialog with app version and info."""
+    messagebox.showinfo(
+        "About Bulletin Builder",
+        "LACC Bulletin Builder v0.1.1\n\n"
+        "Smart desktop builder for community email bulletins.\n\n"
+        "© 2025 Lake Almanor Country Club",
+        parent=app
+    )
 
 def init(app):
     """Construct the main UI elements on the provided app instance.
@@ -99,6 +110,16 @@ def init(app):
         tools_menu.add_separator()
         tools_menu.add_command(label="Run Auto Sync", command=lambda: getattr(app, 'auto_sync_events_feed', lambda *a, **k: None)(True))
         menubar.add_cascade(label="Tools", menu=tools_menu)
+
+        # Help menu
+        help_menu = tk.Menu(menubar, tearoff=0)
+        help_menu.add_command(
+            label="Email Deliverability Guide (DKIM/SPF/DMARC)",
+            command=lambda: getattr(app, 'show_email_auth_guidance', lambda: None)()
+        )
+        help_menu.add_separator()
+        help_menu.add_command(label="About", command=lambda: _show_about_dialog(app))
+        menubar.add_cascade(label="Help", menu=help_menu)
 
         try:
             app.configure(menu=menubar)
