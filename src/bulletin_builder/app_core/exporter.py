@@ -175,11 +175,11 @@ def init(app):
       if success:
         messagebox.showinfo("PDF Export Successful", message, parent=app)
         if hasattr(app, 'show_status_message'):
-          app.show_status_message("PDF exported successfully", duration_ms=2000)
+          app.show_status_message("PDF exported successfully", duration=2000)
       else:
         messagebox.showerror("PDF Export Failed", message, parent=app)
         if hasattr(app, 'show_status_message'):
-          app.show_status_message("PDF export failed", duration_ms=2000)
+          app.show_status_message("PDF export failed", duration=2000)
       
     except Exception as e:
       try:

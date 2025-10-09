@@ -11,7 +11,7 @@
         {"description": "Implement an advanced email preview feature to simulate rendering in major clients like Gmail, Outlook, and mobile.", "status": "complete"},
         {"description": "Create an export validation step to check for accessibility issues (WCAG) and potential spam triggers.", "status": "complete"},
         {"description": "Enhance the template editor with live HTML/CSS linting for email-safe code.", "status": "complete"},
-        {"description": "Add an 'Export to PDF' feature for compliance and archiving purposes.", "status": "todo"},
+        {"description": "Add an 'Export to PDF' feature for compliance and archiving purposes.", "status": "complete"},
         {"description": "Integrate optional, privacy-respecting analytics for open/click tracking.", "status": "todo"},
         {"description": "Provide a 'Best Practices for Email' checklist or wizard to guide users before export.", "status": "todo"},
         {"description": "Automate image optimization during export to inline, compress, and convert images for email safety.", "status": "todo"},
