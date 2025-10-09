@@ -10,8 +10,6 @@ class CustomTextFrame(ctk.CTkFrame):
     A frame for editing a 'custom_text' section, containing a title and content.
     """
     def __init__(self, parent, section_data: dict, refresh_callback: callable):
-        if DEBUG:
-            print(f"[DEBUG] CustomTextFrame __init__ called. parent={parent}, section_data={section_data}")
         # Store references for potential future re-instantiation
         self._init_args = (parent, section_data, refresh_callback)
         try:
@@ -41,9 +39,6 @@ class CustomTextFrame(ctk.CTkFrame):
             self.content_textbox.insert("1.0", self.section_data.get("content", ""))
             self.content_textbox.bind("<KeyRelease>", self._on_data_change)
 
-            if DEBUG:
-                print(f"[DEBUG] CustomTextFrame children: {[str(w) for w in self.winfo_children()]}")
-                print("[DEBUG] CustomTextFrame __init__ completed successfully.")
         except Exception as e:
             print(f"[ERROR] Exception in CustomTextFrame __init__: {e}")
             raise

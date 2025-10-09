@@ -12,8 +12,6 @@ class EventsFrame(ctk.CTkFrame):
     A frame for editing an 'events' section, with a single layout style for the whole section.
     """
     def __init__(self, parent, section_data: dict, refresh_callback: callable):
-        if DEBUG:
-            print(f"[DEBUG] EventsFrame __init__ called. parent={parent}, section_data={section_data}")
         self._init_args = (parent, section_data, refresh_callback)
         try:
             super().__init__(parent, fg_color="transparent")
@@ -37,8 +35,6 @@ class EventsFrame(ctk.CTkFrame):
             # Layout fix: ensure frame expands and grid works
             self.grid_rowconfigure(99, weight=1)
             self.grid_columnconfigure(0, weight=1)
-            if DEBUG:
-                print("[DEBUG] EventsFrame __init__ completed successfully.")
         except Exception as e:
             print(f"[ERROR] Exception in EventsFrame __init__: {e}")
             raise

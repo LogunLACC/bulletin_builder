@@ -17,14 +17,11 @@ import socket
 class BulletinBuilderApp(ctk.CTk):
     def export_frontsteps_html(self, html_content):
         """Fallback FrontSteps exporter: strips wrappers and copies processed HTML to clipboard."""
-        print("[DEBUG] export_frontsteps_html called")
         from bulletin_builder.postprocess import process_frontsteps_html
         processed = process_frontsteps_html(html_content)
-        print(f"[DEBUG] processed HTML: {processed[:60]}...")
         self.clipboard_clear()
         self.clipboard_append(processed)
         if hasattr(self, 'show_status_message'):
-            print("[DEBUG] show_status_message called")
             self.show_status_message("FrontSteps HTML copied to clipboard.", duration_ms=800)
     def render_bulletin_html(self, ctx=None):
         """Fallback renderer for tests. Returns minimal HTML."""
