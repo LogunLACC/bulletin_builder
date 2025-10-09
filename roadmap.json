@@ -227,8 +227,8 @@
         {"description": "Replace BB_DEBUG environment variable checks with a proper logging configuration system.", "status": "complete"},
         {"description": "Add proper error handling and custom exception classes for common failure modes (import errors, export failures, render failures).", "status": "complete"},
         {"description": "Remove or document all stub functions in exporter.py (batch_send_emails, optimize_email_images, etc.).", "status": "complete"},
-        {"description": "Consolidate duplicate PyInstaller spec files - remove redundant bulletin_builder.spec and src/__main__.spec, keep only packaging/bulletin_builder.spec.", "status": "todo"},
-        {"description": "Update PyInstaller spec to include all required data files (templates, assets, config.ini.default) and test the build process.", "status": "todo"},
+        {"description": "Consolidate duplicate PyInstaller spec files - remove redundant bulletin_builder.spec and src/__main__.spec, keep only packaging/bulletin_builder.spec.", "status": "complete"},
+        {"description": "Update PyInstaller spec to include all required data files (templates, assets, config.ini.default) and test the build process.", "status": "complete"},
         {"description": "Add type hints to all public functions and methods for better IDE support and code clarity.", "status": "todo"},
         {"description": "Document all public API functions and classes with proper docstrings.", "status": "todo"}
       ]
