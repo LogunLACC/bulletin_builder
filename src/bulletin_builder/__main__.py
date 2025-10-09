@@ -178,11 +178,57 @@ class BulletinBuilderApp(ctk.CTk):
         self.configure(menu=menubar)
 
     def export_current_preview(self):
-        """Renders the current bulletin state and passes it to the exporter."""
+        """Renders the current bulletin state, validates it, and passes it to the exporter."""
         try:
             if hasattr(self, 'render_bulletin_html') and hasattr(self, 'collect_context'):
                 ctx = self.collect_context()
                 html_content = self.render_bulletin_html(ctx)
+                
+                # Run export validation if available
+                if hasattr(self, 'validate_export') and hasattr(self, 'format_validation_report'):
+                    from tkinter import messagebox
+                    
+                    accessibility_result, spam_result = self.validate_export(html_content)
+                    
+                    # If there are errors or warnings, show validation report
+                    if accessibility_result or spam_result:
+                        report = self.format_validation_report(accessibility_result, spam_result)
+                        
+                        # Check if there are critical errors
+                        has_errors = accessibility_result.has_errors() or spam_result.has_errors()
+                        
+                        if has_errors:
+                            # Show error dialog with option to cancel or proceed anyway
+                            response = messagebox.askyesno(
+                                "Export Validation - Critical Issues",
+                                f"{report}\n\nCritical issues found. Do you want to proceed with export anyway?",
+                                icon="warning",
+                                parent=self
+                            )
+                            if not response:
+                                self.show_status_message("Export cancelled due to validation errors")
+                                return
+                        else:
+                            # Just warnings/info, show but proceed automatically
+                            messagebox.showinfo(
+                                "Export Validation - Recommendations",
+                                f"{report}\n\nProceeding with export. Review recommendations above.",
+                                parent=self
+                            )
+                    
+                    # Log validation results
+                    if hasattr(self, 'log_action'):
+                        try:
+                            from bulletin_builder.actions_log import log_action
+                            log_action("export_validation", {
+                                "accessibility_summary": accessibility_result.summary(),
+                                "spam_summary": spam_result.summary(),
+                                "total_issues": len(accessibility_result.issues) + len(spam_result.issues)
+                            })
+                        except Exception:
+                            pass
+                
+                # Proceed with export
                 self.export_frontsteps_html(html_content)
         except Exception as e:
             print(f"Export failed: {e}")
