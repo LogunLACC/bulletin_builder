@@ -10,6 +10,7 @@ from bulletin_builder.app_core.export_validator import (
     ValidationResult,
     validate_accessibility,
     validate_spam_triggers,
+    validate_html_css_email_safety,
     validate_export,
     format_validation_report,
     init
@@ -306,20 +307,23 @@ class TestValidationIntegration:
     
     def test_validate_export(self):
         html = '<h1>Title</h1><p>Content</p><img src="test.jpg" alt="Test">'
-        accessibility_result, spam_result = validate_export(html)
+        accessibility_result, spam_result, email_css_result = validate_export(html)
         
         assert isinstance(accessibility_result, ValidationResult)
         assert isinstance(spam_result, ValidationResult)
+        assert isinstance(email_css_result, ValidationResult)
     
     def test_format_validation_report_no_issues(self):
         accessibility_result = ValidationResult()
         spam_result = ValidationResult()
+        email_css_result = ValidationResult()
         
-        report = format_validation_report(accessibility_result, spam_result)
+        report = format_validation_report(accessibility_result, spam_result, email_css_result)
         
         assert "EXPORT VALIDATION REPORT" in report
         assert "ACCESSIBILITY (WCAG)" in report
         assert "SPAM TRIGGER DETECTION" in report
+        assert "EMAIL COMPATIBILITY (HTML/CSS)" in report
         assert "No accessibility issues found" in report or "ALL CHECKS PASSED" in report
     
     def test_format_validation_report_with_issues(self):
@@ -339,13 +343,23 @@ class TestValidationIntegration:
             "Rephrase"
         )
         
-        report = format_validation_report(accessibility_result, spam_result)
+        email_css_result = ValidationResult()
+        email_css_result.add_issue(
+            ValidationIssue.SEVERITY_WARNING,
+            "email_css",
+            "Style tag detected",
+            "Use inline styles"
+        )
+        
+        report = format_validation_report(accessibility_result, spam_result, email_css_result)
         
         assert "EXPORT VALIDATION REPORT" in report
         assert "Missing alt text" in report
         assert "Spam trigger word found" in report
+        assert "Style tag detected" in report
         assert "Add alt attribute" in report
         assert "Rephrase" in report
+        assert "Use inline styles" in report
         assert "ERROR:" in report
         assert "WARNING:" in report
     
@@ -358,8 +372,9 @@ class TestValidationIntegration:
         )
         
         spam_result = ValidationResult()
+        email_css_result = ValidationResult()
         
-        report = format_validation_report(accessibility_result, spam_result)
+        report = format_validation_report(accessibility_result, spam_result, email_css_result)
         
         assert "CRITICAL ISSUES FOUND" in report or "1 error" in report
 
@@ -381,11 +396,13 @@ class TestInit:
         assert hasattr(app, 'validate_export')
         assert hasattr(app, 'validate_accessibility')
         assert hasattr(app, 'validate_spam_triggers')
+        assert hasattr(app, 'validate_html_css_email_safety')
         assert hasattr(app, 'format_validation_report')
         
         assert callable(app.validate_export)
         assert callable(app.validate_accessibility)
         assert callable(app.validate_spam_triggers)
+        assert callable(app.validate_html_css_email_safety)
         assert callable(app.format_validation_report)
     
     def test_init_functions_work(self):
@@ -394,14 +411,174 @@ class TestInit:
         
         # Test that attached functions work
         html = '<h1>Test</h1><img src="test.jpg" alt="Test">'
-        accessibility_result, spam_result = app.validate_export(html)
+        accessibility_result, spam_result, email_css_result = app.validate_export(html)
         
         assert isinstance(accessibility_result, ValidationResult)
         assert isinstance(spam_result, ValidationResult)
+        assert isinstance(email_css_result, ValidationResult)
         
-        report = app.format_validation_report(accessibility_result, spam_result)
+        report = app.format_validation_report(accessibility_result, spam_result, email_css_result)
         assert isinstance(report, str)
         assert len(report) > 0
+
+
+class TestHTMLCSSEmailSafety:
+    """Test HTML/CSS email safety validation."""
+    
+    def test_clean_html_passes(self):
+        html = '''
+        <table>
+            <tr>
+                <td style="color: #333;">
+                    <h1>Test</h1>
+                    <p>Clean email content with inline styles</p>
+                </td>
+            </tr>
+        </table>
+        '''
+        result = validate_html_css_email_safety(html)
+        assert isinstance(result, ValidationResult)
+        # Should have no errors or warnings for clean email HTML
+        assert len(result.get_by_severity(ValidationIssue.SEVERITY_ERROR)) == 0
+    
+    def test_style_tags_detected(self):
+        html = '<style>.test { color: red; }</style><p>Test</p>'
+        result = validate_html_css_email_safety(html)
+        warnings = result.get_by_severity(ValidationIssue.SEVERITY_WARNING)
+        assert len(warnings) > 0
+        assert any("style" in issue.message.lower() for issue in warnings)
+    
+    def test_external_css_detected(self):
+        html = '<link rel="stylesheet" href="styles.css"><p>Test</p>'
+        result = validate_html_css_email_safety(html)
+        errors = result.get_by_severity(ValidationIssue.SEVERITY_ERROR)
+        assert len(errors) > 0
+        assert any("css link" in issue.message.lower() for issue in errors)
+    
+    def test_script_tags_detected(self):
+        html = '<script>alert("test");</script><p>Test</p>'
+        result = validate_html_css_email_safety(html)
+        errors = result.get_by_severity(ValidationIssue.SEVERITY_ERROR)
+        assert len(errors) > 0
+        assert any("script" in issue.message.lower() for issue in errors)
+    
+    def test_event_handlers_detected(self):
+        html = '<button onclick="doSomething()">Click</button>'
+        result = validate_html_css_email_safety(html)
+        errors = result.get_by_severity(ValidationIssue.SEVERITY_ERROR)
+        assert len(errors) > 0
+        assert any("event handler" in issue.message.lower() for issue in errors)
+    
+    def test_css_position_detected(self):
+        html = '<div style="position: absolute;">Test</div>'
+        result = validate_html_css_email_safety(html)
+        warnings = result.get_by_severity(ValidationIssue.SEVERITY_WARNING)
+        assert len(warnings) > 0
+        assert any("position" in issue.message.lower() for issue in warnings)
+    
+    def test_css_float_detected(self):
+        html = '<div style="float: left;">Test</div>'
+        result = validate_html_css_email_safety(html)
+        warnings = result.get_by_severity(ValidationIssue.SEVERITY_WARNING)
+        assert len(warnings) > 0
+        assert any("float" in issue.message.lower() for issue in warnings)
+    
+    def test_flexbox_detected(self):
+        html = '<div style="display: flex;">Test</div>'
+        result = validate_html_css_email_safety(html)
+        errors = result.get_by_severity(ValidationIssue.SEVERITY_ERROR)
+        assert len(errors) > 0
+        assert any("flex" in issue.message.lower() or "grid" in issue.message.lower() for issue in errors)
+    
+    def test_grid_detected(self):
+        html = '<div style="display: grid;">Test</div>'
+        result = validate_html_css_email_safety(html)
+        errors = result.get_by_severity(ValidationIssue.SEVERITY_ERROR)
+        assert len(errors) > 0
+        assert any("grid" in issue.message.lower() or "flex" in issue.message.lower() for issue in errors)
+    
+    def test_video_tag_detected(self):
+        html = '<video src="video.mp4">Video</video>'
+        result = validate_html_css_email_safety(html)
+        warnings = result.get_by_severity(ValidationIssue.SEVERITY_WARNING)
+        assert len(warnings) > 0
+        assert any("video" in issue.message.lower() or "audio" in issue.message.lower() for issue in warnings)
+    
+    def test_audio_tag_detected(self):
+        html = '<audio src="audio.mp3">Audio</audio>'
+        result = validate_html_css_email_safety(html)
+        warnings = result.get_by_severity(ValidationIssue.SEVERITY_WARNING)
+        assert len(warnings) > 0
+        assert any("audio" in issue.message.lower() or "video" in issue.message.lower() for issue in warnings)
+    
+    def test_background_image_detected(self):
+        html = '<div style="background-image: url(image.jpg);">Test</div>'
+        result = validate_html_css_email_safety(html)
+        info = result.get_by_severity(ValidationIssue.SEVERITY_INFO)
+        assert len(info) > 0
+        assert any("background" in issue.message.lower() for issue in info)
+    
+    def test_form_detected(self):
+        html = '<form action="/submit"><input type="text"></form>'
+        result = validate_html_css_email_safety(html)
+        warnings = result.get_by_severity(ValidationIssue.SEVERITY_WARNING)
+        assert len(warnings) > 0
+        assert any("form" in issue.message.lower() for issue in warnings)
+    
+    def test_iframe_detected(self):
+        html = '<iframe src="page.html"></iframe>'
+        result = validate_html_css_email_safety(html)
+        errors = result.get_by_severity(ValidationIssue.SEVERITY_ERROR)
+        assert len(errors) > 0
+        assert any("iframe" in issue.message.lower() for issue in errors)
+    
+    def test_table_layout_info(self):
+        html = '<div><p>No tables</p></div>'
+        result = validate_html_css_email_safety(html)
+        info = result.get_by_severity(ValidationIssue.SEVERITY_INFO)
+        # Should have info about using tables
+        assert len(info) > 0
+        assert any("table" in issue.message.lower() for issue in info)
+    
+    def test_css3_properties_detected(self):
+        html = '<div style="border-radius: 5px; box-shadow: 0 0 10px;">Test</div>'
+        result = validate_html_css_email_safety(html)
+        info = result.get_by_severity(ValidationIssue.SEVERITY_INFO)
+        assert len(info) > 0
+        assert any("css3" in issue.message.lower() or "border-radius" in issue.message.lower() for issue in info)
+    
+    def test_multiple_issues_detected(self):
+        html = '''
+        <style>.test { color: red; }</style>
+        <script>alert("test");</script>
+        <div onclick="test()" style="display: flex;">
+            <iframe src="bad.html"></iframe>
+        </div>
+        '''
+        result = validate_html_css_email_safety(html)
+        
+        # Should have multiple errors and warnings
+        errors = result.get_by_severity(ValidationIssue.SEVERITY_ERROR)
+        warnings = result.get_by_severity(ValidationIssue.SEVERITY_WARNING)
+        
+        assert len(errors) >= 3  # script, onclick, flex, iframe
+        assert len(warnings) >= 1  # style tag
+    
+    def test_safe_inline_styles(self):
+        html = '''
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td style="padding: 10px; color: #333; font-size: 14px;">
+                    Safe inline styles
+                </td>
+            </tr>
+        </table>
+        '''
+        result = validate_html_css_email_safety(html)
+        
+        # Should have no errors for safe inline styles
+        errors = result.get_by_severity(ValidationIssue.SEVERITY_ERROR)
+        assert len(errors) == 0
 
 
 if __name__ == "__main__":

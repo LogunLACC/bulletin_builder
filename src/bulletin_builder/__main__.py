@@ -188,14 +188,16 @@ class BulletinBuilderApp(ctk.CTk):
                 if hasattr(self, 'validate_export') and hasattr(self, 'format_validation_report'):
                     from tkinter import messagebox
                     
-                    accessibility_result, spam_result = self.validate_export(html_content)
+                    accessibility_result, spam_result, email_css_result = self.validate_export(html_content)
                     
                     # If there are errors or warnings, show validation report
-                    if accessibility_result or spam_result:
-                        report = self.format_validation_report(accessibility_result, spam_result)
+                    if accessibility_result.issues or spam_result.issues or email_css_result.issues:
+                        report = self.format_validation_report(accessibility_result, spam_result, email_css_result)
                         
                         # Check if there are critical errors
-                        has_errors = accessibility_result.has_errors() or spam_result.has_errors()
+                        has_errors = (accessibility_result.has_errors() or 
+                                     spam_result.has_errors() or 
+                                     email_css_result.has_errors())
                         
                         if has_errors:
                             # Show error dialog with option to cancel or proceed anyway

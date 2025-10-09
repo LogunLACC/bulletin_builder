@@ -386,20 +386,202 @@ def validate_spam_triggers(html: str) -> ValidationResult:
     return result
 
 
-def validate_export(html: str) -> Tuple[ValidationResult, ValidationResult]:
+def validate_html_css_email_safety(html: str) -> ValidationResult:
+    """
+    Validate HTML/CSS for email client compatibility.
+    
+    Checks:
+    - Presence of <style> tags (should use inline styles)
+    - Use of position/float CSS (poor email support)
+    - External CSS links (not allowed in emails)
+    - JavaScript usage (blocked in emails)
+    - Unsupported CSS properties
+    - Missing inline styles on key elements
+    - Use of web fonts that may not render
+    - Video/audio tags (limited support)
+    """
+    result = ValidationResult()
+    
+    # Check for <style> tags - email clients often strip these
+    style_tags = re.findall(r'<style[^>]*>.*?</style>', html, re.IGNORECASE | re.DOTALL)
+    if style_tags:
+        result.add_issue(
+            ValidationIssue.SEVERITY_WARNING,
+            "email_css",
+            f"Found {len(style_tags)} <style> tag(s) in HTML",
+            "Email clients often strip <style> tags. Use inline styles instead (style=\"...\") for better compatibility"
+        )
+    
+    # Check for external CSS links
+    css_links = re.findall(r'<link[^>]+rel=["\']stylesheet["\'][^>]*>', html, re.IGNORECASE)
+    if css_links:
+        result.add_issue(
+            ValidationIssue.SEVERITY_ERROR,
+            "email_css",
+            f"Found {len(css_links)} external CSS link(s)",
+            "External CSS is blocked by email clients. All styles must be inline"
+        )
+    
+    # Check for JavaScript - completely blocked in emails
+    script_tags = re.findall(r'<script[^>]*>.*?</script>', html, re.IGNORECASE | re.DOTALL)
+    onclick_handlers = re.findall(r'\son\w+\s*=', html, re.IGNORECASE)
+    
+    if script_tags:
+        result.add_issue(
+            ValidationIssue.SEVERITY_ERROR,
+            "email_js",
+            f"Found {len(script_tags)} <script> tag(s)",
+            "JavaScript is completely blocked in email clients. Remove all scripts"
+        )
+    
+    if onclick_handlers:
+        result.add_issue(
+            ValidationIssue.SEVERITY_ERROR,
+            "email_js",
+            f"Found {len(onclick_handlers)} inline event handler(s) (onclick, onload, etc.)",
+            "Event handlers don't work in emails. Use <a> tags with mailto: or http: links instead"
+        )
+    
+    # Check for CSS position property - poor email support
+    position_css = re.findall(r'position\s*:\s*(absolute|fixed|sticky)', html, re.IGNORECASE)
+    if position_css:
+        result.add_issue(
+            ValidationIssue.SEVERITY_WARNING,
+            "email_css",
+            f"Found CSS position property: {', '.join(set(position_css))}",
+            "CSS positioning (absolute/fixed/sticky) has poor support in email clients. Use table-based layouts instead"
+        )
+    
+    # Check for float property - inconsistent email support
+    float_css = re.findall(r'float\s*:\s*(left|right)', html, re.IGNORECASE)
+    if float_css:
+        result.add_issue(
+            ValidationIssue.SEVERITY_WARNING,
+            "email_css",
+            f"Found CSS float property used {len(float_css)} time(s)",
+            "CSS float has inconsistent support in email clients. Use table columns for side-by-side layouts"
+        )
+    
+    # Check for flexbox/grid - not supported in most email clients
+    modern_css = re.findall(r'display\s*:\s*(flex|grid|inline-flex|inline-grid)', html, re.IGNORECASE)
+    if modern_css:
+        result.add_issue(
+            ValidationIssue.SEVERITY_ERROR,
+            "email_css",
+            f"Found modern CSS layout: {', '.join(set(modern_css))}",
+            "Flexbox and Grid are not supported in email clients. Use table-based layouts for structure"
+        )
+    
+    # Check for web fonts - limited support
+    font_face = re.findall(r'@font-face', html, re.IGNORECASE)
+    if font_face:
+        result.add_issue(
+            ValidationIssue.SEVERITY_INFO,
+            "email_css",
+            "Found @font-face declaration",
+            "Web fonts have limited support in email clients. Provide fallback to web-safe fonts (Arial, Georgia, etc.)"
+        )
+    
+    # Check for video/audio tags - very limited support
+    video_tags = re.findall(r'<video[^>]*>', html, re.IGNORECASE)
+    audio_tags = re.findall(r'<audio[^>]*>', html, re.IGNORECASE)
+    
+    if video_tags:
+        result.add_issue(
+            ValidationIssue.SEVERITY_WARNING,
+            "email_media",
+            f"Found {len(video_tags)} <video> tag(s)",
+            "Video tags are not supported in most email clients. Use a linked image thumbnail instead"
+        )
+    
+    if audio_tags:
+        result.add_issue(
+            ValidationIssue.SEVERITY_WARNING,
+            "email_media",
+            f"Found {len(audio_tags)} <audio> tag(s)",
+            "Audio tags are not supported in email clients. Provide a link to audio content instead"
+        )
+    
+    # Check for background images - Outlook doesn't support
+    bg_image_css = re.findall(r'background-image\s*:', html, re.IGNORECASE)
+    if bg_image_css:
+        result.add_issue(
+            ValidationIssue.SEVERITY_INFO,
+            "email_css",
+            f"Found {len(bg_image_css)} background-image declaration(s)",
+            "Background images don't work in Outlook. Use bgcolor for solid colors or VML for Outlook compatibility"
+        )
+    
+    # Check for forms - limited support
+    form_tags = re.findall(r'<form[^>]*>', html, re.IGNORECASE)
+    if form_tags:
+        result.add_issue(
+            ValidationIssue.SEVERITY_WARNING,
+            "email_html",
+            f"Found {len(form_tags)} <form> tag(s)",
+            "Forms have limited support in email clients. Link to a web-based form instead"
+        )
+    
+    # Check for iframes - blocked in emails
+    iframe_tags = re.findall(r'<iframe[^>]*>', html, re.IGNORECASE)
+    if iframe_tags:
+        result.add_issue(
+            ValidationIssue.SEVERITY_ERROR,
+            "email_html",
+            f"Found {len(iframe_tags)} <iframe> tag(s)",
+            "Iframes are blocked in email clients for security. Link to external content instead"
+        )
+    
+    # Check if using tables for layout (good for email)
+    table_count = html.count('<table')
+    has_divs = '<div' in html
+    
+    if has_divs and table_count < 2:
+        result.add_issue(
+            ValidationIssue.SEVERITY_INFO,
+            "email_layout",
+            "Using <div>-based layout with few tables",
+            "Email clients work best with table-based layouts. Consider using nested tables for complex structures"
+        )
+    
+    # Check for CSS3 properties that may not work
+    css3_properties = [
+        (r'border-radius\s*:', 'border-radius', 'rounded corners'),
+        (r'box-shadow\s*:', 'box-shadow', 'shadows'),
+        (r'text-shadow\s*:', 'text-shadow', 'text shadows'),
+        (r'transform\s*:', 'transform', 'transforms'),
+        (r'transition\s*:', 'transition', 'transitions'),
+        (r'animation\s*:', 'animation', 'animations'),
+    ]
+    
+    for pattern, prop, description in css3_properties:
+        matches = re.findall(pattern, html, re.IGNORECASE)
+        if matches:
+            result.add_issue(
+                ValidationIssue.SEVERITY_INFO,
+                "email_css",
+                f"Using CSS3 property '{prop}' ({len(matches)} occurrence(s))",
+                f"CSS3 {description} have limited support in email clients (work in iOS/Apple Mail, not in Outlook/Gmail)"
+            )
+    
+    return result
+
+
+def validate_export(html: str) -> Tuple[ValidationResult, ValidationResult, ValidationResult]:
     """
     Run all validation checks on exported HTML.
     
     Returns:
-        Tuple of (accessibility_result, spam_result)
+        Tuple of (accessibility_result, spam_result, email_css_result)
     """
     accessibility_result = validate_accessibility(html)
     spam_result = validate_spam_triggers(html)
+    email_css_result = validate_html_css_email_safety(html)
     
-    return accessibility_result, spam_result
+    return accessibility_result, spam_result, email_css_result
 
 
-def format_validation_report(accessibility_result: ValidationResult, spam_result: ValidationResult) -> str:
+def format_validation_report(accessibility_result: ValidationResult, spam_result: ValidationResult, email_css_result: ValidationResult) -> str:
     """
     Format validation results into a human-readable report.
     """
@@ -412,7 +594,7 @@ def format_validation_report(accessibility_result: ValidationResult, spam_result
     # Accessibility section
     lines.append("ACCESSIBILITY (WCAG)")
     lines.append("-" * 60)
-    if accessibility_result:
+    if accessibility_result.issues:
         lines.append(f"Summary: {accessibility_result.summary()}")
         lines.append("")
         
@@ -432,7 +614,7 @@ def format_validation_report(accessibility_result: ValidationResult, spam_result
     # Spam section
     lines.append("SPAM TRIGGER DETECTION")
     lines.append("-" * 60)
-    if spam_result:
+    if spam_result.issues:
         lines.append(f"Summary: {spam_result.summary()}")
         lines.append("")
         
@@ -449,13 +631,35 @@ def format_validation_report(accessibility_result: ValidationResult, spam_result
         lines.append("✓ No spam triggers detected")
         lines.append("")
     
+    # Email compatibility section
+    lines.append("EMAIL COMPATIBILITY (HTML/CSS)")
+    lines.append("-" * 60)
+    if email_css_result.issues:
+        lines.append(f"Summary: {email_css_result.summary()}")
+        lines.append("")
+        
+        for severity in [ValidationIssue.SEVERITY_ERROR, ValidationIssue.SEVERITY_WARNING, ValidationIssue.SEVERITY_INFO]:
+            issues = email_css_result.get_by_severity(severity)
+            if issues:
+                lines.append(f"{severity.upper()}:")
+                for issue in issues:
+                    lines.append(f"  • {issue.message}")
+                    if issue.recommendation:
+                        lines.append(f"    → {issue.recommendation}")
+                lines.append("")
+    else:
+        lines.append("✓ No email compatibility issues found")
+        lines.append("")
+    
     lines.append("=" * 60)
     
     # Overall summary
     total_errors = (accessibility_result.get_by_severity(ValidationIssue.SEVERITY_ERROR) + 
-                   spam_result.get_by_severity(ValidationIssue.SEVERITY_ERROR))
+                   spam_result.get_by_severity(ValidationIssue.SEVERITY_ERROR) +
+                   email_css_result.get_by_severity(ValidationIssue.SEVERITY_ERROR))
     total_warnings = (accessibility_result.get_by_severity(ValidationIssue.SEVERITY_WARNING) + 
-                     spam_result.get_by_severity(ValidationIssue.SEVERITY_WARNING))
+                     spam_result.get_by_severity(ValidationIssue.SEVERITY_WARNING) +
+                     email_css_result.get_by_severity(ValidationIssue.SEVERITY_WARNING))
     
     if total_errors:
         lines.append(f"⚠ {len(total_errors)} CRITICAL ISSUES FOUND")
@@ -478,4 +682,5 @@ def init(app):
     app.validate_export = validate_export
     app.validate_accessibility = validate_accessibility
     app.validate_spam_triggers = validate_spam_triggers
+    app.validate_html_css_email_safety = validate_html_css_email_safety
     app.format_validation_report = format_validation_report
