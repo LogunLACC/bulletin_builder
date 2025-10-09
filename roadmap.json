@@ -8,7 +8,7 @@
       "goal": "Ensure bulletins are not just compatible, but beautiful, robust, and reliably delivered in real-world email workflows.",
       "tasks": [
         {"description": "Add DKIM/SPF/DMARC guidance to educate users on improving email deliverability.", "status": "complete"},
-        {"description": "Implement an advanced email preview feature to simulate rendering in major clients like Gmail, Outlook, and mobile.", "status": "todo"},
+        {"description": "Implement an advanced email preview feature to simulate rendering in major clients like Gmail, Outlook, and mobile.", "status": "complete"},
         {"description": "Create an export validation step to check for accessibility issues (WCAG) and potential spam triggers.", "status": "todo"},
         {"description": "Enhance the template editor with live HTML/CSS linting for email-safe code.", "status": "todo"},
         {"description": "Add an 'Export to PDF' feature for compliance and archiving purposes.", "status": "todo"},
