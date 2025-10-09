@@ -209,6 +209,9 @@ def init(app):
     tab_names = ["Content", "Settings", "Preview"]
     app._tab_buttons = {}
     
+    # Forward declaration - will be defined after views are created
+    show_view_fn = None
+    
     def on_tab_click(name: str):
         for n, b in app._tab_buttons.items():
             if n == name:
@@ -227,7 +230,8 @@ def init(app):
                     text_color=DESIGN["text_secondary"],
                     border_width=0
                 )
-        show_view(name)
+        if show_view_fn:
+            show_view_fn(name)
 
     for i, name in enumerate(tab_names):
         btn = ctk.CTkButton(
@@ -593,16 +597,11 @@ def init(app):
                 app.show_section_editor()
         else:
             app.editor_container.grid_forget()
-            for child in app.editor_container.winfo_children():
-                try:
-                    child.grid_forget()
-                except Exception:
-                    try:
-                        child.pack_forget()
-                    except Exception:
-                        pass
-                child.destroy()
-        all_views[name].grid(row=0, column=0, sticky="nsew")
+        
+        all_views.get(name, content_view).grid(row=0, column=0, sticky="nsew")
+    
+    # Assign to the forward reference so tab clicks work
+    show_view_fn = show_view
 
     # ---------- prime state ----------
     # populate list and select first AFTER editor exists
