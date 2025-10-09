@@ -181,10 +181,19 @@ def init(app):
     app.grid_rowconfigure(0, weight=1)
     app.grid_columnconfigure(0, weight=1)
 
-    # status bar (single instance)
+    # Modern status bar at bottom
     if not hasattr(app, "status_bar"):
-        app.status_bar = ctk.CTkLabel(app, text="", anchor="w")
-        app.status_bar.grid(row=1, column=0, sticky="ew", padx=10)
+        app.status_bar = ctk.CTkLabel(
+            app, 
+            text="Ready",
+            anchor="w",
+            fg_color=DESIGN["bg_card"],
+            text_color=DESIGN["text_secondary"],
+            font=(DESIGN["font_family"], 12),
+            height=28,
+            corner_radius=0
+        )
+        app.status_bar.grid(row=1, column=0, sticky="ew", padx=0, pady=0)
 
     # ---------- right panel (create FIRST) ----------
     if not hasattr(app, "right_panel") or app.right_panel is None:
@@ -618,3 +627,23 @@ def init(app):
     app.bind("<Control-Shift-S>", lambda e: getattr(app, "save_draft_as", getattr(app, "save_draft", lambda: None))())
     app.bind("<Control-o>", lambda e: getattr(app, "open_draft", lambda: None)())
     app.bind("<Control-n>", lambda e: getattr(app, "new_draft", lambda: None)())
+    
+    # Modern status message system
+    def show_status_message(message: str, duration: int = 3000, type: str = "info"):
+        """Show a temporary status message with modern styling."""
+        if hasattr(app, "status_bar"):
+            # Color code by message type
+            if type == "success":
+                app.status_bar.configure(text=f"✓ {message}", text_color=DESIGN["success"])
+            elif type == "error":
+                app.status_bar.configure(text=f"✗ {message}", text_color=DESIGN["danger"])
+            elif type == "warning":
+                app.status_bar.configure(text=f"⚠ {message}", text_color=DESIGN["warning"])
+            else:
+                app.status_bar.configure(text=message, text_color=DESIGN["text_secondary"])
+            
+            # Auto-clear after duration
+            if duration > 0:
+                app.after(duration, lambda: app.status_bar.configure(text="Ready", text_color=DESIGN["text_secondary"]))
+    
+    app.show_status_message = show_status_message
