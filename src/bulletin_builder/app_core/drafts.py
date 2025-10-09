@@ -2,6 +2,10 @@ import json
 from pathlib import Path
 from tkinter import filedialog, messagebox
 from datetime import date
+from bulletin_builder.exceptions import DraftLoadError, DraftSaveError, JSONImportError
+from bulletin_builder.app_core.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 def init(app):
     def _default_settings():
@@ -38,10 +42,26 @@ def init(app):
         if not path:
             return
         try:
-            data = json.loads(Path(path).read_text(encoding='utf-8'))
-        except Exception:
-            # messagebox.showerror('Open Error',str(e))
+            logger.info(f"Opening draft from {path}")
+            text = Path(path).read_text(encoding='utf-8')
+            data = json.loads(text)
+        except FileNotFoundError as e:
+            logger.error(f"Draft file not found: {path}")
+            error = DraftLoadError(f"Draft file not found: {Path(path).name}", file_path=path)
+            messagebox.showerror('Open Error', str(error), parent=app)
             return
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid JSON in draft file: {e}")
+            error = JSONImportError(f"Invalid JSON format in draft file: {e.msg}", file_path=path)
+            messagebox.showerror('Open Error', str(error), parent=app)
+            return
+        except Exception as e:
+            logger.exception(f"Unexpected error opening draft: {e}")
+            error = DraftLoadError(f"Failed to open draft: {str(e)}", file_path=path)
+            messagebox.showerror('Open Error', str(error), parent=app)
+            return
+        
+        logger.debug(f"Draft loaded with {len(data.get('sections', []))} sections")
         app.sections_data[:] = data.get('sections',[])
         app.current_draft_path = path
         app.renderer.set_template(data.get('template_name', 'main_layout.html'))
@@ -65,17 +85,49 @@ def init(app):
             if not path:
                 return
             app.current_draft_path = path
+        
         payload = {
             'sections': app.sections_data,
             'settings': app.settings_frame.dump(),
             'template_name': app.renderer.template_name
         }
+        
         try:
-            Path(app.current_draft_path).write_text(json.dumps(payload,indent=2), encoding='utf-8')
-            app.show_status_message(f"Draft saved: {Path(app.current_draft_path).name}")
-        except Exception:
-            # messagebox.showerror('Save Error',str(e))
-            pass
+            logger.info(f"Saving draft to {app.current_draft_path}")
+            draft_path = Path(app.current_draft_path)
+            
+            # Ensure parent directory exists
+            draft_path.parent.mkdir(parents=True, exist_ok=True)
+            
+            # Write the file
+            draft_path.write_text(json.dumps(payload, indent=2), encoding='utf-8')
+            
+            logger.debug(f"Draft saved with {len(app.sections_data)} sections")
+            app.show_status_message(f"Draft saved: {draft_path.name}")
+            
+        except PermissionError as e:
+            logger.error(f"Permission denied saving draft: {e}")
+            error = DraftSaveError(
+                f"Permission denied: Cannot write to {draft_path.name}",
+                file_path=str(draft_path)
+            )
+            messagebox.showerror('Save Error', str(error), parent=app)
+            
+        except OSError as e:
+            logger.error(f"OS error saving draft: {e}")
+            error = DraftSaveError(
+                f"Failed to save draft: {str(e)}",
+                file_path=str(draft_path)
+            )
+            messagebox.showerror('Save Error', str(error), parent=app)
+            
+        except Exception as e:
+            logger.exception(f"Unexpected error saving draft: {e}")
+            error = DraftSaveError(
+                f"Unexpected error saving draft: {str(e)}",
+                file_path=str(draft_path)
+            )
+            messagebox.showerror('Save Error', str(error), parent=app)
 
     app.new_draft  = new_draft
     app.open_draft = open_draft

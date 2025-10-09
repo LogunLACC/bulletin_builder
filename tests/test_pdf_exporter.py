@@ -74,7 +74,9 @@ class TestPDFExporter:
                 pass
     
     def test_export_to_pdf_handles_errors(self):
-        """Test error handling in PDF export."""
+        """Test error handling in PDF export - now raises exceptions."""
+        from bulletin_builder.exceptions import PDFExportError
+        
         try:
             from weasyprint import HTML
             weasyprint_available = True
@@ -84,14 +86,15 @@ class TestPDFExporter:
         if not weasyprint_available:
             pytest.skip("weasyprint not installed")
         
-        # Try to export to invalid path
+        # Try to export to invalid path - should raise PDFExportError
         html = '<p>Test</p>'
         invalid_path = '/invalid/path/that/does/not/exist/test.pdf'
         
-        success, message = export_to_pdf(html, invalid_path)
+        with pytest.raises(PDFExportError) as exc_info:
+            export_to_pdf(html, invalid_path)
         
-        assert success is False
-        assert 'failed' in message.lower()
+        assert 'Failed to write PDF file' in str(exc_info.value)
+        assert invalid_path in str(exc_info.value.context.get('output_path', ''))
     
     def test_init_attaches_function(self):
         """Test that init attaches export_to_pdf to app."""

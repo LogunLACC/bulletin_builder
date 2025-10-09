@@ -76,19 +76,20 @@ def init(app):
   # PDF export handler
   def on_export_pdf_clicked():
     """Export bulletin to PDF format."""
+    from tkinter import filedialog, messagebox
+    import os
+    from bulletin_builder.exceptions import PDFExportError, MissingDependencyError
+    from bulletin_builder.app_core.logging_config import get_logger
+    
+    logger = get_logger(__name__)
+    
     try:
-      from tkinter import filedialog, messagebox
-      import os
-      
       # Check if PDF exporter is available
       if not hasattr(app, 'export_to_pdf'):
-        messagebox.showerror(
-          "PDF Export Unavailable",
-          "PDF export requires the 'weasyprint' library.\n\n"
-          "Install with: pip install weasyprint",
-          parent=app
+        raise MissingDependencyError(
+          "PDF export requires the 'weasyprint' library. Install with: pip install weasyprint",
+          dependency_name="weasyprint"
         )
-        return
       
       # Get the HTML content
       if hasattr(app, 'render_bulletin_html'):
@@ -98,8 +99,7 @@ def init(app):
           ctx = app.get_export_context()
         html_content = app.render_bulletin_html(ctx)
       else:
-        messagebox.showerror("Export Error", "Cannot render bulletin HTML", parent=app)
-        return
+        raise PDFExportError("Cannot render bulletin HTML - render_bulletin_html method not available")
       
       # Ask user where to save
       default_name = "LACC_Bulletin.pdf"
@@ -118,23 +118,34 @@ def init(app):
       if not output_path:
         return  # User cancelled
       
-      # Export to PDF
-      success, message = app.export_to_pdf(html_content, output_path)
-      
-      if success:
+      # Export to PDF - this now raises exceptions instead of returning success/message
+      try:
+        success, message = app.export_to_pdf(html_content, output_path)
+        # If the old API returned successfully
         messagebox.showinfo("PDF Export Successful", message, parent=app)
         if hasattr(app, 'show_status_message'):
-          app.show_status_message("PDF exported successfully", duration=2000)
-      else:
-        messagebox.showerror("PDF Export Failed", message, parent=app)
-        if hasattr(app, 'show_status_message'):
-          app.show_status_message("PDF export failed", duration=2000)
+          app.show_status_message("PDF exported successfully", duration_ms=2000)
+      except (PDFExportError, MissingDependencyError):
+        # These are expected, re-raise to outer handler
+        raise
+      
+    except MissingDependencyError as e:
+      logger.error(f"Missing dependency for PDF export: {e}")
+      messagebox.showerror(
+        "PDF Export Unavailable",
+        str(e),
+        parent=app
+      )
+      
+    except PDFExportError as e:
+      logger.error(f"PDF export failed: {e}")
+      messagebox.showerror("PDF Export Failed", str(e), parent=app)
+      if hasattr(app, 'show_status_message'):
+        app.show_status_message("PDF export failed", duration_ms=2000)
       
     except Exception as e:
-      try:
-        messagebox.showerror('PDF Export Error', str(e), parent=app)
-      except Exception:
-        print('PDF Export Error:', e)
+      logger.exception(f"Unexpected error during PDF export: {e}")
+      messagebox.showerror('PDF Export Error', f"Unexpected error: {str(e)}", parent=app)
   
   app.on_export_pdf_clicked = on_export_pdf_clicked
   
