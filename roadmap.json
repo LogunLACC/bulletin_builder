@@ -224,7 +224,7 @@
       "goal": "Remove debug code, improve error handling, and enhance maintainability.",
       "tasks": [
         {"description": "Remove all [DEBUG] print statements from production code in __main__.py, ui modules, and app_core modules.", "status": "complete"},
-        {"description": "Replace BB_DEBUG environment variable checks with a proper logging configuration system.", "status": "todo"},
+        {"description": "Replace BB_DEBUG environment variable checks with a proper logging configuration system.", "status": "complete"},
         {"description": "Add proper error handling and custom exception classes for common failure modes (import errors, export failures, render failures).", "status": "todo"},
         {"description": "Remove or document all stub functions in exporter.py (batch_send_emails, optimize_email_images, etc.).", "status": "complete"},
         {"description": "Consolidate duplicate PyInstaller spec files - remove redundant bulletin_builder.spec and src/__main__.spec, keep only packaging/bulletin_builder.spec.", "status": "todo"},
