@@ -12,10 +12,10 @@
         {"description": "Create an export validation step to check for accessibility issues (WCAG) and potential spam triggers.", "status": "complete"},
         {"description": "Enhance the template editor with live HTML/CSS linting for email-safe code.", "status": "complete"},
         {"description": "Add an 'Export to PDF' feature for compliance and archiving purposes.", "status": "complete"},
-        {"description": "Integrate optional, privacy-respecting analytics for open/click tracking.", "status": "todo"},
+        {"description": "Integrate optional, privacy-respecting analytics for open/click tracking.", "status": "skipped", "note": "User does not need analytics tracking"},
         {"description": "Provide a 'Best Practices for Email' checklist or wizard to guide users before export.", "status": "todo"},
         {"description": "Automate image optimization during export to inline, compress, and convert images for email safety.", "status": "todo"},
-        {"description": "Implement a batch send and scheduling feature with rate limiting and error recovery.", "status": "todo"}
+        {"description": "Implement a batch send and scheduling feature with rate limiting and error recovery.", "status": "skipped", "note": "User does not need batch sending"}
       ]
     },
     {
