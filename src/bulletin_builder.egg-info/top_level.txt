@@ -1,5 +1,6 @@
 assets
 bulletin_builder
+exporters
 postprocess
 templates
 user_drafts

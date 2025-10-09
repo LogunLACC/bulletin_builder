@@ -311,8 +311,8 @@ def init(app):
 
     controls = ctk.CTkFrame(preview_view)
     controls.grid(row=0, column=0, sticky="ew", padx=0, pady=(0, 8))
-    for i in range(6):
-        controls.grid_columnconfigure(i, weight=(1 if i == 5 else 0))
+    for i in range(7):
+        controls.grid_columnconfigure(i, weight=(1 if i == 6 else 0))
 
     app.device_var = tk.StringVar(value="Desktop")
     def _on_device_change(choice):
@@ -371,22 +371,22 @@ def init(app):
     mode_menu = ctk.CTkOptionMenu(controls, variable=app.preview_mode_var,
                                   values=["Code", "Rendered"],
                                   command=on_preview_mode_change)
-    mode_menu.grid(row=0, column=1, padx=(0, 8))
+    mode_menu.grid(row=0, column=3, padx=(0, 8))
     add_tooltip(mode_menu, "Switch between raw HTML and rendered preview")
 
     update_btn = ctk.CTkButton(controls, text="Update",
                                command=getattr(app, "update_preview", lambda: None))
-    update_btn.grid(row=0, column=2, padx=(0, 8))
+    update_btn.grid(row=0, column=4, padx=(0, 8))
     add_tooltip(update_btn, "Re-render preview (Ctrl+U)")
 
     view_btn = ctk.CTkButton(controls, text="View in Browser",
                              command=getattr(app, "open_in_browser", lambda: None))
-    view_btn.grid(row=0, column=3, padx=(0, 8))
+    view_btn.grid(row=0, column=5, padx=(0, 8))
     add_tooltip(view_btn, "Open current preview in your browser")
 
     export_btn = ctk.CTkButton(controls, text="Export (FrontSteps)",
                                command=getattr(app, "export_current_preview", lambda: None))
-    export_btn.grid(row=0, column=4, sticky="e")
+    export_btn.grid(row=0, column=6, sticky="e")
     add_tooltip(export_btn, "Export body-only HTML for FrontSteps")
 
     # Expose a preview area reference for device width tweaks

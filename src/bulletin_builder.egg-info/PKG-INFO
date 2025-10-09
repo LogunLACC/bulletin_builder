@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: bulletin_builder
-Version: 0.1.0
+Version: 0.1.1
 Summary: Smart desktop builder for community email bulletins
 Author-email: Logun <logun.johnston@gmail.com>
 Requires-Python: >=3.9
@@ -68,22 +68,47 @@ pyupdater            # for auto‑update (optional)
 
 ---
 
-## Packaging
+distributed to users on the same platform (Windows or macOS) without needing a
+## Packaging & Build Instructions
 
-Run the build script to create a standalone executable (requires PyInstaller):
+### 1. Install Requirements
 
-```bash
+Open PowerShell and run:
+
+```powershell
+pip install -r requirements.txt
+```
+
+### 2. Build the Executable (Windows)
+
+Run the build script:
+
+```powershell
 python scripts/build_exe.py
 ```
 
-The resulting `bulletin_builder` directory contains an executable that can be
-distributed to users on the same platform (Windows or macOS) without needing a
-Python installation.
+This will use PyInstaller and the provided spec file to create a standalone executable in the `build/bulletin_builder` directory.
 
+### 3. Distribute the App
+
+Copy the entire `build/bulletin_builder` folder to your target machine. Users do not need Python installed.
+
+### 4. Configuration
+
+Edit `config.ini` (or copy `config.example.ini` to `config.ini`) and update your OpenAI and SMTP credentials as needed.
+
+### 5. Troubleshooting
+
+- If you encounter missing modules, ensure all dependencies in `requirements.txt` are installed.
+- For GUI issues, verify that CustomTkinter and tkhtmlview are installed and working.
+- For PDF export, WeasyPrint must be installed and functional.
+
+---
+
+destination address to receive a preview message.
 ### SMTP Configuration
 
-To use the **Send Test Email** feature, update `config.ini` with your SMTP
-credentials:
+To use the **Send Test Email** feature, update `config.ini` with your SMTP credentials:
 
 ```ini
 [smtp]
@@ -95,8 +120,7 @@ from_addr = "Bulletin Builder <user@example.com>"
 use_tls = true
 ```
 
-After configuring, click **Send Test Email...** in the app and enter the
-destination address to receive a preview message.
+After configuring, click **Send Test Email...** in the app and enter the destination address to receive a preview message.
 
 ## Keyboard Shortcuts
 
