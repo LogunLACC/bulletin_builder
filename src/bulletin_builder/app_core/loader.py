@@ -11,6 +11,7 @@ MODULES = [
     ("importer", False),      # CSV/Sheet/Feed importers
     ("exporter", False),      # HTML/TXT export, ICS, email
     ("email_deliverability", False),  # DKIM/SPF/DMARC guidance
+    ("email_client_preview", False),  # Email client preview simulation
     ("preview", True),        # defines show_placeholder + update_preview
     ("ui_setup", True),       # builds UI; attaches _build_menus and calls it
 ]

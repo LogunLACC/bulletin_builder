@@ -184,7 +184,17 @@ def _open_in_browser(app):
 def _set_preview_device(app, device):
     """Adjust preview width for responsive modes."""
     app.device_mode = device
-    widths = {"Desktop": 800, "Tablet": 600, "Mobile": 375}
-    width = widths.get(device, 800)
+    
+    # Get width from email client preview if available, otherwise use device defaults
+    if hasattr(app, 'email_client_var') and hasattr(app, 'get_current_client_width'):
+        try:
+            width = app.get_current_client_width()
+        except Exception:
+            widths = {"Desktop": 800, "Tablet": 600, "Mobile": 375}
+            width = widths.get(device, 800)
+    else:
+        widths = {"Desktop": 800, "Tablet": 600, "Mobile": 375}
+        width = widths.get(device, 800)
+    
     if hasattr(app, 'preview_area'):
         app.preview_area.configure(width=width)

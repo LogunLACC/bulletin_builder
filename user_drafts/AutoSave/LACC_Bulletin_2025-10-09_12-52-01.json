@@ -1,0 +1,19 @@
+{
+  "sections": [],
+  "settings": {
+    "bulletin_title": "LACC Bulletin",
+    "bulletin_date": "Thursday, October 09, 2025",
+    "theme_css": "default.css",
+    "colors": {
+      "primary": "#103040",
+      "secondary": "#506070"
+    },
+    "google_api_key": "\"REPLACE_ME_GOOGLE_API_KEY\"",
+    "openai_api_key": "\"REPLACE_ME_OPENAI_API_KEY\"",
+    "events_feed_url": "https://raw.githubusercontent.com/LogunLACC/bulletin_builder/refs/heads/main/events.json",
+    "auto_import_events": false,
+    "appearance_mode": "Light",
+    "events_window_days": null
+  },
+  "template_name": "main_layout.html"
+}

@@ -311,8 +311,8 @@ def init(app):
 
     controls = ctk.CTkFrame(preview_view)
     controls.grid(row=0, column=0, sticky="ew", padx=0, pady=(0, 8))
-    for i in range(5):
-        controls.grid_columnconfigure(i, weight=(1 if i == 4 else 0))
+    for i in range(6):
+        controls.grid_columnconfigure(i, weight=(1 if i == 5 else 0))
 
     app.device_var = tk.StringVar(value="Desktop")
     def _on_device_change(choice):
@@ -328,6 +328,36 @@ def init(app):
                                     command=_on_device_change)
     device_menu.grid(row=0, column=0, padx=(0, 8))
     add_tooltip(device_menu, "Preview width: Desktop/Tablet/Mobile")
+
+    # Email client simulation selector
+    if not hasattr(app, 'email_client_var'):
+        app.email_client_var = tk.StringVar(value="Standard")
+    
+    def _on_client_change(choice):
+        try:
+            if hasattr(app, 'update_preview'):
+                app.update_preview()
+        except Exception:
+            pass
+    
+    client_menu = ctk.CTkOptionMenu(
+        controls,
+        variable=app.email_client_var,
+        values=["Standard", "Gmail", "Outlook", "Apple Mail", "Mobile"],
+        command=_on_client_change
+    )
+    client_menu.grid(row=0, column=1, padx=(0, 8))
+    add_tooltip(client_menu, "Simulate email client rendering")
+    
+    # Info button for client details
+    info_btn = ctk.CTkButton(
+        controls,
+        text="ℹ",
+        width=30,
+        command=lambda: getattr(app, 'show_email_client_info', lambda: None)()
+    )
+    info_btn.grid(row=0, column=2, padx=(0, 8))
+    add_tooltip(info_btn, "Show email client rendering details")
 
     app.preview_mode_var = tk.StringVar(value="Code")
     def on_preview_mode_change(choice):
