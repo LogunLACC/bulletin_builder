@@ -14,7 +14,7 @@
         {"description": "Add an 'Export to PDF' feature for compliance and archiving purposes.", "status": "complete"},
         {"description": "Integrate optional, privacy-respecting analytics for open/click tracking.", "status": "skipped", "note": "User does not need analytics tracking"},
         {"description": "Provide a 'Best Practices for Email' checklist or wizard to guide users before export.", "status": "complete"},
-        {"description": "Automate image optimization during export to inline, compress, and convert images for email safety.", "status": "todo"},
+        {"description": "Automate image optimization during export to inline, compress, and convert images for email safety.", "status": "skipped", "note": "User prefers to skip for now"},
         {"description": "Implement a batch send and scheduling feature with rate limiting and error recovery.", "status": "skipped", "note": "User does not need batch sending"}
       ]
     },
