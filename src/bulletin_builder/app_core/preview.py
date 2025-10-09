@@ -3,20 +3,34 @@ import os
 import tempfile
 import urllib.request
 import concurrent.futures
+from typing import Any, Optional
+from concurrent.futures import Future
 
 from bulletin_builder.app_core.image_utils import optimize_image
 
 _preview_executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
 
-def init(app):
-    """Bind preview methods onto the app."""
+
+def init(app: Any) -> None:
+    """
+    Bind preview methods onto the app.
+    
+    Args:
+        app: Application instance to attach preview functions to
+    """
     app.update_preview      = lambda: _trigger_preview(app)
     app.toggle_preview_mode = lambda mode: _toggle_preview(app, mode)
     app.open_in_browser     = lambda: _open_in_browser(app)
     app.set_preview_device  = lambda device: _set_preview_device(app, device)
     
-    def _toggle_preview(app, mode):
-        """Switch between preview modes (e.g., Rendered/Code)."""
+    def _toggle_preview(app: Any, mode: str) -> None:
+        """
+        Switch between preview modes (e.g., Rendered/Code).
+        
+        Args:
+            app: Application instance
+            mode: Preview mode to switch to
+        """
         if hasattr(app, "preview_mode_var"):
             try:
                 app.preview_mode_var.set(mode)
@@ -24,7 +38,8 @@ def init(app):
             except Exception:
                 pass
 
-    def show_placeholder():
+    def show_placeholder() -> None:
+        """Show placeholder message in preview area."""
         try:
             if hasattr(app, "status_bar"):
                 app.status_bar.configure(text="Waiting for content...")
@@ -39,7 +54,17 @@ def init(app):
     # First paint (safe even before ui_setup builds widgets)
     app.after(0, app.show_placeholder)
 
-def _render_preview_logic(app):
+
+def _render_preview_logic(app: Any) -> str:
+    """
+    Render the bulletin HTML for preview.
+    
+    Args:
+        app: Application instance
+        
+    Returns:
+        Rendered HTML string
+    """
     settings = app.settings_frame.dump() if hasattr(app, "settings_frame") else {}
     context = dict(settings)
     context["sections"] = app.sections_data
@@ -69,8 +94,13 @@ def _render_preview_logic(app):
     return raw_html, rendered
 
 
-def _trigger_preview(app):
-    """Submit a preview render job to the background executor and attach callback."""
+def _trigger_preview(app: Any) -> None:
+    """
+    Submit a preview render job to the background executor and attach callback.
+    
+    Args:
+        app: Application instance
+    """
     try:
         if hasattr(app, '_show_progress'):
             app.after(0, app._show_progress)
@@ -90,7 +120,14 @@ def _trigger_preview(app):
                 app.after(0, app._hide_progress)
 
 
-def _apply_preview(app, future):
+def _apply_preview(app: Any, future: Future) -> None:
+    """
+    Apply rendered preview to the UI.
+    
+    Args:
+        app: Application instance
+        future: Future containing rendered HTML result
+    """
     try:
         raw_html, rendered = future.result()
         mode = app.preview_mode_var.get() if hasattr(app, "preview_mode_var") else "Rendered"
@@ -172,8 +209,13 @@ def _apply_preview(app, future):
         except Exception:
             pass
 
-def _open_in_browser(app):
-    """Fall‑back open‑in‑browser implementation in case exporter didn’t bind it."""
+def _open_in_browser(app: Any) -> None:
+    """
+    Fall-back open-in-browser implementation in case exporter didn't bind it.
+    
+    Args:
+        app: Application instance
+    """
     import webbrowser
     tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".html")
     html = app.renderer.render_html(app.sections_data, app.settings_frame.dump())
@@ -181,8 +223,15 @@ def _open_in_browser(app):
     tmp.close()
     webbrowser.open(tmp.name)
 
-def _set_preview_device(app, device):
-    """Adjust preview width for responsive modes."""
+
+def _set_preview_device(app: Any, device: str) -> None:
+    """
+    Adjust preview width for responsive modes.
+    
+    Args:
+        app: Application instance
+        device: Device mode ('Desktop', 'Tablet', or 'Mobile')
+    """
     app.device_mode = device
     
     # Get width from email client preview if available, otherwise use device defaults

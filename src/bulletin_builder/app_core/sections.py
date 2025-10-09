@@ -1,16 +1,26 @@
 import customtkinter as ctk
 import tkinter as tk
+from typing import Any, Tuple, List, Optional
 from bulletin_builder.ui.base_section import SectionRegistry
+
 
 class AddSectionDialog(ctk.CTkToplevel):
     """Modal dialog to capture title and type for a new section."""
-    def __init__(self, parent, section_types):
+    
+    def __init__(self, parent: Any, section_types: List[str]) -> None:
+        """
+        Initialize the section dialog.
+        
+        Args:
+            parent: Parent window
+            section_types: List of available section type names
+        """
         super().__init__(parent)
         self.title("Add New Section")
         self.geometry("420x220")
         self.transient(parent)
         self.grab_set()
-        self.result = None
+        self.result: Optional[Tuple[str, str]] = None
 
         # Layout with grid for tighter spacing and right-aligned buttons
         frm = ctk.CTkFrame(self)
@@ -43,7 +53,8 @@ class AddSectionDialog(ctk.CTkToplevel):
             pass
         self.wait_window()
 
-    def _center_on_parent(self, parent):
+    def _center_on_parent(self, parent: Any) -> None:
+        """Center the dialog on the parent window."""
         self.update_idletasks()
         try:
             px = parent.winfo_rootx()
@@ -65,7 +76,8 @@ class AddSectionDialog(ctk.CTkToplevel):
             y = (sh - wh) // 2
             self.geometry(f"+{x}+{y}")
 
-    def on_ok(self):
+    def on_ok(self) -> None:
+        """Handle OK button press."""
         title = self.title_entry.get().strip()
         sec_type = self.type_menu.get()
         if not title:
@@ -74,11 +86,23 @@ class AddSectionDialog(ctk.CTkToplevel):
         self.result = (title, sec_type)
         self.destroy()
 
-    def get_input(self):
+    def get_input(self) -> Optional[Tuple[str, str]]:
+        """
+        Get the user input from the dialog.
+        
+        Returns:
+            Tuple of (title, section_type) or None if cancelled
+        """
         return self.result
 
 
-def add_section_dialog(app):
+def add_section_dialog(app: Any) -> None:
+    """
+    Display dialog to add a new section.
+    
+    Args:
+        app: Application instance
+    """
     types = SectionRegistry.available_types()
     dlg = AddSectionDialog(app, types)
     result = dlg.get_input()
@@ -103,7 +127,14 @@ def add_section_dialog(app):
         except Exception:
             pass
 
-def remove_section(app):
+
+def remove_section(app: Any) -> None:
+    """
+    Remove the currently selected section.
+    
+    Args:
+        app: Application instance
+    """
     sel = app.section_listbox.curselection()
     if not sel:
         return
@@ -118,7 +149,16 @@ def remove_section(app):
     except Exception:
         pass
 
-def init(app):
+
+def init(app: Any) -> None:
+    """
+    Initialize sections module.
+    
+    Binds section management functions to the application instance.
+    
+    Args:
+        app: Application instance to attach section functions to
+    """
     # Bind methods to the application instance only during initialization.
     app.add_section_dialog = lambda: add_section_dialog(app)
     app.remove_section = lambda: remove_section(app)
@@ -130,7 +170,14 @@ def init(app):
 # The following functions are now defined and bound inside the init(app) function.
 
 # --- Section Selection ---
-def on_section_select(app, event=None):
+def on_section_select(app: Any, event: Optional[Any] = None) -> None:
+    """
+    Handle section selection from listbox.
+    
+    Args:
+        app: Application instance
+        event: Tkinter event object (optional)
+    """
     sel = app.section_listbox.curselection()
     if not sel:
         return
@@ -148,8 +195,16 @@ def on_section_select(app, event=None):
         print(f"[ERROR] Could not build/replace editor frame: {e}")
     app.active_editor_index = idx
 
+
 # --- Update Section Data ---
-def update_section_data(app, updated):
+def update_section_data(app: Any, updated: dict[str, Any]) -> None:
+    """
+    Update the data for the active section.
+    
+    Args:
+        app: Application instance
+        updated: Dictionary of section data updates to apply
+    """
     if hasattr(app, 'active_editor_index') and app.active_editor_index is not None:
         app.sections_data[app.active_editor_index].update(updated)
         if hasattr(app, 'update_preview'):
@@ -161,8 +216,16 @@ def update_section_data(app, updated):
         except Exception:
             pass
 
+
 # --- Refresh Listbox Titles ---
-def refresh_listbox_titles(app, event=None):
+def refresh_listbox_titles(app: Any, event: Optional[Any] = None) -> None:
+    """
+    Refresh the section listbox with current section titles.
+    
+    Args:
+        app: Application instance
+        event: Tkinter event object (optional)
+    """
     app.section_listbox.delete(0, tk.END)
     for i, sec in enumerate(app.sections_data):
         title = sec.get('title', 'Untitled')
