@@ -52,45 +52,34 @@ pyupdater            # for auto‑update (optional)
 
 ---
 
-distributed to users on the same platform (Windows or macOS) without needing a
 ## Packaging & Build Instructions
 
-### 1. Install Requirements
+### Quick Build
 
-Open PowerShell and run:
+```bash
+# Install PyInstaller if needed
+pip install pyinstaller
 
-```powershell
-pip install -r requirements.txt
-```
-
-### 2. Build the Executable (Windows)
-
-Run the build script:
-
-```powershell
+# Build the executable
 python scripts/build_exe.py
 ```
 
-This will use PyInstaller and the provided spec file to create a standalone executable in the `build/bulletin_builder` directory.
+The built application will be in `dist/bulletin/`.
 
-### 3. Distribute the App
+### Detailed Build Instructions
 
-Copy the entire `build/bulletin_builder` folder to your target machine. Users do not need Python installed.
+See [docs/BUILDING.md](docs/BUILDING.md) for comprehensive build documentation including:
+- Build configuration
+- Data file management
+- Platform-specific notes
+- Troubleshooting
+- Distribution options
 
-### 4. Configuration
+### Configuration
 
-Edit `config.ini` (or copy `config.example.ini` to `config.ini`) and update your OpenAI and SMTP credentials as needed.
-
-### 5. Troubleshooting
-
-- If you encounter missing modules, ensure all dependencies in `requirements.txt` are installed.
-- For GUI issues, verify that CustomTkinter and tkhtmlview are installed and working.
-- For PDF export, WeasyPrint must be installed and functional.
+Edit `config.ini` (or copy `config.ini.default` to `config.ini`) and update your API keys and SMTP credentials as needed.
 
 ---
-
-destination address to receive a preview message.
-### SMTP Configuration
 
 To use the **Send Test Email** feature, update `config.ini` with your SMTP credentials:
 
