@@ -160,6 +160,11 @@ def init(app):
         # Help menu
         help_menu = tk.Menu(menubar, tearoff=0)
         help_menu.add_command(
+            label="Email Best Practices Checklist",
+            command=lambda: getattr(app, 'show_best_practices_checklist', lambda: None)()
+        )
+        help_menu.add_separator()
+        help_menu.add_command(
             label="Email Deliverability Guide (DKIM/SPF/DMARC)",
             command=lambda: getattr(app, 'show_email_auth_guidance', lambda: None)()
         )

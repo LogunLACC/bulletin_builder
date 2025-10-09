@@ -14,6 +14,7 @@ MODULES = [
     ("email_client_preview", False),  # Email client preview simulation
     ("export_validator", False),  # WCAG & spam validation for exports
     ("pdf_exporter", False),  # PDF export for archiving and compliance
+    ("best_practices", False),  # Email best practices checklist/wizard
     ("preview", True),        # defines show_placeholder + update_preview
     ("ui_setup", True),       # builds UI; attaches _build_menus and calls it
 ]
