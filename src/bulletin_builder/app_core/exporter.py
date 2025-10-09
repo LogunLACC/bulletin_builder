@@ -123,5 +123,71 @@ def init(app):
 
   app.on_export_html_text_clicked = lambda: None
   app.on_copy_for_email_clicked = lambda: None
+  
+  # PDF export handler
+  def on_export_pdf_clicked():
+    """Export bulletin to PDF format."""
+    try:
+      from tkinter import filedialog, messagebox
+      import os
+      
+      # Check if PDF exporter is available
+      if not hasattr(app, 'export_to_pdf'):
+        messagebox.showerror(
+          "PDF Export Unavailable",
+          "PDF export requires the 'weasyprint' library.\n\n"
+          "Install with: pip install weasyprint",
+          parent=app
+        )
+        return
+      
+      # Get the HTML content
+      if hasattr(app, 'render_bulletin_html'):
+        # Get context
+        ctx = {}
+        if hasattr(app, 'get_export_context'):
+          ctx = app.get_export_context()
+        html_content = app.render_bulletin_html(ctx)
+      else:
+        messagebox.showerror("Export Error", "Cannot render bulletin HTML", parent=app)
+        return
+      
+      # Ask user where to save
+      default_name = "LACC_Bulletin.pdf"
+      if hasattr(app, 'current_draft_path') and app.current_draft_path:
+        draft_name = os.path.splitext(os.path.basename(app.current_draft_path))[0]
+        default_name = f"{draft_name}.pdf"
+      
+      output_path = filedialog.asksaveasfilename(
+        title="Export to PDF",
+        defaultextension=".pdf",
+        filetypes=[("PDF files", "*.pdf"), ("All files", "*.*")],
+        initialfile=default_name,
+        parent=app
+      )
+      
+      if not output_path:
+        return  # User cancelled
+      
+      # Export to PDF
+      success, message = app.export_to_pdf(html_content, output_path)
+      
+      if success:
+        messagebox.showinfo("PDF Export Successful", message, parent=app)
+        if hasattr(app, 'show_status_message'):
+          app.show_status_message("PDF exported successfully", duration_ms=2000)
+      else:
+        messagebox.showerror("PDF Export Failed", message, parent=app)
+        if hasattr(app, 'show_status_message'):
+          app.show_status_message("PDF export failed", duration_ms=2000)
+      
+    except Exception as e:
+      try:
+        messagebox.showerror('PDF Export Error', str(e), parent=app)
+      except Exception:
+        print('PDF Export Error:', e)
+  
+  app.on_export_pdf_clicked = on_export_pdf_clicked
+  
   # The main handler is now on the app, this is the worker function
   app.export_frontsteps_html = export_frontsteps_html

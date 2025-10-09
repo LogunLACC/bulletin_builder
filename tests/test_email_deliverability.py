@@ -16,7 +16,7 @@ if TK_AVAILABLE:
         _root.destroy()
     except Exception as e:
         TK_AVAILABLE = False
-        pytest.skip(f"Tk not available: {e}")
+        pytest.skip(f"Tk not available: {e}", allow_module_level=True)
 
 
 def test_email_deliverability_module_imports():

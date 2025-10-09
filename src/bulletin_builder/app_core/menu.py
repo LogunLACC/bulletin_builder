@@ -20,6 +20,7 @@ def init(app):
     app.import_announcements_sheet = getattr(app, 'import_announcements_sheet', lambda: None)
     app.import_events_feed = getattr(app, 'import_events_feed', lambda url=None: None)
     app.on_export_html_text_clicked = getattr(app, 'on_export_html_text_clicked', lambda: None)
+    app.on_export_pdf_clicked = getattr(app, 'on_export_pdf_clicked', lambda: None)
     app.on_copy_for_email_clicked = getattr(app, 'on_copy_for_email_clicked', lambda: None)
     app.open_in_browser = getattr(app, 'open_in_browser', lambda: None)
     app.on_export_ics_clicked = getattr(app, 'on_export_ics_clicked', lambda: None)

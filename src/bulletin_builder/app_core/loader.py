@@ -13,6 +13,7 @@ MODULES = [
     ("email_deliverability", False),  # DKIM/SPF/DMARC guidance
     ("email_client_preview", False),  # Email client preview simulation
     ("export_validator", False),  # WCAG & spam validation for exports
+    ("pdf_exporter", False),  # PDF export for archiving and compliance
     ("preview", True),        # defines show_placeholder + update_preview
     ("ui_setup", True),       # builds UI; attaches _build_menus and calls it
 ]

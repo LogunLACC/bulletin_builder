@@ -140,6 +140,7 @@ def init(app):
         file_menu.add_separator()
 
         add("Export Bulletin (FrontSteps)", "export_current_preview")
+        add("Export to PDF...", "on_export_pdf_clicked")
         add("Open in Browser", "open_in_browser")
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=app.destroy)
