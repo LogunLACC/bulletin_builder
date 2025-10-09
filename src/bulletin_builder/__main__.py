@@ -11,7 +11,12 @@ from bulletin_builder.app_core.config import (
     load_confirm_on_close,
     load_autosave_on_close,
 )
+from bulletin_builder.app_core.logging_config import configure_logging, get_logger
 import socket
+
+# Configure logging at application startup
+configure_logging(console_output=True)
+logger = get_logger(__name__)
 
 
 class BulletinBuilderApp(ctk.CTk):

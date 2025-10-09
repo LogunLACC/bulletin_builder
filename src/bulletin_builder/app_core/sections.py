@@ -1,9 +1,6 @@
 import customtkinter as ctk
-import os
 import tkinter as tk
 from bulletin_builder.ui.base_section import SectionRegistry
-
-DEBUG = bool(int(os.getenv('BB_DEBUG', '0') or '0'))
 
 class AddSectionDialog(ctk.CTkToplevel):
     """Modal dialog to capture title and type for a new section."""

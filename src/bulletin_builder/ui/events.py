@@ -1,8 +1,5 @@
 import customtkinter as ctk
-import os
 from .base_section import SectionRegistry
-
-DEBUG = bool(int(os.getenv('BB_DEBUG', '0') or '0'))
 
 @SectionRegistry.register("lacc_events")
 @SectionRegistry.register("community_events")
