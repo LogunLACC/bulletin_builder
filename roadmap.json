@@ -264,7 +264,7 @@
         {
           "description": "Create a centralized settings manager to handle all config file I/O operations.",
           "status": "complete",
-          "note": "Implemented ConfigManager class with dataclass-based configs (SMTPConfig, APIKeys, EventsConfig, WindowConfig, AppSettings). Includes comprehensive load/save operations, backward compatibility layer, and 549 lines with 24 passing tests. Committed in e62722c."
+          "note": "Implemented ConfigManager class with dataclass-based configs (SMTPConfig, APIKeys, EventsConfig, WindowConfig, AppSettings). Includes comprehensive load/save operations, backward compatibility layer, and 549 lines with 24 passing tests. Committed in 88ab4b0."
         },
         {
           "description": "Add validation for all configuration values with helpful error messages.",
@@ -276,8 +276,16 @@
           "status": "complete",
           "note": "Implemented ENV_PREFIX='BULLETIN_' pattern with 16 supported environment variables. Added _get_env_var(), _get_env_bool(), _get_env_int() helper methods. Environment variables override config file values for SMTP, API keys, events, and window settings. Supports both BULLETIN_KEY1_KEY2 and BULLETIN_KEY1__KEY2 formats. Committed with Task 2 in e62722c. All 36 tests passing."
         },
-        {"description": "Add settings migration logic to handle config format changes between versions.", "status": "todo"},
-        {"description": "Create a settings validation tool to check config.ini for common errors before app launch.", "status": "todo"}
+        {
+          "description": "Add settings migration logic to handle config format changes between versions.",
+          "status": "complete",
+          "note": "Created ConfigMigration class with version tracking system (CURRENT_VERSION='2.0'). Implements get_config_version(), set_config_version(), needs_migration(), migrate(), and backup_config(). Migration 1.0→2.0 adds [meta] section, window.autosave_on_close, and normalizes booleans. Integrated with ConfigManager.load() for automatic migration and ConfigManager.save() for version persistence. All 44 tests passing (36 settings + 8 migration). Committed in 0964757."
+        },
+        {
+          "description": "Create a settings validation tool to check config.ini for common errors before app launch.",
+          "status": "complete",
+          "note": "Added --validate-config CLI command with validate_config_command() function. Returns exit codes: 0=valid, 1=errors, 2=file not found. User-friendly output separates ERROR vs WARNING with emojis and status display. Added _get_config_version_from_file() helper to ConfigManager. Includes 5 comprehensive CLI tests covering valid configs, errors, warnings, missing files, and auto-migration. All 49 tests passing (44 settings + 5 CLI). Committed in d97d722."
+        }
       ]
     },
     {
