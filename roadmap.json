@@ -240,9 +240,9 @@
         {"description": "Fix PyInstaller build to correctly bundle python313.dll and all dependencies for standalone execution.", "status": "complete", "note": "Build process works correctly. Improved build_exe.py with error handling for Windows permission issues. Documented workarounds in BUILDING.md"},
         {"description": "Create a proper dist folder structure with all required runtime files (templates, assets, config).", "status": "complete", "note": "Verified dist structure includes all runtime files: templates/, components/, config.ini.default, bulletin_builder/templates/, all DLLs. Structure documented in BUILDING.md"},
         {"description": "Add build validation tests to ensure the executable runs without missing DLLs or imports.", "status": "complete", "note": "Created validate_build.py with 8 comprehensive checks: executable, internal structure, templates, components, config, dependencies, DLLs, launch test. All checks passing!"},
-        {"description": "Document platform-specific build requirements and known issues in README.md.", "status": "in_progress", "note": "BUILDING.md has comprehensive Windows documentation. Need to add platform comparison and update README.md with quick start"},
-        {"description": "Create automated build scripts for Windows and macOS with dependency verification.", "status": "in_progress", "note": "Windows build script complete with error handling and retry logic. macOS/Linux scripts pending"},
-        {"description": "Add installer/setup wizard for easier end-user installation.", "status": "todo"}
+        {"description": "Document platform-specific build requirements and known issues in README.md.", "status": "complete", "note": "Enhanced README.md with Installation section, build quick start, validation steps, Windows notes. BUILDING.md has comprehensive Windows troubleshooting and full platform comparison table (Windows/macOS/Linux)"},
+        {"description": "Create automated build scripts for Windows and macOS with dependency verification.", "status": "complete", "note": "Created 3 platform-specific build scripts: build_exe.py (Windows with permission handling), build_macos.py (.app bundle + .dmg), build_linux.py (AppImage support). All include error handling, cleanup logic, and detailed instructions."},
+        {"description": "Add installer/setup wizard for easier end-user installation.", "status": "todo", "note": "Next: Create installers - Inno Setup (Windows), .dmg with custom background (macOS), .deb/.rpm packages (Linux)"}
       ]
     },
     {
