@@ -653,5 +653,193 @@ class TestEnhancedValidation:
         assert result is True
 
 
+class TestConfigMigration:
+    """Test configuration migration system."""
+
+    def test_get_config_version(self):
+        """Test getting config version."""
+        import configparser
+        from bulletin_builder.app_core.settings_manager import ConfigMigration
+        
+        # Config with version
+        parser = configparser.ConfigParser()
+        parser.add_section("meta")
+        parser.set("meta", "version", "1.5")
+        
+        version = ConfigMigration.get_config_version(parser)
+        assert version == "1.5"
+        
+        # Config without version (defaults to 1.0)
+        parser2 = configparser.ConfigParser()
+        version2 = ConfigMigration.get_config_version(parser2)
+        assert version2 == "1.0"
+
+    def test_set_config_version(self):
+        """Test setting config version."""
+        import configparser
+        from bulletin_builder.app_core.settings_manager import ConfigMigration
+        
+        parser = configparser.ConfigParser()
+        ConfigMigration.set_config_version(parser, "2.5")
+        
+        assert parser.has_section("meta")
+        assert parser.get("meta", "version") == "2.5"
+
+    def test_needs_migration(self):
+        """Test checking if migration is needed."""
+        import configparser
+        from bulletin_builder.app_core.settings_manager import ConfigMigration
+        
+        # Old version needs migration
+        parser1 = configparser.ConfigParser()
+        parser1.add_section("meta")
+        parser1.set("meta", "version", "1.0")
+        assert ConfigMigration.needs_migration(parser1) is True
+        
+        # Current version doesn't need migration
+        parser2 = configparser.ConfigParser()
+        parser2.add_section("meta")
+        parser2.set("meta", "version", ConfigMigration.CURRENT_VERSION)
+        assert ConfigMigration.needs_migration(parser2) is False
+
+    def test_migrate_1_0_to_2_0(self):
+        """Test migration from version 1.0 to 2.0."""
+        import configparser
+        from bulletin_builder.app_core.settings_manager import ConfigMigration
+        
+        # Create a 1.0 config
+        parser = configparser.ConfigParser()
+        parser.add_section("smtp")
+        parser.set("smtp", "host", "smtp.example.com")
+        
+        parser.add_section("window")
+        parser.set("window", "geometry", "1024x768+0+0")
+        parser.set("window", "confirm_on_close", "TRUE")  # Uppercase boolean
+        
+        # Apply migration
+        migrated = ConfigMigration._migrate_1_0_to_2_0(parser)
+        
+        # Check meta section was added
+        assert migrated.has_section("meta")
+        
+        # Check autosave_on_close was added
+        assert migrated.has_option("window", "autosave_on_close")
+        assert migrated.get("window", "autosave_on_close") == "true"
+        
+        # Check boolean normalization
+        assert migrated.get("window", "confirm_on_close") == "true"
+
+    def test_full_migration_process(self):
+        """Test complete migration process."""
+        import configparser
+        from bulletin_builder.app_core.settings_manager import ConfigMigration
+        
+        # Create a 1.0 config
+        parser = configparser.ConfigParser()
+        parser.add_section("smtp")
+        parser.set("smtp", "host", "smtp.gmail.com")
+        parser.set("smtp", "use_tls", "YES")  # Mixed case boolean
+        
+        # Should need migration
+        assert ConfigMigration.needs_migration(parser) is True
+        
+        # Perform migration
+        migrated = ConfigMigration.migrate(parser)
+        
+        # Should now be at current version
+        version = ConfigMigration.get_config_version(migrated)
+        assert version == ConfigMigration.CURRENT_VERSION
+        
+        # Should not need migration anymore
+        assert ConfigMigration.needs_migration(migrated) is False
+        
+        # Check boolean was normalized
+        assert migrated.get("smtp", "use_tls") == "true"
+
+    def test_backup_config(self):
+        """Test config backup creation."""
+        from bulletin_builder.app_core.settings_manager import ConfigMigration
+        
+        # Create a temporary config file
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.ini', delete=False) as f:
+            f.write("[smtp]\nhost = smtp.example.com\n")
+            temp_path = Path(f.name)
+        
+        try:
+            # Create backup
+            backup_path = ConfigMigration.backup_config(temp_path)
+            
+            # Backup should exist
+            assert backup_path.exists()
+            assert "backup" in backup_path.name
+            
+            # Backup should have same content
+            assert backup_path.read_text() == temp_path.read_text()
+            
+            # Clean up backup
+            backup_path.unlink()
+        finally:
+            temp_path.unlink()
+
+    def test_automatic_migration_on_load(self):
+        """Test that ConfigManager automatically migrates old configs."""
+        import configparser
+        
+        # Create a 1.0 config file
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.ini', delete=False) as f:
+            f.write("[smtp]\nhost = smtp.example.com\nuse_tls = TRUE\n")
+            f.write("[window]\ngeometry = 1024x768+0+0\n")
+            temp_path = f.name
+        
+        try:
+            # Load config (should trigger migration)
+            manager = ConfigManager(temp_path)
+            settings = manager.load()
+            
+            # Config should have been migrated
+            parser = configparser.ConfigParser()
+            parser.read(temp_path)
+            
+            # Should have version
+            assert parser.has_section("meta")
+            version = parser.get("meta", "version")
+            assert version == "2.0"
+            
+            # Should have autosave_on_close
+            assert parser.has_option("window", "autosave_on_close")
+            
+            # Backup file should exist
+            backup_files = list(Path(temp_path).parent.glob("*.backup_*"))
+            assert len(backup_files) > 0
+            
+            # Clean up backup
+            for backup in backup_files:
+                backup.unlink()
+        finally:
+            os.unlink(temp_path)
+
+    def test_save_includes_version(self):
+        """Test that saving config always includes version."""
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.ini', delete=False) as f:
+            temp_path = f.name
+        
+        try:
+            # Save config
+            manager = ConfigManager(temp_path)
+            settings = AppSettings()
+            manager.save(settings)
+            
+            # Read back
+            import configparser
+            parser = configparser.ConfigParser()
+            parser.read(temp_path)
+            
+            # Should have version
+            assert parser.has_section("meta")
+            assert parser.get("meta", "version") == "2.0"
+        finally:
+            os.unlink(temp_path)
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

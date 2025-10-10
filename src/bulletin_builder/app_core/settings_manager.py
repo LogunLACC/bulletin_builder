@@ -87,6 +87,150 @@ class ConfigurationError(Exception):
     pass
 
 
+class ConfigMigration:
+    """
+    Handles migration of config.ini between versions.
+    
+    This class manages versioning and migration of configuration files to ensure
+    backward compatibility when config format changes across app versions.
+    """
+    
+    # Current config version
+    CURRENT_VERSION = "2.0"
+    
+    # Migration functions mapping: version -> migration callable
+    MIGRATIONS = {}
+    
+    @classmethod
+    def get_config_version(cls, config: configparser.ConfigParser) -> str:
+        """
+        Get the version number from config file.
+        
+        Args:
+            config: ConfigParser instance
+            
+        Returns:
+            Version string (e.g., "2.0") or "1.0" if not present
+        """
+        return config.get("meta", "version", fallback="1.0")
+    
+    @classmethod
+    def set_config_version(cls, config: configparser.ConfigParser, version: str) -> None:
+        """
+        Set the version number in config file.
+        
+        Args:
+            config: ConfigParser instance
+            version: Version string to set
+        """
+        if not config.has_section("meta"):
+            config.add_section("meta")
+        config.set("meta", "version", version)
+    
+    @classmethod
+    def needs_migration(cls, config: configparser.ConfigParser) -> bool:
+        """
+        Check if config file needs migration.
+        
+        Args:
+            config: ConfigParser instance
+            
+        Returns:
+            True if migration is needed, False otherwise
+        """
+        current = cls.get_config_version(config)
+        return current != cls.CURRENT_VERSION
+    
+    @classmethod
+    def migrate(cls, config: configparser.ConfigParser) -> configparser.ConfigParser:
+        """
+        Migrate config file to current version.
+        
+        Applies all necessary migrations in sequence to bring the config
+        from its current version to CURRENT_VERSION.
+        
+        Args:
+            config: ConfigParser instance to migrate
+            
+        Returns:
+            Migrated ConfigParser instance
+        """
+        current_version = cls.get_config_version(config)
+        logger.info(f"Migrating config from version {current_version} to {cls.CURRENT_VERSION}")
+        
+        # Apply migrations in order
+        if current_version == "1.0" and cls.CURRENT_VERSION >= "2.0":
+            config = cls._migrate_1_0_to_2_0(config)
+            current_version = "2.0"
+        
+        # Set final version
+        cls.set_config_version(config, cls.CURRENT_VERSION)
+        logger.info(f"Config migration complete: now at version {cls.CURRENT_VERSION}")
+        
+        return config
+    
+    @classmethod
+    def _migrate_1_0_to_2_0(cls, config: configparser.ConfigParser) -> configparser.ConfigParser:
+        """
+        Migrate config from version 1.0 to 2.0.
+        
+        Changes in 2.0:
+        - Added [meta] section with version tracking
+        - Renamed [smtp] -> [email] for clarity (if ever applicable)
+        - Added default values for window.autosave_on_close
+        - Standardized boolean values to lowercase (true/false)
+        
+        Args:
+            config: ConfigParser instance at version 1.0
+            
+        Returns:
+            Migrated ConfigParser instance at version 2.0
+        """
+        logger.info("Applying migration: 1.0 -> 2.0")
+        
+        # Add [meta] section if missing
+        if not config.has_section("meta"):
+            config.add_section("meta")
+        
+        # Ensure [window] section has autosave_on_close (added in 2.0)
+        if config.has_section("window"):
+            if not config.has_option("window", "autosave_on_close"):
+                config.set("window", "autosave_on_close", "true")
+                logger.info("Added window.autosave_on_close with default value")
+        
+        # Normalize boolean values to lowercase
+        for section in config.sections():
+            for option in config.options(section):
+                value = config.get(section, option)
+                if value.upper() in ("TRUE", "FALSE", "YES", "NO", "ON", "OFF"):
+                    normalized = "true" if value.upper() in ("TRUE", "YES", "ON", "1") else "false"
+                    config.set(section, option, normalized)
+        
+        logger.info("Migration 1.0 -> 2.0 complete")
+        return config
+    
+    @classmethod
+    def backup_config(cls, config_path: Path) -> Path:
+        """
+        Create a backup of the config file before migration.
+        
+        Args:
+            config_path: Path to config.ini
+            
+        Returns:
+            Path to backup file
+        """
+        import shutil
+        from datetime import datetime
+        
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_path = config_path.parent / f"{config_path.stem}.backup_{timestamp}{config_path.suffix}"
+        shutil.copy(config_path, backup_path)
+        logger.info(f"Created config backup: {backup_path}")
+        
+        return backup_path
+
+
 class ConfigManager:
     """
     Centralized configuration manager.
@@ -180,6 +324,8 @@ class ConfigManager:
         """
         Load all settings from config.ini.
         
+        Automatically migrates config file if needed before loading.
+        
         Returns:
             AppSettings with all configuration loaded
             
@@ -196,6 +342,25 @@ class ConfigManager:
             parser.read(self.config_path, encoding='utf-8')
         except configparser.Error as e:
             raise ConfigurationError(f"Failed to parse config file: {e}") from e
+        
+        # Check if migration is needed
+        if ConfigMigration.needs_migration(parser):
+            logger.info("Config file needs migration")
+            
+            # Backup before migrating
+            ConfigMigration.backup_config(self.config_path)
+            
+            # Perform migration
+            parser = ConfigMigration.migrate(parser)
+            
+            # Save migrated config
+            try:
+                with open(self.config_path, 'w', encoding='utf-8') as f:
+                    parser.write(f)
+                logger.info(f"Saved migrated config to {self.config_path}")
+            except OSError as e:
+                logger.error(f"Failed to save migrated config: {e}")
+                # Continue with migrated parser in memory
         
         return AppSettings(
             smtp=self._load_smtp(parser),
@@ -222,6 +387,9 @@ class ConfigManager:
                 parser.read(self.config_path, encoding='utf-8')
             except configparser.Error as e:
                 logger.warning(f"Could not read existing config: {e}")
+        
+        # Ensure version is set
+        ConfigMigration.set_config_version(parser, ConfigMigration.CURRENT_VERSION)
         
         # Update sections
         self._save_smtp(parser, settings.smtp)
