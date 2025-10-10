@@ -632,7 +632,7 @@ def validate_export(html: str) -> Tuple[ValidationResult, ValidationResult, Vali
     return accessibility_result, spam_result, email_css_result
 
 
-def format_validation_report(accessibility_result: ValidationResult, spam_result: ValidationResult, email_css_result: ValidationResult) -> str:
+def format_validation_report(accessibility_result: ValidationResult, spam_result: ValidationResult, email_css_result: ValidationResult, max_issues_per_type: int = 5) -> str:
     """
     Format validation results into a human-readable report.
     
@@ -640,6 +640,7 @@ def format_validation_report(accessibility_result: ValidationResult, spam_result
         accessibility_result: Accessibility validation results
         spam_result: Spam trigger validation results
         email_css_result: Email compatibility validation results
+        max_issues_per_type: Maximum number of issues to show per severity type (default: 5)
         
     Returns:
         Formatted string report with all validation results
@@ -660,11 +661,14 @@ def format_validation_report(accessibility_result: ValidationResult, spam_result
         for severity in [ValidationIssue.SEVERITY_ERROR, ValidationIssue.SEVERITY_WARNING, ValidationIssue.SEVERITY_INFO]:
             issues = accessibility_result.get_by_severity(severity)
             if issues:
-                lines.append(f"{severity.upper()}:")
-                for issue in issues:
+                lines.append(f"{severity.upper()} ({len(issues)} total):")
+                # Show only first max_issues_per_type issues
+                for issue in issues[:max_issues_per_type]:
                     lines.append(f"  • {issue.message}")
                     if issue.recommendation:
                         lines.append(f"    → {issue.recommendation}")
+                if len(issues) > max_issues_per_type:
+                    lines.append(f"  ... and {len(issues) - max_issues_per_type} more {severity} issues")
                 lines.append("")
     else:
         lines.append("✓ No accessibility issues found")
@@ -680,11 +684,14 @@ def format_validation_report(accessibility_result: ValidationResult, spam_result
         for severity in [ValidationIssue.SEVERITY_ERROR, ValidationIssue.SEVERITY_WARNING, ValidationIssue.SEVERITY_INFO]:
             issues = spam_result.get_by_severity(severity)
             if issues:
-                lines.append(f"{severity.upper()}:")
-                for issue in issues:
+                lines.append(f"{severity.upper()} ({len(issues)} total):")
+                # Show only first max_issues_per_type issues
+                for issue in issues[:max_issues_per_type]:
                     lines.append(f"  • {issue.message}")
                     if issue.recommendation:
                         lines.append(f"    → {issue.recommendation}")
+                if len(issues) > max_issues_per_type:
+                    lines.append(f"  ... and {len(issues) - max_issues_per_type} more {severity} issues")
                 lines.append("")
     else:
         lines.append("✓ No spam triggers detected")
@@ -700,11 +707,14 @@ def format_validation_report(accessibility_result: ValidationResult, spam_result
         for severity in [ValidationIssue.SEVERITY_ERROR, ValidationIssue.SEVERITY_WARNING, ValidationIssue.SEVERITY_INFO]:
             issues = email_css_result.get_by_severity(severity)
             if issues:
-                lines.append(f"{severity.upper()}:")
-                for issue in issues:
+                lines.append(f"{severity.upper()} ({len(issues)} total):")
+                # Show only first max_issues_per_type issues
+                for issue in issues[:max_issues_per_type]:
                     lines.append(f"  • {issue.message}")
                     if issue.recommendation:
                         lines.append(f"    → {issue.recommendation}")
+                if len(issues) > max_issues_per_type:
+                    lines.append(f"  ... and {len(issues) - max_issues_per_type} more {severity} issues")
                 lines.append("")
     else:
         lines.append("✓ No email compatibility issues found")
