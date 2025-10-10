@@ -229,8 +229,8 @@
         {"description": "Remove or document all stub functions in exporter.py (batch_send_emails, optimize_email_images, etc.).", "status": "complete"},
         {"description": "Consolidate duplicate PyInstaller spec files - remove redundant bulletin_builder.spec and src/__main__.spec, keep only packaging/bulletin_builder.spec.", "status": "complete"},
         {"description": "Update PyInstaller spec to include all required data files (templates, assets, config.ini.default) and test the build process.", "status": "complete"},
-        {"description": "Add type hints to all public functions and methods for better IDE support and code clarity.", "status": "in_progress", "note": "Added to drafts.py, export_validator.py, exporter.py, sections.py, preview.py - continuing with remaining modules"},
-        {"description": "Document all public API functions and classes with proper docstrings.", "status": "in_progress", "note": "Adding docstrings alongside type hints"}
+        {"description": "Add type hints to all public functions and methods for better IDE support and code clarity.", "status": "complete", "note": "Added to drafts.py, export_validator.py, exporter.py, sections.py, preview.py, importer.py, ui_setup.py, core_init.py, settings.py. Created TYPE_HINTS_GUIDE.md"},
+        {"description": "Document all public API functions and classes with proper docstrings.", "status": "complete", "note": "Added comprehensive docstrings with Args and Returns sections alongside type hints"}
       ]
     },
     {
