@@ -10,10 +10,15 @@ import configparser
 import os
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
-from typing import Any, Optional, Dict, List
+from typing import Any, Optional, Dict, List, Tuple
 import logging
+import re
 
 logger = logging.getLogger(__name__)
+
+
+# Environment variable prefix
+ENV_PREFIX = "BULLETIN_"
 
 
 @dataclass
@@ -96,14 +101,16 @@ class ConfigManager:
         config.save(settings)
     """
 
-    def __init__(self, config_path: str = "config.ini"):
+    def __init__(self, config_path: str = "config.ini", use_env_vars: bool = True):
         """
         Initialize the configuration manager.
         
         Args:
             config_path: Path to config.ini file (default: "config.ini")
+            use_env_vars: Whether to use environment variable overrides (default: True)
         """
         self.config_path = Path(config_path)
+        self.use_env_vars = use_env_vars
         self._ensure_config_exists()
 
     def _ensure_config_exists(self) -> None:
@@ -117,6 +124,57 @@ class ConfigManager:
                 logger.info(f"Created {self.config_path} from {default_path}")
             else:
                 logger.warning(f"No config file found at {self.config_path}")
+
+    def _get_env_var(self, *keys: str) -> Optional[str]:
+        """
+        Get value from environment variable.
+        
+        Tries multiple key formats:
+        - BULLETIN_SMTP_HOST
+        - BULLETIN_SMTP__HOST (with double underscore)
+        
+        Args:
+            keys: Variable name parts (e.g., "smtp", "host")
+            
+        Returns:
+            Environment variable value or None
+        """
+        if not self.use_env_vars:
+            return None
+        
+        # Try with single underscore
+        env_key = ENV_PREFIX + "_".join(k.upper() for k in keys)
+        value = os.getenv(env_key)
+        if value is not None:
+            logger.debug(f"Using environment variable: {env_key}")
+            return value
+        
+        # Try with double underscore separator
+        env_key = ENV_PREFIX + "__".join(k.upper() for k in keys)
+        value = os.getenv(env_key)
+        if value is not None:
+            logger.debug(f"Using environment variable: {env_key}")
+            return value
+        
+        return None
+
+    def _get_env_bool(self, *keys: str, default: bool = False) -> bool:
+        """Get boolean from environment variable."""
+        value = self._get_env_var(*keys)
+        if value is None:
+            return default
+        return value.lower() in ('true', '1', 'yes', 'on')
+
+    def _get_env_int(self, *keys: str, default: int = 0) -> Optional[int]:
+        """Get integer from environment variable."""
+        value = self._get_env_var(*keys)
+        if value is None:
+            return None
+        try:
+            return int(value)
+        except ValueError:
+            logger.warning(f"Invalid integer in environment variable: {value}")
+            return default
 
     def load(self) -> AppSettings:
         """
@@ -182,18 +240,32 @@ class ConfigManager:
     # ========== SMTP Configuration ==========
 
     def _load_smtp(self, parser: configparser.ConfigParser) -> SMTPConfig:
-        """Load SMTP configuration from parser."""
-        if not parser.has_section("smtp"):
-            return SMTPConfig()
+        """Load SMTP configuration from parser with environment variable overrides."""
+        # Start with defaults or config file values
+        if parser.has_section("smtp"):
+            config = SMTPConfig(
+                host=parser.get("smtp", "host", fallback="smtp.example.com"),
+                port=parser.getint("smtp", "port", fallback=587),
+                username=parser.get("smtp", "username", fallback=""),
+                password=parser.get("smtp", "password", fallback=""),
+                from_addr=parser.get("smtp", "from_addr", fallback="Bulletin Builder <user@example.com>"),
+                use_tls=parser.getboolean("smtp", "use_tls", fallback=True),
+            )
+        else:
+            config = SMTPConfig()
         
-        return SMTPConfig(
-            host=parser.get("smtp", "host", fallback="smtp.example.com"),
-            port=parser.getint("smtp", "port", fallback=587),
-            username=parser.get("smtp", "username", fallback=""),
-            password=parser.get("smtp", "password", fallback=""),
-            from_addr=parser.get("smtp", "from_addr", fallback="Bulletin Builder <user@example.com>"),
-            use_tls=parser.getboolean("smtp", "use_tls", fallback=True),
-        )
+        # Apply environment variable overrides
+        if self.use_env_vars:
+            config.host = self._get_env_var("smtp", "host") or config.host
+            env_port = self._get_env_int("smtp", "port")
+            if env_port is not None:
+                config.port = env_port
+            config.username = self._get_env_var("smtp", "username") or config.username
+            config.password = self._get_env_var("smtp", "password") or config.password
+            config.from_addr = self._get_env_var("smtp", "from_addr") or config.from_addr
+            config.use_tls = self._get_env_bool("smtp", "use_tls", default=config.use_tls)
+        
+        return config
 
     def _save_smtp(self, parser: configparser.ConfigParser, smtp: SMTPConfig) -> None:
         """Save SMTP configuration to parser."""
@@ -220,7 +292,7 @@ class ConfigManager:
     # ========== API Keys ==========
 
     def _load_api_keys(self, parser: configparser.ConfigParser) -> APIKeys:
-        """Load API keys from parser."""
+        """Load API keys from parser with environment variable overrides."""
         google_key = ""
         openai_key = ""
         
@@ -233,6 +305,11 @@ class ConfigManager:
         
         if parser.has_section("openai"):
             openai_key = parser.get("openai", "api_key", fallback="")
+        
+        # Apply environment variable overrides
+        if self.use_env_vars:
+            google_key = self._get_env_var("google", "api_key") or self._get_env_var("api", "google") or google_key
+            openai_key = self._get_env_var("openai", "api_key") or self._get_env_var("api", "openai") or openai_key
         
         return APIKeys(google=google_key, openai=openai_key)
 
@@ -280,15 +357,20 @@ class ConfigManager:
     # ========== Events Configuration ==========
 
     def _load_events(self, parser: configparser.ConfigParser) -> EventsConfig:
-        """Load events configuration from parser."""
-        if not parser.has_section("events"):
-            return EventsConfig()
+        """Load events configuration from parser with environment variable overrides."""
+        if parser.has_section("events"):
+            url = parser.get("events", "feed_url", fallback="")
+            # Strip quotes and whitespace
+            url = url.strip().strip('"\'')
+            auto_import = parser.getboolean("events", "auto_import", fallback=False)
+        else:
+            url = ""
+            auto_import = False
         
-        url = parser.get("events", "feed_url", fallback="")
-        # Strip quotes and whitespace
-        url = url.strip().strip('"\'')
-        
-        auto_import = parser.getboolean("events", "auto_import", fallback=False)
+        # Apply environment variable overrides
+        if self.use_env_vars:
+            url = self._get_env_var("events", "feed_url") or url
+            auto_import = self._get_env_bool("events", "auto_import", default=auto_import)
         
         return EventsConfig(feed_url=url, auto_import=auto_import)
 
@@ -334,16 +416,25 @@ class ConfigManager:
     # ========== Window Configuration ==========
 
     def _load_window(self, parser: configparser.ConfigParser) -> WindowConfig:
-        """Load window configuration from parser."""
-        if not parser.has_section("window"):
-            return WindowConfig()
+        """Load window configuration from parser with environment variable overrides."""
+        if parser.has_section("window"):
+            config = WindowConfig(
+                geometry=parser.get("window", "geometry", fallback=""),
+                state=parser.get("window", "state", fallback=""),
+                confirm_on_close=parser.getboolean("window", "confirm_on_close", fallback=True),
+                autosave_on_close=parser.getboolean("window", "autosave_on_close", fallback=True),
+            )
+        else:
+            config = WindowConfig()
         
-        return WindowConfig(
-            geometry=parser.get("window", "geometry", fallback=""),
-            state=parser.get("window", "state", fallback=""),
-            confirm_on_close=parser.getboolean("window", "confirm_on_close", fallback=True),
-            autosave_on_close=parser.getboolean("window", "autosave_on_close", fallback=True),
-        )
+        # Apply environment variable overrides (usually not used for window state)
+        if self.use_env_vars:
+            config.geometry = self._get_env_var("window", "geometry") or config.geometry
+            config.state = self._get_env_var("window", "state") or config.state
+            config.confirm_on_close = self._get_env_bool("window", "confirm_on_close", default=config.confirm_on_close)
+            config.autosave_on_close = self._get_env_bool("window", "autosave_on_close", default=config.autosave_on_close)
+        
+        return config
 
     def _save_window(self, parser: configparser.ConfigParser, window: WindowConfig) -> None:
         """Save window configuration to parser."""
@@ -401,42 +492,101 @@ class ConfigManager:
 
     # ========== Utility Methods ==========
 
-    def validate(self) -> List[str]:
+    def validate(self) -> List[Tuple[str, str]]:
         """
-        Validate configuration and return list of warnings/errors.
+        Validate configuration and return list of issues.
         
         Returns:
-            List of validation messages (empty if all valid)
+            List of (severity, message) tuples where severity is 'ERROR' or 'WARNING'
+            Empty list if all valid
         """
         issues = []
         settings = self.load()
         
         # Validate SMTP if configured
-        if settings.smtp.host != "smtp.example.com":
+        if settings.smtp.host and settings.smtp.host != "smtp.example.com":
             if not settings.smtp.username:
-                issues.append("SMTP: username is required when host is configured")
+                issues.append(("ERROR", "SMTP: username is required when host is configured"))
             if not settings.smtp.password:
-                issues.append("SMTP: password is required when host is configured")
+                issues.append(("ERROR", "SMTP: password is required when host is configured"))
+            
+            # Check port
             if settings.smtp.port not in [25, 465, 587, 2525]:
-                issues.append(f"SMTP: unusual port {settings.smtp.port} (expected 587, 465, or 25)")
+                issues.append(("WARNING", f"SMTP: unusual port {settings.smtp.port} (common ports: 587 for TLS, 465 for SSL, 25 for unencrypted)"))
+            
+            # Check TLS/SSL port mismatch
+            if settings.smtp.port == 465 and settings.smtp.use_tls:
+                issues.append(("WARNING", "SMTP: port 465 typically uses SSL, not TLS. Consider setting use_tls=false or using port 587"))
+            if settings.smtp.port == 587 and not settings.smtp.use_tls:
+                issues.append(("WARNING", "SMTP: port 587 typically requires TLS. Consider setting use_tls=true"))
+            
+            # Validate from_addr format
+            if settings.smtp.from_addr:
+                # Should match: "Name <email@example.com>" or "email@example.com"
+                if not re.search(r'[^@]+@[^@]+\.[^@]+', settings.smtp.from_addr):
+                    issues.append(("ERROR", f"SMTP: from_addr '{settings.smtp.from_addr}' doesn't contain a valid email address"))
+        
+        # Validate API keys format (basic check)
+        if settings.api_keys.google and settings.api_keys.google == "REPLACE_ME_GOOGLE_API_KEY":
+            issues.append(("WARNING", "Google API key is still set to placeholder value"))
+        if settings.api_keys.openai and settings.api_keys.openai == "REPLACE_ME_OPENAI_API_KEY":
+            issues.append(("WARNING", "OpenAI API key is still set to placeholder value"))
         
         # Validate events feed URL
         if settings.events.feed_url:
             if not (settings.events.feed_url.startswith("http://") or 
                     settings.events.feed_url.startswith("https://")):
-                issues.append("Events: feed_url should be a valid HTTP/HTTPS URL")
+                issues.append(("ERROR", "Events: feed_url must be a valid HTTP or HTTPS URL"))
+            elif settings.events.feed_url.startswith("http://"):
+                issues.append(("WARNING", "Events: feed_url uses HTTP (unencrypted). Consider using HTTPS for security"))
+            
+            # Check if URL looks like placeholder
+            if "example.com" in settings.events.feed_url.lower():
+                issues.append(("WARNING", "Events: feed_url appears to be a placeholder (contains 'example.com')"))
         
         # Validate window geometry format
         if settings.window.geometry:
-            import re
             if not re.match(r'^\d+x\d+[+-]\d+[+-]\d+$', settings.window.geometry):
-                issues.append(f"Window: invalid geometry format '{settings.window.geometry}' (expected WxH+X+Y)")
+                issues.append(("ERROR", f"Window: invalid geometry format '{settings.window.geometry}' (expected: WIDTHxHEIGHT+X+Y, e.g., 1200x800+100+100)"))
+            else:
+                # Parse and validate reasonable values
+                match = re.match(r'^(\d+)x(\d+)[+-](\d+)[+-](\d+)$', settings.window.geometry)
+                if match:
+                    width, height, x, y = map(int, match.groups())
+                    if width < 640 or height < 480:
+                        issues.append(("WARNING", f"Window: geometry {width}x{height} is very small (minimum 640x480 recommended)"))
+                    if width > 7680 or height > 4320:  # 8K resolution
+                        issues.append(("WARNING", f"Window: geometry {width}x{height} is unusually large"))
         
         # Validate window state
-        if settings.window.state and settings.window.state not in ['', 'normal', 'zoomed', 'iconic']:
-            issues.append(f"Window: invalid state '{settings.window.state}' (expected normal, zoomed, or iconic)")
+        valid_states = ['', 'normal', 'zoomed', 'iconic']
+        if settings.window.state and settings.window.state not in valid_states:
+            issues.append(("ERROR", f"Window: invalid state '{settings.window.state}' (expected: {', '.join(valid_states)})"))
         
         return issues
+
+    def validate_and_report(self) -> bool:
+        """
+        Validate configuration and print issues to console.
+        
+        Returns:
+            True if validation passed (no errors), False if errors found
+        """
+        issues = self.validate()
+        
+        if not issues:
+            logger.info("✓ Configuration validation passed")
+            return True
+        
+        has_errors = False
+        for severity, message in issues:
+            if severity == "ERROR":
+                logger.error(f"✗ {message}")
+                has_errors = True
+            else:
+                logger.warning(f"⚠ {message}")
+        
+        return not has_errors
 
     def export_dict(self) -> Dict[str, Any]:
         """
@@ -457,6 +607,39 @@ class ConfigManager:
         """Reset all settings to defaults (useful for testing)."""
         self.save(AppSettings())
         logger.info("Configuration reset to defaults")
+
+    def get_supported_env_vars(self) -> Dict[str, str]:
+        """
+        Get dictionary of all supported environment variables with descriptions.
+        
+        Returns:
+            Dict mapping environment variable names to descriptions
+        """
+        return {
+            # SMTP
+            "BULLETIN_SMTP_HOST": "SMTP server hostname",
+            "BULLETIN_SMTP_PORT": "SMTP server port (587 for TLS, 465 for SSL)",
+            "BULLETIN_SMTP_USERNAME": "SMTP username (usually email address)",
+            "BULLETIN_SMTP_PASSWORD": "SMTP password or app-specific password",
+            "BULLETIN_SMTP_FROM_ADDR": "From address with format: Name <email@example.com>",
+            "BULLETIN_SMTP_USE_TLS": "Use TLS encryption (true/false)",
+            
+            # API Keys
+            "BULLETIN_GOOGLE_API_KEY": "Google AI API key",
+            "BULLETIN_API_GOOGLE": "Google AI API key (alternative name)",
+            "BULLETIN_OPENAI_API_KEY": "OpenAI API key",
+            "BULLETIN_API_OPENAI": "OpenAI API key (alternative name)",
+            
+            # Events
+            "BULLETIN_EVENTS_FEED_URL": "Events feed URL (HTTP/HTTPS)",
+            "BULLETIN_EVENTS_AUTO_IMPORT": "Auto-import events on startup (true/false)",
+            
+            # Window (usually not used via environment)
+            "BULLETIN_WINDOW_GEOMETRY": "Window geometry (WIDTHxHEIGHT+X+Y)",
+            "BULLETIN_WINDOW_STATE": "Window state (normal/zoomed/iconic)",
+            "BULLETIN_WINDOW_CONFIRM_ON_CLOSE": "Confirm before closing (true/false)",
+            "BULLETIN_WINDOW_AUTOSAVE_ON_CLOSE": "Auto-save on close (true/false)",
+        }
 
 
 # Global instance for backward compatibility

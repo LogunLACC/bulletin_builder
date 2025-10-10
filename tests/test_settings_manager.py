@@ -6,7 +6,7 @@ import pytest
 import tempfile
 import os
 from pathlib import Path
-from src.bulletin_builder.app_core.settings_manager import (
+from bulletin_builder.app_core.settings_manager import (
     ConfigManager,
     AppSettings,
     SMTPConfig,
@@ -14,6 +14,7 @@ from src.bulletin_builder.app_core.settings_manager import (
     EventsConfig,
     WindowConfig,
     ConfigurationError,
+    ENV_PREFIX,
 )
 
 
@@ -346,7 +347,9 @@ class TestValidation:
     def test_validate_valid_config(self, config_manager):
         """Test validation of valid configuration."""
         issues = config_manager.validate()
-        assert len(issues) == 0
+        # Config has valid SMTP settings, should have no errors
+        errors = [msg for sev, msg in issues if sev == "ERROR"]
+        assert len(errors) == 0
 
     def test_validate_smtp_missing_credentials(self):
         """Test validation catches missing SMTP credentials."""
@@ -359,8 +362,10 @@ class TestValidation:
             issues = manager.validate()
             
             assert len(issues) > 0
-            assert any("username" in issue.lower() for issue in issues)
-            assert any("password" in issue.lower() for issue in issues)
+            # Check for errors (not just warnings)
+            errors = [msg for sev, msg in issues if sev == "ERROR"]
+            assert any("username" in msg.lower() for msg in errors)
+            assert any("password" in msg.lower() for msg in errors)
         finally:
             os.unlink(temp_path)
 
@@ -375,7 +380,8 @@ class TestValidation:
             issues = manager.validate()
             
             assert len(issues) > 0
-            assert any("feed_url" in issue for issue in issues)
+            messages = [msg for sev, msg in issues]
+            assert any("feed_url" in msg for msg in messages)
         finally:
             os.unlink(temp_path)
 
@@ -390,7 +396,8 @@ class TestValidation:
             issues = manager.validate()
             
             assert len(issues) > 0
-            assert any("geometry" in issue.lower() for issue in issues)
+            messages = [msg for sev, msg in issues]
+            assert any("geometry" in msg.lower() for msg in messages)
         finally:
             os.unlink(temp_path)
 
@@ -405,7 +412,8 @@ class TestValidation:
             issues = manager.validate()
             
             assert len(issues) > 0
-            assert any("state" in issue.lower() for issue in issues)
+            messages = [msg for sev, msg in issues]
+            assert any("state" in msg.lower() for msg in messages)
         finally:
             os.unlink(temp_path)
 
@@ -446,7 +454,7 @@ class TestGlobalInstance:
 
     def test_get_config_manager(self):
         """Test getting global ConfigManager instance."""
-        from src.bulletin_builder.app_core.settings_manager import get_config_manager
+        from bulletin_builder.app_core.settings_manager import get_config_manager
         
         manager1 = get_config_manager()
         manager2 = get_config_manager()
@@ -456,7 +464,7 @@ class TestGlobalInstance:
 
     def test_get_config_manager_different_path(self):
         """Test getting ConfigManager with different path creates new instance."""
-        from src.bulletin_builder.app_core.settings_manager import get_config_manager
+        from bulletin_builder.app_core.settings_manager import get_config_manager
         
         manager1 = get_config_manager("config1.ini")
         manager2 = get_config_manager("config2.ini")
@@ -464,6 +472,185 @@ class TestGlobalInstance:
         # Should return different instances
         assert manager1 is not manager2
         assert str(manager1.config_path) != str(manager2.config_path)
+
+
+class TestEnvironmentVariables:
+    """Test environment variable overrides."""
+
+    def test_smtp_env_override(self, monkeypatch, temp_config_file):
+        """Test SMTP configuration from environment variables."""
+        # Set environment variables
+        monkeypatch.setenv(f"{ENV_PREFIX}SMTP_HOST", "smtp.env.com")
+        monkeypatch.setenv(f"{ENV_PREFIX}SMTP_PORT", "465")
+        monkeypatch.setenv(f"{ENV_PREFIX}SMTP_USERNAME", "env@example.com")
+        monkeypatch.setenv(f"{ENV_PREFIX}SMTP_PASSWORD", "envpass")
+        monkeypatch.setenv(f"{ENV_PREFIX}SMTP_USE_TLS", "false")
+        
+        manager = ConfigManager(temp_config_file, use_env_vars=True)
+        smtp = manager.get_smtp()
+        
+        # Environment variables should override config file
+        assert smtp.host == "smtp.env.com"
+        assert smtp.port == 465
+        assert smtp.username == "env@example.com"
+        assert smtp.password == "envpass"
+        assert smtp.use_tls is False
+
+    def test_api_keys_env_override(self, monkeypatch, temp_config_file):
+        """Test API keys from environment variables."""
+        monkeypatch.setenv(f"{ENV_PREFIX}GOOGLE_API_KEY", "env_google_key")
+        monkeypatch.setenv(f"{ENV_PREFIX}OPENAI_API_KEY", "env_openai_key")
+        
+        manager = ConfigManager(temp_config_file, use_env_vars=True)
+        keys = manager.get_api_keys()
+        
+        assert keys.google == "env_google_key"
+        assert keys.openai == "env_openai_key"
+
+    def test_events_env_override(self, monkeypatch, temp_config_file):
+        """Test events configuration from environment variables."""
+        monkeypatch.setenv(f"{ENV_PREFIX}EVENTS_FEED_URL", "https://env.com/events")
+        monkeypatch.setenv(f"{ENV_PREFIX}EVENTS_AUTO_IMPORT", "false")
+        
+        manager = ConfigManager(temp_config_file, use_env_vars=True)
+        events = manager.get_events_config()
+        
+        assert events.feed_url == "https://env.com/events"
+        assert events.auto_import is False
+
+    def test_env_bool_parsing(self, monkeypatch, temp_config_file):
+        """Test boolean environment variable parsing."""
+        test_cases = [
+            ("true", True),
+            ("TRUE", True),
+            ("1", True),
+            ("yes", True),
+            ("on", True),
+            ("false", False),
+            ("FALSE", False),
+            ("0", False),
+            ("no", False),
+            ("off", False),
+        ]
+        
+        for value, expected in test_cases:
+            monkeypatch.setenv(f"{ENV_PREFIX}SMTP_USE_TLS", value)
+            manager = ConfigManager(temp_config_file, use_env_vars=True)
+            smtp = manager.get_smtp()
+            assert smtp.use_tls is expected, f"Failed for value: {value}"
+
+    def test_env_disabled(self, monkeypatch, temp_config_file):
+        """Test that environment variables are ignored when disabled."""
+        monkeypatch.setenv(f"{ENV_PREFIX}SMTP_HOST", "smtp.env.com")
+        
+        manager = ConfigManager(temp_config_file, use_env_vars=False)
+        smtp = manager.get_smtp()
+        
+        # Should use config file value, not environment
+        assert smtp.host == "smtp.test.com"
+        assert smtp.host != "smtp.env.com"
+
+    def test_get_supported_env_vars(self, config_manager):
+        """Test getting list of supported environment variables."""
+        env_vars = config_manager.get_supported_env_vars()
+        
+        # Check some key variables are documented
+        assert "BULLETIN_SMTP_HOST" in env_vars
+        assert "BULLETIN_GOOGLE_API_KEY" in env_vars
+        assert "BULLETIN_EVENTS_FEED_URL" in env_vars
+        
+        # Check descriptions are present
+        for var, desc in env_vars.items():
+            assert isinstance(desc, str)
+            assert len(desc) > 0
+
+
+class TestEnhancedValidation:
+    """Test enhanced validation with severity levels."""
+
+    def test_validate_returns_tuples(self, config_manager):
+        """Test that validate returns (severity, message) tuples."""
+        issues = config_manager.validate()
+        
+        # Should return list of tuples
+        for issue in issues:
+            assert isinstance(issue, tuple)
+            assert len(issue) == 2
+            severity, message = issue
+            assert severity in ["ERROR", "WARNING"]
+            assert isinstance(message, str)
+
+    def test_validate_smtp_tls_port_mismatch(self):
+        """Test validation catches TLS/SSL port mismatches."""
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.ini', delete=False) as f:
+            # Port 465 with TLS (should use SSL)
+            f.write("[smtp]\nhost = smtp.test.com\nport = 465\nuse_tls = true\n")
+            temp_path = f.name
+        
+        try:
+            manager = ConfigManager(temp_path)
+            issues = manager.validate()
+            
+            # Should have warning about port/TLS mismatch
+            assert any("465" in msg and "SSL" in msg for sev, msg in issues)
+        finally:
+            os.unlink(temp_path)
+
+    def test_validate_placeholder_values(self):
+        """Test validation catches placeholder values."""
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.ini', delete=False) as f:
+            f.write("[google]\napi_key = REPLACE_ME_GOOGLE_API_KEY\n")
+            temp_path = f.name
+        
+        try:
+            manager = ConfigManager(temp_path)
+            issues = manager.validate()
+            
+            # Should have warning about placeholder
+            assert any("placeholder" in msg.lower() for sev, msg in issues)
+        finally:
+            os.unlink(temp_path)
+
+    def test_validate_insecure_http(self):
+        """Test validation warns about HTTP (not HTTPS)."""
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.ini', delete=False) as f:
+            f.write("[events]\nfeed_url = http://example.com/events\n")
+            temp_path = f.name
+        
+        try:
+            manager = ConfigManager(temp_path)
+            issues = manager.validate()
+            
+            # Should have warning about HTTP
+            assert any("HTTP" in msg and "unencrypted" in msg.lower() for sev, msg in issues)
+        finally:
+            os.unlink(temp_path)
+
+    def test_validate_window_size_warnings(self):
+        """Test validation warns about unusual window sizes."""
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.ini', delete=False) as f:
+            # Very small window
+            f.write("[window]\ngeometry = 400x300+0+0\n")
+            temp_path = f.name
+        
+        try:
+            manager = ConfigManager(temp_path)
+            issues = manager.validate()
+            
+            # Should have warning about small size
+            assert any("small" in msg.lower() for sev, msg in issues)
+        finally:
+            os.unlink(temp_path)
+
+    def test_validate_and_report(self, config_manager, caplog):
+        """Test validate_and_report method."""
+        import logging
+        caplog.set_level(logging.INFO)
+        
+        result = config_manager.validate_and_report()
+        
+        # Should return True (no errors in test config)
+        assert result is True
 
 
 if __name__ == "__main__":
