@@ -8,11 +8,21 @@ This guide explains how to build standalone executables of Bulletin Builder usin
 # Install PyInstaller if not already installed
 pip install pyinstaller
 
+# IMPORTANT: Close the Bulletin Builder application if it's running
+# (to avoid Windows permission errors)
+
 # Build the executable
 python scripts/build_exe.py
 ```
 
 The built application will be in `dist/bulletin/`.
+
+## Prerequisites
+
+- Python 3.9+ with pip
+- PyInstaller 6.0+
+- All project dependencies installed (`pip install -e .`)
+- **Windows users:** Close any running instances of Bulletin Builder before building
 
 ## Build Process
 
@@ -52,12 +62,18 @@ The build process automatically includes:
 **File:** `scripts/build_exe.py`
 
 The build script:
-1. Locates the canonical spec file
-2. Runs PyInstaller with `--clean` and `--noconfirm` flags
-3. Reports build progress and completion
+1. Manually cleans build/dist directories (with retry logic for Windows)
+2. Locates the canonical spec file
+3. Runs PyInstaller with `--noconfirm` flag
+4. Reports build progress and completion
 
-```python
-python scripts/build_exe.py
+**Options:**
+- Default: Cleans previous builds before building
+- `--no-clean`: Skip the cleanup step
+
+```bash
+python scripts/build_exe.py          # Normal build with cleanup
+python scripts/build_exe.py --no-clean  # Build without cleanup
 ```
 
 ### 4. Manual Build
@@ -166,6 +182,57 @@ cd dist/bulletin
 
 ## Troubleshooting
 
+### Windows Permission Errors (PermissionError [WinError 5])
+
+**Problem:** Build fails with "PermissionError: [WinError 5] Access is denied" when trying to remove build or dist directories.
+
+**Common Cause:** The Bulletin Builder application is still running in the background, holding locks on files in the dist folder (especially `dist\bulletin\_internal\aiohttp\_websocket` and other DLL files).
+
+**Solutions:**
+
+1. **Close the Application First (Recommended):**
+   ```bash
+   # Make sure no bulletin.exe or python processes are running
+   # On Windows PowerShell:
+   taskkill /F /IM bulletin.exe /T
+   
+   # Or close via Task Manager:
+   # Ctrl+Shift+Esc → Find "bulletin.exe" or "Bulletin Builder" → End Task
+   
+   # Then build:
+   python scripts/build_exe.py
+   ```
+
+2. **Use the --no-clean Flag:**
+   ```bash
+   # Skip cleanup and build anyway
+   python scripts/build_exe.py --no-clean
+   ```
+
+3. **Use Build Directory Output:**
+   If the build succeeds but fails copying to dist, the executable is still created successfully in `build/bulletin_builder/bulletin.exe`. You can use this directly:
+   ```bash
+   # Run from build directory
+   build\bulletin_builder\bulletin.exe --gui
+   ```
+
+4. **Manual Cleanup:**
+   ```powershell
+   # Force remove directories (requires admin privileges)
+   Remove-Item -Path "build" -Recurse -Force
+   Remove-Item -Path "dist" -Recurse -Force
+   
+   # Then build
+   python scripts/build_exe.py --no-clean
+   ```
+
+**Technical Details:**
+- PyInstaller completes all build stages successfully (Analysis → PYZ → PKG → EXE)
+- The EXE is created in `build/bulletin_builder/bulletin.exe`
+- Only the final COLLECT stage (copying to dist) fails when files are locked
+- The build script includes retry logic with 2-second delays for transient locks
+- If retry fails, you'll see warnings but the build continues
+
 ### Missing Modules
 
 **Problem:** ImportError when running the executable
@@ -212,10 +279,11 @@ excludes=[
 **Problem:** PyInstaller fails during build
 
 **Solutions:**
-1. Ensure all dependencies are installed: `pip install -r requirements.txt`
-2. Use `--clean` flag to remove cached files
+1. **First:** Close any running instances of the application (see Windows Permission Errors above)
+2. Ensure all dependencies are installed: `pip install -r requirements.txt`
 3. Update PyInstaller: `pip install --upgrade pyinstaller`
 4. Check the build log in `build/bulletin/` directory
+5. Try with `--no-clean` flag to skip problematic cleanup
 
 ### Console Window Appears
 
