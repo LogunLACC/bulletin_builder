@@ -1,5 +1,6 @@
 import customtkinter as ctk
 import tkinter as tk
+from typing import Any
 from tkinter import messagebox
 from tkhtmlview import HTMLLabel
 from ..ui.settings import SettingsFrame
@@ -50,8 +51,13 @@ DESIGN = {
     "font_size_xl": 18,
 }
 
-def _show_about_dialog(app):
-    """Display a simple About dialog with app version and info."""
+def _show_about_dialog(app: Any) -> None:
+    """
+    Display a simple About dialog with app version and info.
+    
+    Args:
+        app: Application instance
+    """
     messagebox.showinfo(
         "About Bulletin Builder",
         "LACC Bulletin Builder v0.1.1\n\n"
@@ -60,11 +66,16 @@ def _show_about_dialog(app):
         parent=app
     )
 
-def init(app):
-    """Construct the main UI elements on the provided app instance.
+
+def init(app: Any) -> None:
+    """
+    Construct the main UI elements on the provided app instance.
 
     This function intentionally performs all GUI creation only when called so
     that importing this module is safe in headless/test environments.
+    
+    Args:
+        app: Application instance to initialize UI components on
     """
 
     # ---------- safety shims ----------

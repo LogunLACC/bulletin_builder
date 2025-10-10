@@ -2,6 +2,7 @@
 
 import customtkinter as ctk
 from pathlib import Path
+from typing import Any
 import concurrent.futures
 
 import openai
@@ -24,7 +25,21 @@ from bulletin_builder.ui import announcements  # noqa:F401
 SectionRegistry.available_types = classmethod(lambda cls: list(cls._frames.keys()))
 
 
-def init(app):
+def init(app: Any) -> None:
+    """
+    Initialize core application components and attributes.
+    
+    Sets up:
+    - Section data structures
+    - API keys (Google, OpenAI)
+    - Bulletin renderer with templates
+    - Progress indicators
+    - Background thread executor
+    - AI callback system
+    
+    Args:
+        app: Application instance to initialize
+    """
     # --- Base attributes ---
     app.sections_data = []
     app.current_draft_path = None
