@@ -158,6 +158,13 @@ class BulletinBuilderApp(ctk.CTk):
     def _finalize_close(self):
         """Save window state and destroy the window."""
         try:
+            # Stop auto-backup system before closing
+            if hasattr(self, 'backup_manager'):
+                try:
+                    self.backup_manager.stop()
+                except Exception as e:
+                    logger.debug(f"Error stopping backup manager: {e}")
+            
             st = self.state()
             geo = self.geometry()
             if st == 'zoomed':

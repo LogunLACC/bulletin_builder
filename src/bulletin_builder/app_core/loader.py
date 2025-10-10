@@ -5,6 +5,7 @@ MODULES = [
     ("handlers", False),
     ("component_manager", False),
     ("drafts", False),
+    ("auto_backup", True),    # automatic draft backup for crash recovery
     ("sections", False),
     ("suggestions", False),   # Ensure full menubar (File + Tools) is wired even if ui_setup's fallback kicks in
     ("menu", False),
