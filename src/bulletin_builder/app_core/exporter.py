@@ -93,8 +93,26 @@ def init(app: Any) -> None:
             except Exception:
                 print('Copy FrontSteps Error', e)
 
+    def on_copy_for_frontsteps_clicked() -> None:
+        """Handler for Copy FrontSteps HTML menu item."""
+        try:
+            # Get the rendered bulletin HTML
+            if hasattr(app, 'render_bulletin_html'):
+                ctx = _collect_context()
+                html_content = app.render_bulletin_html(ctx)
+                export_frontsteps_html(html_content)
+            else:
+                messagebox.showerror(
+                    'Export Error',
+                    'Bulletin rendering is not available.',
+                    parent=app
+                )
+        except Exception as e:
+            messagebox.showerror('Export Error', str(e), parent=app)
+
     app.on_export_html_text_clicked = lambda: None
     app.on_copy_for_email_clicked = lambda: None
+    app.on_copy_for_frontsteps_clicked = on_copy_for_frontsteps_clicked
     
     # PDF export handler
     def on_export_pdf_clicked() -> None:

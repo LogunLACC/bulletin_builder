@@ -22,6 +22,7 @@ def init(app):
     app.on_export_html_text_clicked = getattr(app, 'on_export_html_text_clicked', lambda: None)
     app.on_export_pdf_clicked = getattr(app, 'on_export_pdf_clicked', lambda: None)
     app.on_copy_for_email_clicked = getattr(app, 'on_copy_for_email_clicked', lambda: None)
+    app.on_copy_for_frontsteps_clicked = getattr(app, 'on_copy_for_frontsteps_clicked', lambda: None)
     app.open_in_browser = getattr(app, 'open_in_browser', lambda: None)
     app.on_export_ics_clicked = getattr(app, 'on_export_ics_clicked', lambda: None)
     # No UI construction here; ui_setup.build_menus will create the actual menubar.
