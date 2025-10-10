@@ -261,9 +261,21 @@
       "name": "Configuration & Settings",
       "goal": "Improve configuration management and user settings persistence.",
       "tasks": [
-        {"description": "Create a centralized settings manager to handle all config file I/O operations.", "status": "todo"},
-        {"description": "Add validation for all configuration values with helpful error messages.", "status": "todo"},
-        {"description": "Support environment variable overrides for all configuration options.", "status": "todo"},
+        {
+          "description": "Create a centralized settings manager to handle all config file I/O operations.",
+          "status": "complete",
+          "note": "Implemented ConfigManager class with dataclass-based configs (SMTPConfig, APIKeys, EventsConfig, WindowConfig, AppSettings). Includes comprehensive load/save operations, backward compatibility layer, and 549 lines with 24 passing tests. Committed in e62722c."
+        },
+        {
+          "description": "Add validation for all configuration values with helpful error messages.",
+          "status": "complete",
+          "note": "Enhanced validate() method returns List[Tuple[str, str]] with ERROR/WARNING severity levels. Validates SMTP (credentials, ports, TLS/SSL mismatches, email format), API keys (placeholders), Events (HTTP/HTTPS, placeholders), Window (geometry, size, state). Added validate_and_report() for console output. Committed with Task 3 in e62722c."
+        },
+        {
+          "description": "Support environment variable overrides for all configuration options.",
+          "status": "complete",
+          "note": "Implemented ENV_PREFIX='BULLETIN_' pattern with 16 supported environment variables. Added _get_env_var(), _get_env_bool(), _get_env_int() helper methods. Environment variables override config file values for SMTP, API keys, events, and window settings. Supports both BULLETIN_KEY1_KEY2 and BULLETIN_KEY1__KEY2 formats. Committed with Task 2 in e62722c. All 36 tests passing."
+        },
         {"description": "Add settings migration logic to handle config format changes between versions.", "status": "todo"},
         {"description": "Create a settings validation tool to check config.ini for common errors before app launch.", "status": "todo"}
       ]
