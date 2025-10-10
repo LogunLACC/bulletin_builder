@@ -84,20 +84,25 @@ class BulletinBuilderApp(ctk.CTk):
 
     def _on_close(self):
         """Handle the window close event."""
-        # 1. Check if user wants to cancel the close operation
-        if self._confirm_close_is_denied():
-            return
+        try:
+            # 1. Check if user wants to cancel the close operation
+            if self._confirm_close_is_denied():
+                return
 
-        # 2. Perform autosave if enabled
-        autosave_path = self._perform_autosave()
+            # 2. Perform autosave if enabled
+            autosave_path = self._perform_autosave()
 
-        # 3. Show a status message if a save occurred
-        if autosave_path and hasattr(self, 'show_status_message'):
-            self.show_status_message(f"Autosaved to {autosave_path}", duration_ms=800)
+            # 3. Show a status message if a save occurred
+            if autosave_path and hasattr(self, 'show_status_message'):
+                self.show_status_message(f"Autosaved to {autosave_path}", duration_ms=800)
 
-        # 4. Finalize the closing process (with a delay for the toast)
-        delay = 800 if autosave_path else 0
-        self.after(delay, self._finalize_close)
+            # 4. Finalize the closing process (with a delay for the toast)
+            delay = 800 if autosave_path else 0
+            self.after(delay, self._finalize_close)
+        except Exception as e:
+            # If anything fails, still close the app (don't trap the user!)
+            logger.error(f"Error during close: {e}", exc_info=True)
+            self._finalize_close()
 
     def _confirm_close_is_denied(self) -> bool:
         """Show a confirmation dialog if configured. Return True if user cancels."""
