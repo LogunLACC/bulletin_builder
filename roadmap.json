@@ -297,7 +297,11 @@
         {"description": "Add performance benchmarks to detect regressions in render/export times.", "status": "todo"},
         {"description": "Expand CI to test on multiple Python versions (3.9, 3.10, 3.11, 3.13) and platforms (Windows, macOS, Linux).", "status": "todo"},
         {"description": "Add automated visual regression tests for UI components using screenshot comparison.", "status": "todo"},
-        {"description": "Create smoke tests for all menu handlers and export workflows.", "status": "todo"}
+        {
+          "description": "Create smoke tests for all menu handlers and export workflows.",
+          "status": "complete",
+          "note": "Expanded test_smoke.py from 2 to 11 comprehensive tests. Added TestMenuHandlers (4 tests verifying all 12 menu handlers including new on_copy_for_frontsteps_clicked), TestExportWorkflows (3 tests for bulletin/FrontSteps/email rendering), TestImportWorkflows (2 tests for importer and CSV support). All 11 tests passing. Also fixed FrontSteps export handler registration bug in menu.py and exporter.py. Committed in feb9367 (bug fix) and e596eaa (tests)."
+        }
       ]
     },
     {
