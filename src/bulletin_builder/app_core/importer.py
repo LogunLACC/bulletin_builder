@@ -2,6 +2,7 @@ import io
 import csv
 import urllib.request
 import threading
+from typing import Any, Optional
 from tkinter import filedialog, messagebox, simpledialog
 from bulletin_builder.event_feed import (
     fetch_events,
@@ -13,14 +14,31 @@ from bulletin_builder.event_feed import (
 
 
 # --- Non-disruptive CSV parser helpers (append-only) -------------------
-def _bb_norm(value):
-    """Normalize a single CSV cell value to a stripped string (None -> '')."""
+def _bb_norm(value: Any) -> str:
+    """
+    Normalize a single CSV cell value to a stripped string (None -> '').
+    
+    Args:
+        value: Cell value to normalize
+        
+    Returns:
+        Normalized string value
+    """
     if value is None:
         return ""
     return str(value).strip()
 
-def _bb_norm_header(h):
-    """Normalize a header name for mapping (lowercase, underscores)."""
+
+def _bb_norm_header(h: str) -> str:
+    """
+    Normalize a header name for mapping (lowercase, underscores).
+    
+    Args:
+        h: Header name to normalize
+        
+    Returns:
+        Normalized header name
+    """
     s = _bb_norm(h).lower()
     for ch in (" ", "-", ".", "/"):
         s = s.replace(ch, "_")
@@ -49,7 +67,7 @@ _BB_HEADER_MAP = {
     "anchor": "link_text",
 }
 
-def parse_announcements_csv(text):
+def parse_announcements_csv(text: str) -> list[dict[str, str]]:
     """
     Parse CSV text into a list of dicts:
       {title, body, link, link_text}
@@ -59,6 +77,12 @@ def parse_announcements_csv(text):
     - Skips blank lines
     - Defaults link_text to 'Learn more' when link is present but text is blank
     This helper is append-only and does not modify existing import logic.
+    
+    Args:
+        text: CSV text content to parse
+        
+    Returns:
+        List of announcement dictionaries with keys: title, body, link, link_text
     """
     if not text:
         return []
@@ -100,14 +124,25 @@ def parse_announcements_csv(text):
 NET_TIMEOUT = 12  # seconds
 
 
-def init(app):
-    """Attach CSV/JSON/Feed import handlers onto app."""
+def init(app: Any) -> None:
+    """
+    Attach CSV/JSON/Feed import handlers onto app.
+    
+    Args:
+        app: Application instance to attach import functions to
+    """
     # Bind handler callables onto the app
     app.import_announcements_csv = lambda: import_csv_file(app)
     app.import_announcements_sheet = lambda: import_google_sheet(app)
     app.import_events_feed = lambda url=None: import_events_feed(app, url)
 
-    def auto_sync_events_feed(force: bool = False):
+    def auto_sync_events_feed(force: bool = False) -> None:
+        """
+        Auto-sync events feed if enabled.
+        
+        Args:
+            force: If True, sync regardless of auto-import setting
+        """
         url = getattr(app, "events_feed_url", "")
         if not url:
             return
@@ -129,7 +164,13 @@ def init(app):
         pass
 
     # ---------- CSV FILE ----------
-def import_csv_file(app):
+def import_csv_file(app: Any) -> None:
+    """
+    Import announcements from a CSV file.
+    
+    Args:
+        app: Application instance
+    """
     path = filedialog.askopenfilename(
         defaultextension=".csv",
         filetypes=[("CSV Files", "*.csv")],
@@ -165,7 +206,13 @@ def import_csv_file(app):
         return
 
     # ---------- GOOGLE SHEET (public CSV URL) ----------
-def import_google_sheet(app):
+def import_google_sheet(app: Any) -> None:
+    """
+    Import announcements from a Google Sheet public CSV URL.
+    
+    Args:
+        app: Application instance
+    """
     url = simpledialog.askstring("Google Sheet URL", "Enter public CSV URL:", parent=app)
     if not url:
         return
@@ -281,8 +328,14 @@ def import_events_feed(app, url: str | None = None):
 
 # --- INTERNAL ----------------------------------------------------------------
 
-def _submit(app, fn):
-    """Submit work to app's executor or a daemon thread."""
+def _submit(app: Any, fn: Any) -> None:
+    """
+    Submit work to app's executor or a daemon thread.
+    
+    Args:
+        app: Application instance
+        fn: Function to execute in background thread
+    """
     if getattr(app, "_thread_executor", None):
         app._thread_executor.submit(fn)
     else:
@@ -290,7 +343,14 @@ def _submit(app, fn):
 
 
 # New: robust mapping for announcements CSV import
-def _apply_announcements_to_app(app, announcements):
+def _apply_announcements_to_app(app: Any, announcements: list[dict[str, str]]) -> None:
+    """
+    Apply imported announcements to the app's sections data.
+    
+    Args:
+        app: Application instance
+        announcements: List of announcement dictionaries
+    """
     """Update or create the Announcements section and refresh the UI."""
     if not hasattr(app, "sections_data"):
         app.sections_data = []
