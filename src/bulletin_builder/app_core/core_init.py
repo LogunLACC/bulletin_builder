@@ -58,6 +58,26 @@ def init(app: Any) -> None:
     # --- Renderer setup ---
     tpl_dir = Path(__file__).parent.parent / "templates"
     app.renderer = BulletinRenderer(templates_dir=tpl_dir, template_name='main_layout.html')
+    
+    # Add render_bulletin_html method that uses the real renderer
+    def render_bulletin_html(ctx: dict) -> str:
+        """Render bulletin HTML using the template renderer."""
+        return app.renderer.render(ctx)
+    
+    app.render_bulletin_html = render_bulletin_html
+    
+    # Add collect_context method for gathering render context
+    def collect_context() -> dict:
+        """Collect all context needed for rendering."""
+        settings = app.settings_frame.dump() if hasattr(app, 'settings_frame') else {}
+        return {
+            'title': settings.get('bulletin_title', 'Bulletin'),
+            'date': settings.get('bulletin_date', ''),
+            'sections': getattr(app, 'sections_data', []),
+            'settings': settings
+        }
+    
+    app.collect_context = collect_context
 
     # --- Progress indicator ---
     app.progress = ctk.CTkProgressBar(app, mode="indeterminate")

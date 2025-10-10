@@ -95,20 +95,30 @@ def init(app: Any) -> None:
 
     def on_copy_for_frontsteps_clicked() -> None:
         """Handler for Copy FrontSteps HTML menu item."""
+        from bulletin_builder.app_core.logging_config import get_logger
+        logger = get_logger(__name__)
+        
         try:
+            logger.info("FrontSteps export triggered")
+            
             # Get the rendered bulletin HTML
             if hasattr(app, 'render_bulletin_html'):
+                logger.info("Using app.render_bulletin_html")
                 ctx = _collect_context()
+                logger.info(f"Context collected: {list(ctx.keys())}")
                 html_content = app.render_bulletin_html(ctx)
+                logger.info(f"HTML rendered, length: {len(html_content)}")
                 export_frontsteps_html(html_content)
             else:
+                logger.error("app.render_bulletin_html not found")
                 messagebox.showerror(
                     'Export Error',
                     'Bulletin rendering is not available.',
                     parent=app
                 )
         except Exception as e:
-            messagebox.showerror('Export Error', str(e), parent=app)
+            logger.error(f"FrontSteps export failed: {e}", exc_info=True)
+            messagebox.showerror('Export Error', f'Failed to export: {str(e)}', parent=app)
 
     app.on_export_html_text_clicked = lambda: None
     app.on_copy_for_email_clicked = lambda: None
