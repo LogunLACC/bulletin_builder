@@ -29,16 +29,30 @@ def demote_semantics(html: str) -> str:
 
 
 def strip_picture(html: str) -> str:
+    from bulletin_builder.app_core.logging_config import get_logger
+    logger = get_logger(__name__)
+    
     soup = _soup(html)
     body = soup.body or soup
-    for pic in body.find_all('picture'):
+    
+    pictures = body.find_all('picture')
+    logger.info(f"Found {len(pictures)} picture tags")
+    
+    for pic in pictures:
         img = pic.find('img')
+        logger.info(f"Picture tag: {pic.name}, Has img: {img is not None}")
         if img:
+            logger.info(f"Replacing picture with img: {str(img)[:100]}")
             pic.replace_with(img)
         else:
+            logger.warning(f"Picture has no img child, decomposing: {str(pic)[:200]}")
             pic.decompose()
-    for src in body.find_all('source'):
+    
+    sources = body.find_all('source')
+    logger.info(f"Removing {len(sources)} source tags")
+    for src in sources:
         src.decompose()
+    
     return str(soup)
 
 
@@ -116,6 +130,9 @@ def simplify_buttons(html: str) -> str:
     - Collapse presentation tables that only wrap a single anchor
     - For anchors with heavy button styles, keep underline + inherit color
     """
+    from bulletin_builder.app_core.logging_config import get_logger
+    logger = get_logger(__name__)
+    
     soup = _soup(html)
     body = soup.body or soup
 
@@ -124,8 +141,17 @@ def simplify_buttons(html: str) -> str:
         anchors = table.find_all('a')
         if len(anchors) == 1 and len(table.find_all('tr')) <= 2 and len(table.find_all('td')) <= 2:
             a = anchors[0]
+            
+            # Check if anchor contains an image - if so, preserve it instead of converting to text
+            img = a.find('img')
+            if img:
+                logger.info(f"Skipping table collapse - anchor contains image: {img.get('src', '')[:60]}")
+                continue
+            
+            text = a.get_text()
+            logger.info(f"Collapsing button table around anchor with text: '{text[:50]}'")
             new_a = soup.new_tag('a', href=a.get('href', ''))
-            new_a.string = a.get_text() or 'More Info'
+            new_a.string = text or 'More Info'
             new_a['style'] = 'margin:0; padding:0; text-decoration:underline; color:inherit;'
             table.replace_with(new_a)
 
@@ -133,6 +159,7 @@ def simplify_buttons(html: str) -> str:
     for a in body.find_all('a'):
         style = (a.get('style') or '').lower()
         if 'display:inline-block' in style or 'background-color' in style:
+            logger.info(f"Lightening heavy anchor: {a.get('href', '')[:60]}")
             a['style'] = 'margin:0; padding:0; text-decoration:underline; color:inherit;'
     return str(soup)
 
