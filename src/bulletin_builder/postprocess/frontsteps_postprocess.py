@@ -51,6 +51,11 @@ _RX_FORBIDDEN_WRAPPERS = (
 _RX_CENTER_OPEN = re.compile(r"(?is)<center\b[^>]*>")
 _RX_CENTER_CLOSE = re.compile(r"(?is)</center>")
 
+# Unwrap <picture> tags and remove <source> tags (FrontSteps doesn't support them)
+_RX_PICTURE_OPEN = re.compile(r"(?is)<picture\b[^>]*>")
+_RX_PICTURE_CLOSE = re.compile(r"(?is)</picture>")
+_RX_SOURCE = re.compile(r"(?is)<source\b[^>]*>")
+
 _RX_ATTR = {
     "href": re.compile(r"(?is)\bhref\s*=\s*([\"\'])(.*?)\1"),
     "src": re.compile(r"(?is)\bsrc\s*=\s*([\"\'])(.*?)\1"),
@@ -78,6 +83,10 @@ def _strip_wrappers_and_extract_body(html: str) -> str:
     # Unwrap center tags
     content = _RX_CENTER_OPEN.sub("", content)
     content = _RX_CENTER_CLOSE.sub("", content)
+    # Unwrap picture tags and remove source tags (FrontSteps doesn't support responsive images)
+    content = _RX_PICTURE_OPEN.sub("", content)
+    content = _RX_PICTURE_CLOSE.sub("", content)
+    content = _RX_SOURCE.sub("", content)
     # Drop HTML comments
     content = _RX_TAG["comment"].sub("", content)
     return content.strip()
