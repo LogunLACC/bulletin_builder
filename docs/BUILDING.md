@@ -302,22 +302,164 @@ exe = EXE(
 
 ### Windows
 
-- Build creates `.exe` executable
-- No console window if `console=False`
-- Can add icon with `.ico` file
-- Antivirus may flag the executable (false positive)
+**Build Script:** `python scripts/build_exe.py`
+
+**Requirements:**
+- Windows 10/11
+- Python 3.9+ (tested with 3.13.5)
+- PyInstaller 6.0+
+
+**Output:**
+- `dist/bulletin/bulletin.exe` - Standalone Windows executable
+- Size: ~150-200 MB (includes Python runtime, tkinter, dependencies)
+- No Python installation required on target systems
+
+**Features:**
+- No console window (GUI only mode)
+- Custom icon support (.ico file)
+- All DLLs bundled (python313.dll, tcl/tk, SSL, etc.)
+
+**Known Issues:**
+- **Permission Errors:** Must close running app before building (see [Troubleshooting](#windows-permission-errors-permissionerror-winerror-5))
+- **Antivirus:** May flag as suspicious (false positive) - submit to vendor if needed
+- **First Launch:** May take 5-10 seconds to start (unpacking internal files)
+
+**Distribution:**
+```powershell
+# Create zip for distribution
+Compress-Archive -Path dist/bulletin -DestinationPath bulletin_builder_windows.zip
+```
 
 ### macOS
 
-- Build creates Unix executable
-- May need to sign and notarize for distribution
-- Create `.app` bundle for better integration
+**Build Script:** `python scripts/build_macos.py`
+
+**Requirements:**
+- macOS 10.13+ (High Sierra or later)
+- Python 3.9+
+- PyInstaller 6.0+
+- Xcode Command Line Tools (for some dependencies)
+
+**Output:**
+- `dist/Bulletin Builder.app` - macOS application bundle
+- Size: ~120-180 MB
+- Self-contained .app bundle
+
+**Features:**
+- Native .app bundle (drag to Applications)
+- Retina display support
+- Dark mode support (follows system theme)
+- Dock icon integration
+
+**Known Issues:**
+- **Gatekeeper:** Unsigned apps show security warning on first launch
+  - **Solution:** Right-click → Open (first time only)
+  - **Or:** System Preferences → Security & Privacy → Allow
+- **Code Signing:** Requires Apple Developer account ($99/year) for distribution
+- **Notarization:** Required for macOS 10.15+ distribution (prevents Gatekeeper warning)
+
+**Distribution:**
+```bash
+# Create DMG for distribution
+hdiutil create -volname "Bulletin Builder" \
+    -srcfolder dist/ \
+    -ov -format UDZO bulletin_builder_macos.dmg
+
+# Or just zip the .app
+cd dist
+zip -r bulletin_builder_macos.zip "Bulletin Builder.app"
+```
+
+**Code Signing (Optional):**
+```bash
+# Sign the app bundle (requires Developer ID certificate)
+codesign --force --deep --sign "Developer ID Application: Your Name" \
+    "dist/Bulletin Builder.app"
+
+# Verify signature
+codesign --verify --verbose "dist/Bulletin Builder.app"
+
+# Notarize (upload to Apple)
+xcrun notarytool submit bulletin_builder_macos.zip \
+    --apple-id your@email.com \
+    --password your-app-specific-password \
+    --team-id YOUR_TEAM_ID
+```
 
 ### Linux
 
-- Build creates ELF executable
-- May need to mark as executable: `chmod +x bulletin`
-- Consider creating AppImage for better portability
+**Build Script:** `python scripts/build_linux.py` or `python scripts/build_linux.py --appimage`
+
+**Requirements:**
+- Linux with glibc 2.27+ (Ubuntu 18.04+, Debian 10+, Fedora 28+)
+- Python 3.9+
+- PyInstaller 6.0+
+- System libraries: libgtk-3-0, libpango-1.0-0 (usually pre-installed)
+- For AppImage: appimagetool
+
+**Output:**
+- `dist/bulletin/bulletin` - Standalone Linux executable
+- `dist/Bulletin_Builder-x86_64.AppImage` (with --appimage flag)
+- Size: ~100-150 MB
+
+**Features:**
+- Works on most modern Linux distributions
+- AppImage is portable and self-contained
+- No installation required
+
+**Known Issues:**
+- **Missing Libraries:** Some minimal systems may need GTK3/Pango
+  ```bash
+  # Ubuntu/Debian
+  sudo apt install libgtk-3-0 libpango-1.0-0
+  
+  # Fedora/RHEL
+  sudo dnf install gtk3 pango
+  ```
+- **Permissions:** Executable may not have execute bit set
+  ```bash
+  chmod +x dist/bulletin/bulletin
+  # Or for AppImage:
+  chmod +x Bulletin_Builder-x86_64.AppImage
+  ```
+- **Wayland:** May need XWayland compatibility layer (usually automatic)
+
+**Distribution:**
+```bash
+# Tar archive
+cd dist
+tar -czf bulletin_builder_linux.tar.gz bulletin/
+
+# Or distribute AppImage directly (recommended)
+# AppImage works on most distros without installation
+cp dist/Bulletin_Builder-x86_64.AppImage ~/Downloads/
+```
+
+**AppImage Creation:**
+```bash
+# Install appimagetool
+wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+chmod +x appimagetool-x86_64.AppImage
+sudo mv appimagetool-x86_64.AppImage /usr/local/bin/appimagetool
+
+# Build with AppImage
+python scripts/build_linux.py --appimage
+```
+
+### Platform Comparison
+
+| Feature | Windows | macOS | Linux |
+|---------|---------|-------|-------|
+| **Build Script** | `build_exe.py` | `build_macos.py` | `build_linux.py` |
+| **Output Format** | `.exe` | `.app` bundle | ELF / `.AppImage` |
+| **Size** | 150-200 MB | 120-180 MB | 100-150 MB |
+| **Python Required** | ❌ No | ❌ No | ❌ No |
+| **Code Signing** | Optional | Recommended | Not needed |
+| **Distribution** | Zip archive | DMG or Zip | Tar.gz or AppImage |
+| **Installer** | NSIS/Inno Setup | .dmg w/ background | AppImage (portable) |
+| **Auto-updates** | Possible | Possible | Possible |
+| **First Launch** | 5-10 sec | 2-5 sec | 2-5 sec |
+| **Known Issues** | Permission errors | Gatekeeper warnings | Missing GTK3 (rare) |
 
 ## Clean Build
 
