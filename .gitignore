@@ -2,6 +2,8 @@ config.ini
 src/config.ini
 .env
 user_drafts/*.json
+backups/
+backups/*.json
 # Ignore generated and environment files
 repo-mirror.git/
 __pycache__/

@@ -80,7 +80,13 @@ def _render_preview_logic(app: Any) -> str:
     # Download images locally (fallback to remote on error)
     def download_image(match):
         url = match.group(1)
-        ext = os.path.splitext(url)[1] or '.png'
+        # Extract extension from URL path only (before query string)
+        from urllib.parse import urlparse
+        parsed_url = urlparse(url)
+        path_only = parsed_url.path
+        ext = os.path.splitext(path_only)[1] or '.png'
+        # Ensure extension is valid (no query string characters)
+        ext = ext.split('?')[0].split('&')[0]
         fd, tmp_path = tempfile.mkstemp(suffix=ext)
         os.close(fd)
         try:

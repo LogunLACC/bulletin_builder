@@ -67,7 +67,12 @@ def to_jpeg_bytes(data: bytes) -> bytes:
     return out.getvalue()
 
 def safe_name(seed: str, alt: str | None) -> str:
-    base = (alt or "").strip()[:40] or urlsplit(seed).path.rsplit("/", 1)[-1]
+    # Extract path from URL (before query string)
+    parsed = urlsplit(seed)
+    path_only = parsed.path
+    base = (alt or "").strip()[:40] or path_only.rsplit("/", 1)[-1]
+    # Remove query string and fragments from base name
+    base = base.split('?')[0].split('#')[0]
     base = re.sub(r"[^A-Za-z0-9]+", "-", base).strip("-") or "image"
     h = hashlib.sha1(seed.encode()).hexdigest()[:8]
     return f"{base}-{h}.jpg".lower()
