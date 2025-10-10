@@ -4,6 +4,32 @@ This guide explains how to build standalone executables of Bulletin Builder usin
 
 ## Quick Start
 
+### Windows (Recommended - Handles OneDrive)
+
+If your project is in OneDrive or you've encountered permission errors, use the **force build script**:
+
+```powershell
+# For projects in OneDrive, use the force build script:
+powershell -ExecutionPolicy Bypass -File scripts\force_build_windows.ps1
+```
+
+This script automatically:
+- Stops any running instances (bulletin.exe, python.exe)
+- Prompts you to pause OneDrive syncing (or attempts automatic pause)
+- Forcefully cleans build artifacts with retry logic
+- Runs PyInstaller build
+- Validates the build (8 comprehensive checks)
+- Provides detailed success/failure summary
+
+**When you run it:**
+1. The script will prompt you to manually pause OneDrive
+2. Right-click OneDrive icon in system tray → "Pause syncing" → "2 hours"
+3. Press Enter in the terminal after pausing
+4. The build will proceed automatically
+5. Remember to resume OneDrive syncing when done!
+
+### Standard Build (All Platforms)
+
 ```bash
 # Install PyInstaller if not already installed
 pip install pyinstaller
@@ -136,7 +162,7 @@ After building, you'll find:
 ```
 dist/
 └── bulletin/
-    ├── bulletin.exe          # Main executable (Windows)
+    ├── bulletin.exe          # Main executable (Windows) - USE THIS ONE
     ├── bulletin_builder/     # Python package
     │   └── templates/        # Included templates
     ├── templates/            # Additional templates
@@ -144,7 +170,14 @@ dist/
     ├── components/           # Component templates
     ├── config.ini.default    # Default config
     └── _internal/            # PyInstaller internals and dependencies
+        ├── python313.dll     # Python runtime
+        ├── base_library.zip  # Python standard library
+        └── ...               # All other dependencies
 ```
+
+**IMPORTANT:** 
+- **Use `dist/bulletin/bulletin.exe`** - This is the properly packaged executable with all dependencies in `_internal/`
+- **DO NOT use `build/bulletin_builder/bulletin.exe`** - This is an intermediate build artifact that lacks the proper directory structure and will fail with DLL errors
 
 ## Distribution
 
@@ -210,10 +243,12 @@ cd dist/bulletin
    ```
 
 3. **Use Build Directory Output:**
-   If the build succeeds but fails copying to dist, the executable is still created successfully in `build/bulletin_builder/bulletin.exe`. You can use this directly:
-   ```bash
-   # Run from build directory
-   build\bulletin_builder\bulletin.exe --gui
+   If the build succeeds but fails copying to dist, the executable is still created in `build/bulletin_builder/bulletin.exe`. **However, this is an intermediate artifact and will NOT work correctly** because it lacks the proper `_internal/` directory structure with bundled dependencies.
+   
+   **Solution:** Use the force build script or manually copy the entire build to create a proper dist structure:
+   ```powershell
+   # Use the force build script (recommended)
+   powershell -ExecutionPolicy Bypass -File scripts\force_build_windows.ps1
    ```
 
 4. **Manual Cleanup:**
