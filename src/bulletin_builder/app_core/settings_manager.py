@@ -756,6 +756,23 @@ class ConfigManager:
         
         return not has_errors
 
+    def _get_config_version_from_file(self) -> str:
+        """
+        Get the config version directly from file.
+        
+        Returns:
+            Version string (e.g., "2.0") or "unknown" if not readable
+        """
+        if not self.config_path.exists():
+            return "unknown"
+        
+        try:
+            parser = configparser.ConfigParser()
+            parser.read(self.config_path, encoding='utf-8')
+            return ConfigMigration.get_config_version(parser)
+        except Exception:
+            return "unknown"
+
     def export_dict(self) -> Dict[str, Any]:
         """
         Export all settings as a dictionary.
