@@ -233,6 +233,25 @@ cd dist/bulletin
 - The build script includes retry logic with 2-second delays for transient locks
 - If retry fails, you'll see warnings but the build continues
 
+**OneDrive / Cloud Storage Specific Issues:**
+- **Problem:** Builds in OneDrive folders may fail with permission errors on `localpycs` folder
+- **Cause:** OneDrive syncing or file indexing holds locks on build artifacts
+- **Solutions:**
+  1. **Exclude folders from OneDrive:**
+     - Right-click `build` and `dist` folders → "Free up space" (keeps local only)
+     - Or: OneDrive settings → Sync and backup → Manage backup → Uncheck these folders
+  2. **Move project outside OneDrive:**
+     ```powershell
+     # Move to local drive
+     xcopy /E /I "OneDrive path" "C:\Dev\Bulletin Builder"
+     cd "C:\Dev\Bulletin Builder"
+     python scripts/build_exe.py
+     ```
+  3. **Pause OneDrive temporarily:**
+     - Right-click OneDrive icon in system tray → Pause syncing → 2 hours
+     - Build the project
+     - Resume syncing when done
+
 ### Missing Modules
 
 **Problem:** ImportError when running the executable
