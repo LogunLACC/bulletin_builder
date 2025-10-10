@@ -308,7 +308,11 @@
       "name": "Error Recovery & Resilience",
       "goal": "Make the app more robust with better error handling and recovery mechanisms.",
       "tasks": [
-        {"description": "Add automatic draft backup on crash or unexpected exit.", "status": "todo"},
+        {
+          "description": "Add automatic draft backup on crash or unexpected exit.",
+          "status": "complete",
+          "note": "Implemented AutoBackupManager with periodic auto-save (2-minute intervals), crash detection using marker files, and recovery dialog on next launch. System creates backups in ./backups directory, rotates to keep last 10 backups, and prompts user to restore if crash detected. Integrated into loader.py as required module, updated close handler to stop backup gracefully. Added comprehensive test suite with 16 tests covering initialization, auto-save, crash detection, recovery, and backup rotation. All tests passing. Committed in 00fd046."
+        },
         {"description": "Implement draft versioning to allow rollback to previous states.", "status": "todo"},
         {"description": "Add error reporting dialog with actionable suggestions for common failures.", "status": "todo"},
         {"description": "Create a recovery mode that loads the last known good state if the app crashes on startup.", "status": "todo"},
