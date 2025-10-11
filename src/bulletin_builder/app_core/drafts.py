@@ -119,6 +119,22 @@ def init(app: Any) -> None:
             # Ensure parent directory exists
             draft_path.parent.mkdir(parents=True, exist_ok=True)
             
+            # Create a version before saving (if draft already exists)
+            if draft_path.exists():
+                try:
+                    from bulletin_builder.app_core.draft_versioning import DraftVersionManager
+                    manager = DraftVersionManager(draft_path)
+                    
+                    # Read current draft data
+                    current_data = json.loads(draft_path.read_text(encoding='utf-8'))
+                    
+                    # Create auto-version
+                    manager.create_auto_version(current_data, trigger="manual-save")
+                    logger.debug(f"Created auto-version before save")
+                except Exception as e:
+                    # Don't fail the save if versioning fails
+                    logger.warning(f"Failed to create version before save: {e}")
+            
             # Write the file
             draft_path.write_text(json.dumps(payload, indent=2), encoding='utf-8')
             
@@ -148,7 +164,61 @@ def init(app: Any) -> None:
                 file_path=str(draft_path)
             )
             messagebox.showerror('Save Error', str(error), parent=app)
+    
+    def show_version_history() -> None:
+        """Show version history dialog for current draft."""
+        if not app.current_draft_path:
+            messagebox.showinfo(
+                'No Draft Loaded',
+                'Please open or save a draft before viewing version history.',
+                parent=app
+            )
+            return
+        
+        try:
+            from bulletin_builder.ui.version_history_dialog import VersionHistoryDialog
+            
+            def on_restore(draft_data: dict):
+                """Handle version restoration."""
+                # Load the restored data into the app
+                app.sections_data[:] = draft_data.get('sections', [])
+                
+                # Load settings
+                settings = draft_data.get('settings', _default_settings())
+                if hasattr(app.settings_frame, 'load_data'):
+                    app.settings_frame.load_data(
+                        settings,
+                        settings.get('google_api_key', app.google_api_key),
+                        settings.get('openai_api_key', app.openai_api_key),
+                        settings.get('events_feed_url', app.events_feed_url),
+                    )
+                
+                # Update template
+                app.renderer.set_template(draft_data.get('template_name', 'main_layout.html'))
+                
+                # Refresh UI
+                app.refresh_listbox_titles()
+                app.show_placeholder()
+                app.update_preview()
+                
+                logger.info("Version restored and loaded into application")
+            
+            # Show dialog
+            dialog = VersionHistoryDialog(
+                parent=app,
+                draft_path=Path(app.current_draft_path),
+                on_restore=on_restore
+            )
+            
+        except Exception as e:
+            logger.exception(f"Failed to show version history: {e}")
+            messagebox.showerror(
+                'Version History Error',
+                f"Failed to open version history:\n{str(e)}",
+                parent=app
+            )
 
     app.new_draft  = new_draft
     app.open_draft = open_draft
     app.save_draft = save_draft
+    app.show_version_history = show_version_history

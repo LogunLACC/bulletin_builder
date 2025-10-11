@@ -149,6 +149,8 @@ def init(app: Any) -> None:
         file_menu.add_command(label="Save", command=lambda: getattr(app, 'save_draft', lambda save_as=False: None)())
         file_menu.add_command(label="Save As...", command=lambda: getattr(app, 'save_draft', lambda save_as=False: None)(save_as=True))
         file_menu.add_separator()
+        file_menu.add_command(label="Version History...", command=lambda: getattr(app, 'show_version_history', lambda: None)())
+        file_menu.add_separator()
 
         add("Export Bulletin (FrontSteps)", "export_current_preview")
         add("Export to PDF...", "on_export_pdf_clicked")
