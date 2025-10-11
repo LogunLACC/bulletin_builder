@@ -313,7 +313,11 @@
           "status": "complete",
           "note": "Implemented AutoBackupManager with periodic auto-save (2-minute intervals), crash detection using marker files, and recovery dialog on next launch. System creates backups in ./backups directory, rotates to keep last 10 backups, and prompts user to restore if crash detected. Integrated into loader.py as required module, updated close handler to stop backup gracefully. Added comprehensive test suite with 16 tests covering initialization, auto-save, crash detection, recovery, and backup rotation. All tests passing. Committed in 00fd046."
         },
-        {"description": "Implement draft versioning to allow rollback to previous states.", "status": "todo"},
+        {
+          "description": "Implement draft versioning to allow rollback to previous states.", 
+          "status": "complete",
+          "note": "Implemented DraftVersionManager with full version lifecycle management. Versions stored in versions/{draft_name}/ with metadata. Features: save_version (manual/auto), list_versions, restore_version, delete_version, cleanup_old_versions (keeps 20 newest). Microsecond precision for unique version IDs. Created VersionHistoryDialog with scrollable version list, restore/delete operations, confirmation dialogs. Integrated automatic version creation on draft save. Added 'File → Version History...' menu item. Comprehensive test suite with 22 tests all passing. Committed in 7530de1 and 9611e97."
+        },
         {"description": "Add error reporting dialog with actionable suggestions for common failures.", "status": "todo"},
         {"description": "Create a recovery mode that loads the last known good state if the app crashes on startup.", "status": "todo"},
         {"description": "Add validation for all user inputs (URLs, file paths, JSON/CSV imports) with clear error messages.", "status": "todo"},
