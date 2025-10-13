@@ -318,7 +318,11 @@
           "status": "complete",
           "note": "Implemented DraftVersionManager with full version lifecycle management. Versions stored in versions/{draft_name}/ with metadata. Features: save_version (manual/auto), list_versions, restore_version, delete_version, cleanup_old_versions (keeps 20 newest). Microsecond precision for unique version IDs. Created VersionHistoryDialog with scrollable version list, restore/delete operations, confirmation dialogs. Integrated automatic version creation on draft save. Added 'File → Version History...' menu item. Comprehensive test suite with 22 tests all passing. Committed in 7530de1 and 9611e97."
         },
-        {"description": "Add error reporting dialog with actionable suggestions for common failures.", "status": "todo"},
+        {
+          "description": "Add error reporting dialog with actionable suggestions for common failures.", 
+          "status": "complete",
+          "note": "Implemented ErrorDialog UI component with modern styling, error categorization (File I/O, Network, Import, Export, Validation, Permission, Configuration), severity levels (Info, Warning, Error, Critical), and actionable suggestions. Created ErrorAnalyzer for intelligent error analysis with context-aware suggestions. Integrated into drafts module with retry callbacks and log viewer support. Features: Copy error details, View logs button, Retry operation. Comprehensive test suite with 14 tests all passing. Committed in 9a680be."
+        },
         {"description": "Create a recovery mode that loads the last known good state if the app crashes on startup.", "status": "todo"},
         {"description": "Add validation for all user inputs (URLs, file paths, JSON/CSV imports) with clear error messages.", "status": "todo"},
         {"description": "Implement graceful degradation when optional features (AI, analytics) are unavailable.", "status": "todo"}
