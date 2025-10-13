@@ -5,6 +5,7 @@ from datetime import date
 from typing import Dict, Any, Optional
 from bulletin_builder.exceptions import DraftLoadError, DraftSaveError, JSONImportError
 from bulletin_builder.app_core.logging_config import get_logger
+from bulletin_builder.app_core.error_handler import handle_error
 
 logger = get_logger(__name__)
 
@@ -54,24 +55,23 @@ def init(app: Any) -> None:
         )
         if not path:
             return
+        
+        def retry_open():
+            """Retry opening the draft."""
+            return open_draft()
+        
         try:
             logger.info(f"Opening draft from {path}")
             text = Path(path).read_text(encoding='utf-8')
             data = json.loads(text)
-        except FileNotFoundError as e:
-            logger.error(f"Draft file not found: {path}")
-            error = DraftLoadError(f"Draft file not found: {Path(path).name}", file_path=path)
-            messagebox.showerror('Open Error', str(error), parent=app)
-            return
-        except json.JSONDecodeError as e:
-            logger.error(f"Invalid JSON in draft file: {e}")
-            error = JSONImportError(f"Invalid JSON format in draft file: {e.msg}", file_path=path)
-            messagebox.showerror('Open Error', str(error), parent=app)
-            return
-        except Exception as e:
-            logger.exception(f"Unexpected error opening draft: {e}")
-            error = DraftLoadError(f"Failed to open draft: {str(e)}", file_path=path)
-            messagebox.showerror('Open Error', str(error), parent=app)
+        except (FileNotFoundError, json.JSONDecodeError, Exception) as e:
+            handle_error(
+                parent=app,
+                exception=e,
+                title="Open Draft Error",
+                context="opening draft",
+                retry_callback=retry_open
+            )
             return
         
         logger.debug(f"Draft loaded with {len(data.get('sections', []))} sections")
@@ -141,29 +141,18 @@ def init(app: Any) -> None:
             logger.debug(f"Draft saved with {len(app.sections_data)} sections")
             app.show_status_message(f"Draft saved: {draft_path.name}")
             
-        except PermissionError as e:
-            logger.error(f"Permission denied saving draft: {e}")
-            error = DraftSaveError(
-                f"Permission denied: Cannot write to {draft_path.name}",
-                file_path=str(draft_path)
-            )
-            messagebox.showerror('Save Error', str(error), parent=app)
+        except (PermissionError, OSError, Exception) as e:
+            def retry_save():
+                """Retry saving the draft."""
+                return save_draft(save_as=False)
             
-        except OSError as e:
-            logger.error(f"OS error saving draft: {e}")
-            error = DraftSaveError(
-                f"Failed to save draft: {str(e)}",
-                file_path=str(draft_path)
+            handle_error(
+                parent=app,
+                exception=e,
+                title="Save Draft Error",
+                context="saving draft",
+                retry_callback=retry_save
             )
-            messagebox.showerror('Save Error', str(error), parent=app)
-            
-        except Exception as e:
-            logger.exception(f"Unexpected error saving draft: {e}")
-            error = DraftSaveError(
-                f"Unexpected error saving draft: {str(e)}",
-                file_path=str(draft_path)
-            )
-            messagebox.showerror('Save Error', str(error), parent=app)
     
     def show_version_history() -> None:
         """Show version history dialog for current draft."""
@@ -211,11 +200,11 @@ def init(app: Any) -> None:
             )
             
         except Exception as e:
-            logger.exception(f"Failed to show version history: {e}")
-            messagebox.showerror(
-                'Version History Error',
-                f"Failed to open version history:\n{str(e)}",
-                parent=app
+            handle_error(
+                parent=app,
+                exception=e,
+                title="Version History Error",
+                context="opening version history"
             )
 
     app.new_draft  = new_draft
