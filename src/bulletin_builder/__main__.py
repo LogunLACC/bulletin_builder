@@ -37,6 +37,10 @@ class BulletinBuilderApp(ctk.CTk):
     """
     def __init__(self):
         super().__init__()
+        
+        # IMPORTANT: Withdraw window during initialization to prevent flickering/double-window effect
+        self.withdraw()
+        
         # Window title and initial fullscreen/maximized
         try:
             self.title("LACC Bulletin Builder")
@@ -44,11 +48,7 @@ class BulletinBuilderApp(ctk.CTk):
             pass
         # Always start maximized; ignore saved geometry to prevent bounce/snap
         self._desired_start_state = 'zoomed'
-        try:
-            self.state('zoomed')
-            self.update_idletasks()
-        except Exception:
-            pass
+        
         # Expose config savers for SettingsFrame
         self.save_api_key_to_config = save_api_key
         self.save_openai_key_to_config = save_openai_key
@@ -69,16 +69,23 @@ class BulletinBuilderApp(ctk.CTk):
             self._build_menus = self._build_menus_fallback  # expose for consistency
             self._build_menus()
 
-        # Re-assert maximized state after widgets map (prevents snap-to-small)
-        def _ensure_maximized():
+        # NOW show the window after everything is initialized (prevents double-window effect)
+        def _show_and_maximize():
             try:
-                if self.state() != 'zoomed':
-                    self.state('zoomed')
-            except Exception:
-                pass
+                # Show the window
+                self.deiconify()
+                # Force update to ensure window is visible
+                self.update_idletasks()
+                # Maximize the window
+                self.state('zoomed')
+            except Exception as e:
+                logger.debug(f"Error showing/maximizing window: {e}")
+        
+        # Show immediately and ensure maximized state
         try:
-            self.after_idle(_ensure_maximized)
-            self.after(300, _ensure_maximized)
+            self.after_idle(_show_and_maximize)
+            # Backup maximization after a short delay
+            self.after(100, lambda: self.state('zoomed') if self.state() != 'zoomed' else None)
         except Exception:
             pass
 
