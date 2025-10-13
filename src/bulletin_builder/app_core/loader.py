@@ -4,6 +4,7 @@ MODULES = [
     ("core_init", True),      # builds frames, status/progress, basic hooks
     ("recovery_mode", True),  # crash detection and recovery system
     ("input_validators", True),  # input validation for URLs, paths, JSON, CSV
+    ("graceful_degradation", True),  # feature detection and fallback for optional features
     ("handlers", False),
     ("component_manager", False),
     ("drafts", False),
