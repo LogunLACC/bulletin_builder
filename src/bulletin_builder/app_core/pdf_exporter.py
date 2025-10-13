@@ -11,6 +11,7 @@ import tempfile
 import os
 from bulletin_builder.exceptions import PDFExportError, MissingDependencyError
 from bulletin_builder.app_core.logging_config import get_logger
+from bulletin_builder.app_core.lazy_imports import lazy_weasyprint
 
 logger = get_logger(__name__)
 
@@ -32,7 +33,10 @@ def export_to_pdf(html_content: str, output_path: str, client_style: str = "desk
         PDFExportError: If PDF generation fails
     """
     try:
-        from weasyprint import HTML, CSS
+        # Lazy load weasyprint (only when PDF export is actually used)
+        weasyprint = lazy_weasyprint()
+        HTML = weasyprint.HTML
+        CSS = weasyprint.CSS
         from weasyprint.text.fonts import FontConfiguration
     except ImportError as e:
         logger.error("weasyprint library not found")

@@ -5,14 +5,13 @@ from pathlib import Path
 from typing import Any
 import concurrent.futures
 
-import openai
-
 from bulletin_builder.bulletin_renderer import BulletinRenderer
 from bulletin_builder.app_core.config import (
     load_api_key,
     load_openai_key,
     load_events_feed_url,
 )
+from bulletin_builder.app_core.lazy_imports import lazy_openai
 from bulletin_builder.ui.base_section import SectionRegistry
 
 # ensure all UI frame classes register themselves
@@ -51,8 +50,9 @@ def init(app: Any) -> None:
     app.openai_api_key = load_openai_key()
     app.events_feed_url = load_events_feed_url()
 
-    # Configure OpenAI when key available
+    # Configure OpenAI when key available (lazy load)
     if app.openai_api_key and app.openai_api_key != "REPLACE ME WITH YOUR OPENAI API KEY":
+        openai = lazy_openai()
         openai.api_key = app.openai_api_key
 
     # --- Renderer setup ---

@@ -152,12 +152,9 @@ def check_ai_google() -> bool:
         if not api_key or api_key == "your_google_api_key_here":
             return False
         
-        # Check if library is available
-        try:
-            import google.generativeai as genai
-            return True
-        except ImportError:
-            return False
+        # Check if library is available (use non-importing check)
+        from bulletin_builder.app_core.lazy_imports import is_gemini_available
+        return is_gemini_available()
             
     except Exception as e:
         logger.debug(f"Google AI check failed: {e}")
@@ -174,12 +171,9 @@ def check_ai_openai() -> bool:
         if not api_key or api_key == "your_openai_api_key_here":
             return False
         
-        # Check if library is available
-        try:
-            import openai
-            return True
-        except ImportError:
-            return False
+        # Check if library is available (use non-importing check)
+        from bulletin_builder.app_core.lazy_imports import is_openai_available
+        return is_openai_available()
             
     except Exception as e:
         logger.debug(f"OpenAI check failed: {e}")
@@ -204,10 +198,8 @@ def check_network() -> bool:
 def check_pdf_export() -> bool:
     """Check if PDF export (WeasyPrint) is available."""
     try:
-        import weasyprint
-        return True
-    except ImportError:
-        return False
+        from bulletin_builder.app_core.lazy_imports import is_weasyprint_available
+        return is_weasyprint_available()
     except Exception as e:
         logger.debug(f"PDF export check failed: {e}")
         return False

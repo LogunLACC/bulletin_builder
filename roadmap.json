@@ -327,6 +327,22 @@
         {"description": "Add validation for all user inputs (URLs, file paths, JSON/CSV imports) with clear error messages.", "status": "complete", "note": "Implemented comprehensive input_validators module with 5 validator classes (URLValidator, FilePathValidator, JSONValidator, CSVValidator, EmailValidator). ValidationResult class provides is_valid, error, warnings, and suggestions. Features: URL validation with HTTP/HTTPS protocol checking and HTTPS enforcement, file path validation with existence/type/extension checks, JSON validation with line/column error reporting, CSV validation with required column checking, email format validation with disposable domain detection. Integration: Added as required module in loader.py, validators attached to app instance. All validators return detailed error messages with actionable suggestions. Comprehensive test suite with 47 tests all passing. Ready for real-time validation in settings panel and import workflows. Committed in 396f40a."},
         {"description": "Implement graceful degradation when optional features (AI, analytics) are unavailable.", "status": "complete", "note": "Implemented FeatureAvailability class for tracking optional feature availability with automatic fallback mechanisms. Features tracked: ai_google (Gemini API), ai_openai (OpenAI API), ai_assistant (at least one AI provider), network (connectivity test), pdf_export (WeasyPrint). Check functions verify API keys, library imports, and network connectivity. Fallback handlers provide helpful messages and alternative behaviors when features unavailable. Helper functions: get_ai_provider(), can_use_ai(), can_use_network(), can_export_pdf(). Integration: Added as required module in loader.py, attached to app instance. App continues with core features even when optional features missing. Comprehensive test suite with 29 tests all passing covering feature registration, availability checking, fallback execution, and helper functions. Committed in fcd620b."}
       ]
+    },
+    {
+      "name": "Performance Optimization & Profiling",
+      "goal": "Analyze and optimize application performance for faster startup, rendering, and operations.",
+      "tasks": [
+        {"description": "Profile application startup time and identify slow imports or initialization.", "status": "todo"},
+        {"description": "Implement lazy loading for heavy modules (WeasyPrint, AI libraries) to reduce startup time.", "status": "todo"},
+        {"description": "Add template caching system to avoid re-parsing Jinja2 templates on every render.", "status": "todo"},
+        {"description": "Optimize CSV/JSON parsing for large files (>1000 rows) with chunked processing.", "status": "todo"},
+        {"description": "Implement image preprocessing pipeline with automatic resizing and compression.", "status": "todo"},
+        {"description": "Add memory profiling and optimize data structures to reduce RAM usage.", "status": "todo"},
+        {"description": "Implement async operations for non-blocking PDF generation and email sending.", "status": "todo"},
+        {"description": "Add progressive rendering for large bulletins (virtual scrolling for >100 sections).", "status": "todo"},
+        {"description": "Optimize preview generation with debouncing and incremental updates.", "status": "todo"},
+        {"description": "Create performance monitoring dashboard showing render times, memory usage, and bottlenecks.", "status": "todo"}
+      ]
     }
   ],
   "constraints": [
