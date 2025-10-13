@@ -158,12 +158,13 @@ class BulletinBuilderApp(ctk.CTk):
     def _finalize_close(self):
         """Save window state and destroy the window."""
         try:
-            # Stop auto-backup system before closing
-            if hasattr(self, 'backup_manager'):
+            # Remove crash marker on graceful exit
+            if hasattr(self, 'recovery_manager'):
                 try:
-                    self.backup_manager.stop()
+                    self.recovery_manager.remove_crash_marker()
+                    logger.debug("Crash marker removed on graceful exit")
                 except Exception as e:
-                    logger.debug(f"Error stopping backup manager: {e}")
+                    logger.debug(f"Error removing crash marker: {e}")
             
             st = self.state()
             geo = self.geometry()
