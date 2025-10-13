@@ -3,6 +3,7 @@ from importlib import import_module
 MODULES = [
     ("core_init", True),      # builds frames, status/progress, basic hooks
     ("recovery_mode", True),  # crash detection and recovery system
+    ("input_validators", True),  # input validation for URLs, paths, JSON, CSV
     ("handlers", False),
     ("component_manager", False),
     ("drafts", False),
