@@ -334,7 +334,7 @@
       "tasks": [
         {"description": "Profile application startup time and identify slow imports or initialization.", "status": "complete", "note": "Created profile_startup.py profiler. Identified 1.39s in slow imports: Google Gemini (794ms), WeasyPrint (391ms), Jinja2 (60ms). Committed 9fbc45e."},
         {"description": "Implement lazy loading for heavy modules (WeasyPrint, AI libraries) to reduce startup time.", "status": "complete", "note": "Created lazy_imports.py with LazyImporter, LazyModule, ImportStats classes. Integrated into pdf_exporter.py, graceful_degradation.py, core_init.py. WeasyPrint/AI libs now load only when used. 28 tests passing. Committed 9fbc45e."},
-        {"description": "Add template caching system to avoid re-parsing Jinja2 templates on every render.", "status": "todo"},
+        {"description": "Add template caching system to avoid re-parsing Jinja2 templates on every render.", "status": "complete", "note": "Created template_cache.py with CachedBulletinRenderer. Dual-layer caching: bytecode compilation + rendered output. TemplateCacheStats tracks performance. 23 tests passing. Saves 5-10ms per cached render. Committed 49d9c4e."},
         {"description": "Optimize CSV/JSON parsing for large files (>1000 rows) with chunked processing.", "status": "todo"},
         {"description": "Implement image preprocessing pipeline with automatic resizing and compression.", "status": "todo"},
         {"description": "Add memory profiling and optimize data structures to reduce RAM usage.", "status": "todo"},
